@@ -2,12 +2,12 @@ package com.tripweaver.models;
 
 import jakarta.persistence.*;
 import org.springframework.context.annotation.EnableMBeanExport;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "travels")
+@SecondaryTable(name = "travel_comments", pkJoinColumns = @PrimaryKeyJoinColumn(name = "travel_id"))
 public class Travel implements Comparable<Travel> {
 
     @Id
@@ -15,12 +15,13 @@ public class Travel implements Comparable<Travel> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int travelId;
 
+    /*TODO to add approved and pending passengers ( USER.class)*/
+
     @Column(name = "starting_point")
     private String startingPoint;
 
     @Column(name = "ending_point")
     private String endingPoint;
-
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
     @Column(name = "free_seats")
@@ -31,6 +32,15 @@ public class Travel implements Comparable<Travel> {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User driver;
+
+    @Column(name = "travel_comment_content", table = "travel_comments")
+    private String comment;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "travels_travel_statuses",
+            joinColumns = @JoinColumn(name = "travel_id"),
+            inverseJoinColumns = @JoinColumn(name = "travel_status_id"))
+    private TravelStatus status;
 
     public Travel() {
     }
