@@ -20,6 +20,8 @@ bin/
 ### IntelliJ IDEA ###
 .idea
 *.iws
+*.bin
+*.lock
 *.iml
 *.ipr
 out/
