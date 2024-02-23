@@ -3,6 +3,7 @@ package com.tripweaver.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -178,13 +179,13 @@ public class User implements Comparable<User> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-
-        return getUserId() == user.getUserId();
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId;
     }
 
     @Override
     public int hashCode() {
-        return getUserId();
+        return Objects.hash(userId);
     }
 }

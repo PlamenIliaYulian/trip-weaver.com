@@ -21,9 +21,11 @@ public class FeedbackForDriver implements Comparable<FeedbackForDriver>{
     @ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
     private User passengerProvidedFeedback;
 
+
     @JoinColumn(name = "driver_id")
     @ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
     private User driverReceivedFeedback;
+
 
     @Column(name = "rating")
     private int rating;
@@ -60,7 +62,6 @@ public class FeedbackForDriver implements Comparable<FeedbackForDriver>{
     public void setDriverReceivedFeedback(User driverReceivedFeedback) {
         this.driverReceivedFeedback = driverReceivedFeedback;
     }
-
     public int getRating() {
         return rating;
     }
