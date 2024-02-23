@@ -1,4 +1,4 @@
-package com.tripweaver.com.tripweaver;
+package com.tripweaver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
