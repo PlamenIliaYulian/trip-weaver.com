@@ -51,16 +51,10 @@ public class User implements Comparable<User> {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "feedback_for_drivers",
-            joinColumns = @JoinColumn(name = "driver_id"),
-            inverseJoinColumns = @JoinColumn(name = "feedback_id"))
+    @OneToMany(mappedBy = "driverReceivedFeedback")
     private Set<FeedbackForDriver> feedbackForDriver;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "feedback_for_passengers",
-            joinColumns = @JoinColumn(name = "passenger_id"),
-            inverseJoinColumns = @JoinColumn(name = "feedback_id"))
+    @OneToMany(mappedBy = "passengerReceivedFeedback")
     private Set<FeedbackForPassenger> feedbackForPassenger;
 
 
