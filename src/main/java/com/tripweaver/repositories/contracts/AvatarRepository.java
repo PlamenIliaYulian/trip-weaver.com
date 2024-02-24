@@ -11,6 +11,5 @@ public interface AvatarRepository {
 
     String uploadPictureToCloudinary(MultipartFile multipartFile);
 
-
     Avatar getAvatarById(int id);
 }

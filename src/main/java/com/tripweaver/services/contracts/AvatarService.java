@@ -13,4 +13,6 @@ public interface AvatarService {
 
     /*ToDo Ilia*/
     String uploadPictureToCloudinary(MultipartFile multipartFile);
+    /*Ilia*/
+    Avatar getAvatarById(int id);
 }
