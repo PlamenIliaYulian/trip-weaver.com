@@ -144,6 +144,21 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override
+    public long getAllUsersCount() {
+        return 0;
+    }
+
+    @Override
+    public List<User> getTopTenTravelOrganizersByRating() {
+        return null;
+    }
+
+    @Override
+    public List<User> getTopTenTravelPassengersByRating() {
+        return null;
+    }
+
     private String generateOrderBy(UserFilterOptions userFilterOptions) {
         if (userFilterOptions.getSortBy().isEmpty()) {
             return "";
