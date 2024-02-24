@@ -12,6 +12,6 @@ public interface RoleService {
     /*ToDo Plamen*/
     Role getRoleByName(String name);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     List<Role> getAllRoles();
 }
