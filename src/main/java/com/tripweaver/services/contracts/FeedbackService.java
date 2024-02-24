@@ -11,5 +11,12 @@ public interface FeedbackService {
     /*ToDo Yuli - DONE*/
     FeedbackForPassenger createFeedbackForPassenger(FeedbackForPassenger FeedbackForPassenger);
 
+    /*Ilia*/
+    FeedbackForDriver getFeedbackForDriverById (int id);
+    /*Ilia*/
+    FeedbackForPassenger getFeedbackForPassengerById (int id);
+
+
+
 
 }

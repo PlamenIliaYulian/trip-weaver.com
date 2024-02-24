@@ -7,6 +7,6 @@ public interface FeedbackRepository {
 
     FeedbackForDriver createFeedbackForDriver(FeedbackForDriver feedbackForDriver);
     FeedbackForPassenger createFeedbackForPassenger(FeedbackForPassenger FeedbackForPassenger);
-
-
+    FeedbackForDriver getFeedbackForDriverById (int id);
+    FeedbackForPassenger getFeedbackForPassengerById (int id);
 }

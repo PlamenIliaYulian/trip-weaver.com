@@ -28,4 +28,16 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedbackForPassenger createFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger) {
         return feedbackRepository.createFeedbackForPassenger(feedbackForPassenger);
     }
+
+    /*Ilia*/
+    @Override
+    public FeedbackForDriver getFeedbackForDriverById(int id) {
+        return feedbackRepository.getFeedbackForDriverById(id);
+    }
+
+    /*Ilia*/
+    @Override
+    public FeedbackForPassenger getFeedbackForPassengerById(int id) {
+        return feedbackRepository.getFeedbackForPassengerById(id);
+    }
 }
