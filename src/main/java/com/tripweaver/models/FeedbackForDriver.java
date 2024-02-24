@@ -1,5 +1,6 @@
 package com.tripweaver.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -17,11 +18,13 @@ public class FeedbackForDriver implements Comparable<FeedbackForDriver>{
 
     /*ToDo from Ilia - I'm not sure if this is the right approach to get User
     *  objects from the table using passenger_id and driver_id.*/
+
+    @JsonIgnore
     @JoinColumn(name = "passenger_id")
     @ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
     private User passengerProvidedFeedback;
 
-
+    @JsonIgnore
     @JoinColumn(name = "driver_id")
     @ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
     private User driverReceivedFeedback;

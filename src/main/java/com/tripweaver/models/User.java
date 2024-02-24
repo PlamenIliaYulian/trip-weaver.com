@@ -1,5 +1,6 @@
 package com.tripweaver.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -51,10 +52,11 @@ public class User implements Comparable<User> {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "driverReceivedFeedback")
+    @JsonIgnore
+    @OneToMany(mappedBy = "driverReceivedFeedback", fetch = FetchType.EAGER)
     private Set<FeedbackForDriver> feedbackForDriver;
-
-    @OneToMany(mappedBy = "passengerReceivedFeedback")
+    @JsonIgnore
+    @OneToMany(mappedBy = "passengerReceivedFeedback", fetch = FetchType.EAGER)
     private Set<FeedbackForPassenger> feedbackForPassenger;
 
 
@@ -163,6 +165,38 @@ public class User implements Comparable<User> {
 
     public void setAverageDriverRating(int averageDriverRating) {
         this.averageDriverRating = averageDriverRating;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<FeedbackForDriver> getFeedbackForDriver() {
+        return feedbackForDriver;
+    }
+
+    public void setFeedbackForDriver(Set<FeedbackForDriver> feedbackForDriver) {
+        this.feedbackForDriver = feedbackForDriver;
+    }
+
+    public Set<FeedbackForPassenger> getFeedbackForPassenger() {
+        return feedbackForPassenger;
+    }
+
+    public void setFeedbackForPassenger(Set<FeedbackForPassenger> feedbackForPassenger) {
+        this.feedbackForPassenger = feedbackForPassenger;
     }
 
     @Override
