@@ -2,8 +2,10 @@ package com.tripweaver.models;
 
 import jakarta.persistence.*;
 import org.springframework.context.annotation.EnableMBeanExport;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "travels")
@@ -14,8 +16,6 @@ public class Travel implements Comparable<Travel> {
     @Column(name = "travel_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int travelId;
-
-    /*TODO to add approved and pending passengers ( USER.class)*/
 
     @Column(name = "starting_point")
     private String startingPoint;
@@ -41,8 +41,50 @@ public class Travel implements Comparable<Travel> {
             joinColumns = @JoinColumn(name = "travel_id"),
             inverseJoinColumns = @JoinColumn(name = "travel_status_id"))
     private TravelStatus status;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "travels_users_applied",
+            joinColumns = @JoinColumn(name = "travel_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> usersAppliedForTheTravel;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "travels_users_approved",
+            joinColumns = @JoinColumn(name = "travel_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> usersApprovedForTheTravel;
 
     public Travel() {
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public TravelStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TravelStatus status) {
+        this.status = status;
+    }
+
+    public Set<User> getUsersAppliedForTheTravel() {
+        return usersAppliedForTheTravel;
+    }
+
+    public void setUsersAppliedForTheTravel(Set<User> usersAppliedForTheTravel) {
+        this.usersAppliedForTheTravel = usersAppliedForTheTravel;
+    }
+
+    public Set<User> getUsersApprovedForTheTravel() {
+        return usersApprovedForTheTravel;
+    }
+
+    public void setUsersApprovedForTheTravel(Set<User> usersApprovedForTheTravel) {
+        this.usersApprovedForTheTravel = usersApprovedForTheTravel;
     }
 
     public int getTravelId() {

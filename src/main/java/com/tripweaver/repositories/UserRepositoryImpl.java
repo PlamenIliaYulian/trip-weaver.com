@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
+
     @Override
     public User createUser(User user) {
         return null;
@@ -41,7 +42,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User makeAdministrativeChanges(User userToBeUpdated) {
+    public User blockUser(User userToBeblocked) {
+        return null;
+    }
+
+    @Override
+    public User getUserByPhoneNumber(String phoneNumber) {
         return null;
     }
 }

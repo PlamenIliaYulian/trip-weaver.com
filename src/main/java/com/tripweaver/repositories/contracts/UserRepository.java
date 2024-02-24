@@ -19,5 +19,7 @@ public interface UserRepository {
 
     User getUserById(int id);
 
-    User makeAdministrativeChanges(User userToBeUpdated);
+    User blockUser(User userToBeblocked);
+
+    User getUserByPhoneNumber(String phoneNumber);
 }
