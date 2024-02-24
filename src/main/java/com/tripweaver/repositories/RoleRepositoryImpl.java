@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -22,7 +21,15 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Role getRoleById(int id) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Query<Role> query = session.createQuery("FROM Role WHERE roleId = :id ", Role.class);
+            query.setParameter("id", id);
+            List<Role> result = query.list();
+            if (result.isEmpty()) {
+                throw new EntityNotFoundException("Role", id);
+            }
+            return result.get(0);
+        }
     }
 
     @Override

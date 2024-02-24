@@ -12,6 +12,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
 
+    @Autowired
     public FeedbackServiceImpl(FeedbackRepository feedbackRepository) {
         this.feedbackRepository = feedbackRepository;
     }
