@@ -8,7 +8,7 @@ public interface AvatarService {
     /*ToDo Plamen*/
     Avatar createAvatar(Avatar avatar);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     Avatar getDefaultAvatar();
 
     /*ToDo Ilia*/

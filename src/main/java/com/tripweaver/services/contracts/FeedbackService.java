@@ -8,7 +8,7 @@ public interface FeedbackService {
     /*ToDo Plamen*/
     FeedbackForDriver createFeedbackForDriver(FeedbackForDriver feedbackForDriver);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     FeedbackForPassenger createFeedbackForPassenger(FeedbackForPassenger FeedbackForPassenger);
 
 
