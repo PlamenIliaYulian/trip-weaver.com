@@ -43,7 +43,7 @@ public interface UserService {
     List<User> getTopTenTravelPassengersByRating();
     /*ToDo Plamen*/
     User addAvatar(User userToBeUpdated, String avatar, User loggedUser);
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     User deleteAvatar(User userToBeUpdated, User loggedUser);
     /*ToDo Ilia*/
     User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver, User userToReceiveFeedback);

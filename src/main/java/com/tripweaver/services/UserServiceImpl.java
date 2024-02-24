@@ -5,7 +5,9 @@ import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.User;
 import com.tripweaver.models.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
+import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.UserService;
+import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +15,17 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
+    public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
     private final UserRepository userRepository;
+    private final PermissionHelper permissionHelper;
+
+    private final AvatarService avatarService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PermissionHelper permissionHelper, AvatarService avatarService) {
         this.userRepository = userRepository;
+        this.permissionHelper = permissionHelper;
+        this.avatarService = avatarService;
     }
 
     @Override
@@ -89,7 +96,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteAvatar(User userToBeUpdated, User loggedUser) {
-        return null;
+        PermissionHelper.isAdminOrSameUser(
+                userRepository.getUserById(userToBeUpdated.getUserId()),
+                loggedUser, UNAUTHORIZED_OPERATION);
+        userToBeUpdated.setAvatar(avatarService.getDefaultAvatar());
+        return userRepository.updateUser(userToBeUpdated);
     }
 
     @Override
