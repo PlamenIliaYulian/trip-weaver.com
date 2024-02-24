@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TravelServiceImpl implements TravelService {
@@ -63,7 +64,11 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel approvePassenger(User userToApprove, Travel travel) {
-        return null;
+        Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
+        usersAppliedForTheTravel.remove(userToApprove);
+        Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
+        usersApprovedForTheTravel.add(userToApprove);
+        return travelRepository.updateTravel(travel);
     }
 
     @Override

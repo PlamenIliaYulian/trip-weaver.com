@@ -31,7 +31,7 @@ public interface TravelService {
     /*ToDo Plamen*/
     Travel applyForATrip(User userToApply, Travel travelToApplyFor);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     Travel approvePassenger(User userToApprove, Travel travel);
 
     /*ToDo Ilia*/
