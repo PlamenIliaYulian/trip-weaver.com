@@ -58,7 +58,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User unBlockUser(User userToBeUnBlocked) {
-        return userRepository.unBlockUser(userToBeUnBlocked);
+        userToBeUnBlocked.setBlocked(false);
+        return userRepository.updateUser(userToBeUnBlocked);
     }
 
     @Override

@@ -13,21 +13,21 @@ public interface UserService {
     /*ToDo Plamen*/
     User createUser(User user);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     User updateUser(User user);
 
     /*ToDo Ilia*/
     List<User> getAllUsers(UserFilterOptions userFilterOptions);
     /*ToDo Plamen*/
     User getUserByUsername(String username);
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     User getUserByEmail(String email);
     /*ToDo Ilia*/
     User getUserById(int id);
     /*ToDo Plamen*/
     User blockUser(User userToBeBlocked);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     User unBlockUser(User userToBeUnBlocked);
 
     /*ToDo Ilia*/
