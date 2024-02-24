@@ -36,7 +36,7 @@ public interface UserService {
     /*ToDo Plamen*/
     long getAllUsersCount();
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     List<User> getTopTenTravelOrganizersByRating();
 
     /*ToDo Ilia*/

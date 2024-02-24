@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getTopTenTravelOrganizersByRating() {
-        return null;
+        return userRepository.getTopTenTravelOrganizersByRating();
     }
 
     @Override

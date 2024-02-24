@@ -151,7 +151,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getTopTenTravelOrganizersByRating() {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery(
+                    "FROM User " +
+                            "WHERE isDeleted = false " +
+                            "AND isBlocked = false " +
+                            "AND isVerified = true " +
+                            "ORDER BY averageDriverRating DESC " +
+                            "LIMIT 10", User.class);
+            return query.list();
+        }
     }
 
     @Override
