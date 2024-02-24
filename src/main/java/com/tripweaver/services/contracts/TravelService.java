@@ -13,7 +13,7 @@ public interface TravelService {
     /*ToDo Plamen*/
     Travel cancelTravel(Travel travel);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     Travel completeTravel(Travel travel);
 
     /*ToDo Ilia*/

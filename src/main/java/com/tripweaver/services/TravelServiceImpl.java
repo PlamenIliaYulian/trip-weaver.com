@@ -3,12 +3,24 @@ package com.tripweaver.services;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.TravelFilterOptions;
 import com.tripweaver.models.User;
+import com.tripweaver.repositories.contracts.TravelRepository;
 import com.tripweaver.services.contracts.TravelService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class TravelServiceImpl implements TravelService {
+
+    private final TravelRepository travelRepository;
+
+    @Autowired
+    public TravelServiceImpl(TravelRepository travelRepository) {
+        this.travelRepository = travelRepository;
+    }
+
+
     @Override
     public Travel createTravel(Travel travel) {
         return null;
@@ -21,7 +33,7 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel completeTravel(Travel travel) {
-        return null;
+        return travelRepository.updateTravel(travel);
     }
 
     @Override

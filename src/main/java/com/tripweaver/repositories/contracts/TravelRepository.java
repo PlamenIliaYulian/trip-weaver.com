@@ -28,6 +28,7 @@ public interface TravelRepository {
 
     Travel declinePassenger(User userToBeDeclined, Travel travel);
 
+    Travel updateTravel(Travel travel);
 
 
 
