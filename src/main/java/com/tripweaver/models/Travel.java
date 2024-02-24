@@ -16,10 +16,8 @@ public class Travel implements Comparable<Travel> {
     @Column(name = "travel_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int travelId;
-
     @Column(name = "starting_point")
     private String startingPoint;
-
     @Column(name = "ending_point")
     private String endingPoint;
     @Column(name = "departure_time")
@@ -28,14 +26,11 @@ public class Travel implements Comparable<Travel> {
     private int freeSeats;
     @Column(name = "created")
     private LocalDateTime createdOn;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User driver;
-
     @Column(name = "travel_comment_content", table = "travel_comments")
     private String comment;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "travels_travel_statuses",
             joinColumns = @JoinColumn(name = "travel_id"),

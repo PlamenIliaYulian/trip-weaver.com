@@ -2,6 +2,9 @@ package com.tripweaver.exceptions;
 
 public class EntityNotFoundException extends RuntimeException {
 
+    public EntityNotFoundException(String message) {
+        super(message);
+    }
     public EntityNotFoundException(String type, int id) {
         this(type, "id", String.valueOf(id));
     }

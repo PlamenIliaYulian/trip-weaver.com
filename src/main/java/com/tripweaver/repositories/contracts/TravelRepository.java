@@ -18,7 +18,7 @@ public interface TravelRepository {
 
     Travel getTravelById(int travelId);
 
-    List<Travel> getTravelsByDriver(User driver);
+    List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions);
 
     List<Travel> getTravelsByPassenger(User passenger);
 
@@ -30,7 +30,6 @@ public interface TravelRepository {
 
     Travel declinePassenger(User userToBeDeclined, Travel travel);
 
-    Travel updateTravel(Travel travel);
 
 
 

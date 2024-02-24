@@ -8,7 +8,7 @@ import java.util.List;
 public interface TravelService {
 
     /*ToDo Ilia*/
-    Travel createTravel(Travel travel);
+    Travel createTravel(Travel travel,User creator);
 
     /*ToDo Plamen*/
     Travel cancelTravel(Travel travel, User loggedUser);
@@ -17,7 +17,7 @@ public interface TravelService {
     Travel completeTravel(Travel travel);
 
     /*ToDo Ilia*/
-    List<Travel> getTravelsByDriver(User driver, User loggedUser);
+    List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions);
 
     /*ToDo Plamen*/
     List<Travel> getTravelsByPassenger(User passenger, User loggedUser);
@@ -35,6 +35,6 @@ public interface TravelService {
     Travel approvePassenger(User userToApprove, Travel travel);
 
     /*ToDo Ilia*/
-    Travel declinePassenger(User userToBeDeclined, Travel travel);
+    Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn);
 
 }
