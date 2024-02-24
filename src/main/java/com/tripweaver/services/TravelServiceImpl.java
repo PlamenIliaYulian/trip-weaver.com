@@ -48,7 +48,7 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel getTravelById(int travelId) {
-        return null;
+        return travelRepository.getTravelById(travelId);
     }
 
     @Override

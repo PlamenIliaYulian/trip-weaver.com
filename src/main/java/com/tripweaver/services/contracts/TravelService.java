@@ -22,7 +22,7 @@ public interface TravelService {
     /*ToDo Plamen*/
     List<Travel> getTravelsByPassenger(User passenger, User loggedUser);
 
-    /*ToDo Yuli*/
+    /*ToDo Yuli - DONE*/
     Travel getTravelById(int travelId);
 
     /*ToDo Ilia*/

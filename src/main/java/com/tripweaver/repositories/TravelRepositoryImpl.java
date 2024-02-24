@@ -1,11 +1,14 @@
 package com.tripweaver.repositories;
 
+import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.TravelFilterOptions;
 import com.tripweaver.models.User;
 import com.tripweaver.repositories.contracts.TravelRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -37,7 +40,15 @@ public class TravelRepositoryImpl implements TravelRepository {
 
     @Override
     public Travel getTravelById(int travelId) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Query<Travel> query = session.createQuery(
+                    "FROM Travel WHERE travelId = :id", Travel.class);
+            query.setParameter("id", travelId);
+            if (query.list().isEmpty()) {
+                throw new EntityNotFoundException("Travel", travelId);
+            }
+            return query.list().get(0);
+        }
     }
 
     @Override
