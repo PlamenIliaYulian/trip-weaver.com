@@ -1,5 +1,7 @@
 package com.tripweaver.services;
 
+import com.tripweaver.models.FeedbackForDriver;
+import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.User;
 import com.tripweaver.models.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
@@ -62,5 +64,50 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByPhoneNumber(String phoneNumber) {
         return userRepository.getUserByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public long getAllUsersCount() {
+        return 0;
+    }
+
+    @Override
+    public List<User> getTopTenTravelOrganizersByRating() {
+        return null;
+    }
+
+    @Override
+    public List<User> getTopTenTravelPassengersByRating() {
+        return null;
+    }
+
+    @Override
+    public User addAvatar(User userToBeUpdated, String avatar, User loggedUser) {
+        return null;
+    }
+
+    @Override
+    public User deleteAvatar(User userToBeUpdated, User loggedUser) {
+        return null;
+    }
+
+    @Override
+    public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver, User userToReceiveFeedback) {
+        return null;
+    }
+
+    @Override
+    public User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger, User userToReceiveFeedback) {
+        return null;
+    }
+
+    @Override
+    public List<FeedbackForDriver> getAllFeedbackForDriver(User user) {
+        return null;
+    }
+
+    @Override
+    public List<FeedbackForPassenger> getAllFeedbackForPassenger(User user) {
+        return null;
     }
 }
