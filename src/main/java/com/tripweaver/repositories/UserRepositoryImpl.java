@@ -46,7 +46,6 @@ public class UserRepositoryImpl implements UserRepository {
         return user;
     }
 
-    /*TODO check if getAllUsers is implemented correctly as we used it just for testing purposes*/
     @Override
     public List<User> getAllUsers(UserFilterOptions userFilterOptions) {
         try (Session session = sessionFactory.openSession()) {
@@ -57,18 +56,14 @@ public class UserRepositoryImpl implements UserRepository {
                 filters.add("username like :username ");
                 params.put("username", String.format("%%%s%%", value));
             });
-
             userFilterOptions.getEmail().ifPresent(value -> {
                 filters.add("email like :email ");
                 params.put("email", String.format("%%%s%%", value));
             });
-
-            userFilterOptions.getFirstName().ifPresent(value -> {
-                filters.add("firstName like :firstName ");
-                params.put("firstName", String.format("%%%s%%", value));
+            userFilterOptions.getPhoneNumber().ifPresent(value -> {
+                filters.add("phoneNumber like :phoneNumber ");
+                params.put("phoneNumber", String.format("%%%s%%", value));
             });
-
-
             filters.add(" isDeleted = false ");
             params.put("isDeleted", false);
 
@@ -76,12 +71,37 @@ public class UserRepositoryImpl implements UserRepository {
             queryString.append(" WHERE ")
                     .append(String.join(" AND ", filters));
 
-
             queryString.append(generateOrderBy(userFilterOptions));
             Query<User> query = session.createQuery(queryString.toString(), User.class);
             query.setProperties(params);
             return query.list();
         }
+    }
+
+    private String generateOrderBy(UserFilterOptions userFilterOptions) {
+        if (userFilterOptions.getSortBy().isEmpty()) {
+            return "";
+        }
+        String orderBy = "";
+        switch (userFilterOptions.getSortBy().get()) {
+            case "username":
+                orderBy = "username";
+                break;
+            case "email":
+                orderBy = "email";
+                break;
+            case "phoneNumber":
+                orderBy = "phoneNumber";
+                break;
+            default:
+                return "";
+        }
+
+        orderBy = String.format(" order by %s", orderBy);
+        if (userFilterOptions.getSortOrder().isPresent() && userFilterOptions.getSortOrder().get().equalsIgnoreCase("desc")) {
+            orderBy = String.format("%s desc", orderBy);
+        }
+        return orderBy;
     }
 
     @Override
@@ -141,7 +161,7 @@ public class UserRepositoryImpl implements UserRepository {
             query.setParameter("phoneNumber", phoneNumber);
             List<User> result = query.list();
             if (result.isEmpty()) {
-                throw new EntityNotFoundException("User", "phoneNumber", phoneNumber);
+                throw new EntityNotFoundException("User", "phone number", phoneNumber);
             }
             return result.get(0);
         }
@@ -171,6 +191,20 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getTopTenTravelPassengersByRating() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery("FROM User WHERE isDeleted = false " +
+                    "ORDER BY averagePassengerRating DESC LIMIT 10", User.class);
+            return query.list();
+        }
+    }
+
+    @Override
+    public User addAvatar(User userToBeUpdated, String avatar, User loggedUser) {
+        return null;
+    }
+
+    @Override
+    public User deleteAvatar(User userToBeUpdated, User loggedUser) {
         return null;
     }
 
@@ -210,32 +244,23 @@ public class UserRepositoryImpl implements UserRepository {
         return null;
     }
 
-    private String generateOrderBy(UserFilterOptions userFilterOptions) {
-        if (userFilterOptions.getSortBy().isEmpty()) {
-            return "";
-        }
+    @Override
+    public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver, User userToReceiveFeedback) {
+        return null;
+    }
 
-        String orderBy = "";
-        switch (userFilterOptions.getSortBy().get()) {
-            case "username":
-                orderBy = "username";
-                break;
-            case "email":
-                orderBy = "user_email";
-                break;
-            case "firstName":
-                orderBy = "first_name";
-                break;
-            default:
-                return "";
-        }
+    @Override
+    public User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger, User userToReceiveFeedback) {
+        return null;
+    }
 
-        orderBy = String.format(" order by %s", orderBy);
+    @Override
+    public List<FeedbackForDriver> getAllFeedbackForDriver(User user) {
+        return null;
+    }
 
-        if (userFilterOptions.getSortOrder().isPresent() && userFilterOptions.getSortOrder().get().equalsIgnoreCase("desc")) {
-            orderBy = String.format("%s desc", orderBy);
-        }
-
-        return orderBy;
+    @Override
+    public List<FeedbackForPassenger> getAllFeedbackForPassenger(User user) {
+        return null;
     }
 }

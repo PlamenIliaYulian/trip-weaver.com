@@ -10,21 +10,13 @@ import java.util.List;
 public interface UserRepository {
 
     User createUser(User user);
-
     User updateUser(User user);
-
     List<User> getAllUsers(UserFilterOptions userFilterOptions);
-
     User getUserByUsername(String username);
-
     User getUserByEmail(String email);
-
     User getUserById(int id);
-
     User blockUser(User userToBeBlocked);
-
     User unBlockUser(User userToBeUnBlocked);
-
     User getUserByPhoneNumber(String phoneNumber);
     long getAllUsersCount();
     List<User> getTopTenTravelOrganizersByRating();
@@ -33,7 +25,6 @@ public interface UserRepository {
     User deleteAvatar(User userToBeUpdated, User loggedUser);
     User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver, User userToReceiveFeedback);
     User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger, User userToReceiveFeedback);
-
     List<FeedbackForDriver> getAllFeedbackForDriver(User user);
     List<FeedbackForPassenger> getAllFeedbackForPassenger(User user);
 

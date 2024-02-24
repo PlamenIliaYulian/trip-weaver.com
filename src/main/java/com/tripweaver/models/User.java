@@ -59,7 +59,6 @@ public class User implements Comparable<User> {
     @OneToMany(mappedBy = "passengerReceivedFeedback", fetch = FetchType.EAGER)
     private Set<FeedbackForPassenger> feedbackForPassenger;
 
-
     public User() {
     }
 

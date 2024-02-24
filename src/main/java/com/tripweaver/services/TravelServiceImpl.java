@@ -135,7 +135,7 @@ public class TravelServiceImpl implements TravelService {
     /*Ilia*/
     @Override
     public Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn) {
-        isUserLoggedInTheDriver(travel, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        isUserTheDriver(travel, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
         hasUserAppliedOrBeingApprovedForTheTravel(
@@ -158,8 +158,8 @@ public class TravelServiceImpl implements TravelService {
         }
     }
 
-    private void isUserLoggedInTheDriver(Travel travel, User userLoggedIn, String message) {
-        if (!travel.getDriver().equals(userLoggedIn)) {
+    private void isUserTheDriver(Travel travel, User userToBeChecked, String message) {
+        if (!travel.getDriver().equals(userToBeChecked)) {
             throw new UnauthorizedOperationException(message);
         }
     }

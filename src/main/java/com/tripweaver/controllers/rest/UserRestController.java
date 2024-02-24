@@ -49,7 +49,7 @@ public class UserRestController {
                                   @RequestParam(required = false) String sortBy,
                                   @RequestParam(required = false) String sortOrder) {
 
-        return userService.getAllUsers(new UserFilterOptions());
+        return userService.getAllUsers(new UserFilterOptions(null,null,null,null,null), new User());
     }
 
     @GetMapping("/{id}")
