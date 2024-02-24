@@ -18,7 +18,9 @@ public interface UserService {
 
     User getUserById(int id);
 
-    User blockUser(User userToBeblocked);
+    User blockUser(User userToBeBlocked);
+
+    User unBlockUser(User userToBeUnBlocked);
 
     User getUserByPhoneNumber(String phoneNumber);
 }

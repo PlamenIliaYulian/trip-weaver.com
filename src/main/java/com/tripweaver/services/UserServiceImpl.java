@@ -50,8 +50,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User blockUser(User userToBeblocked) {
-        return userRepository.blockUser(userToBeblocked);
+    public User blockUser(User userToBeBlocked) {
+        return userRepository.blockUser(userToBeBlocked);
+    }
+
+    @Override
+    public User unBlockUser(User userToBeUnBlocked) {
+        return userRepository.unBlockUser(userToBeUnBlocked);
     }
 
     @Override
