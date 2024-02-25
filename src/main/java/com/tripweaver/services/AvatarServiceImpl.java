@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
+
+
     private final AvatarRepository avatarRepository;
 
     @Autowired
@@ -18,7 +20,7 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public Avatar createAvatar(Avatar avatar) {
-        return null;
+        return avatarRepository.createAvatar(avatar);
     }
 
     @Override

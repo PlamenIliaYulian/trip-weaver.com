@@ -2,7 +2,7 @@ package com.tripweaver.services;
 
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
-import com.tripweaver.repositories.FeedbackRepositoryImpl;
+import com.tripweaver.repositories.contracts.FeedbackRepository;
 import com.tripweaver.services.contracts.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,16 +10,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
 
-    private final FeedbackRepositoryImpl feedbackRepository;
+    private final FeedbackRepository feedbackRepository;
 
-    @Autowired
-    public FeedbackServiceImpl(FeedbackRepositoryImpl feedbackRepository) {
+    public FeedbackServiceImpl(FeedbackRepository feedbackRepository) {
         this.feedbackRepository = feedbackRepository;
     }
 
     @Override
     public FeedbackForDriver createFeedbackForDriver(FeedbackForDriver feedbackForDriver) {
-        return null;
+        return feedbackRepository.createFeedbackForDriver(feedbackForDriver);
     }
 
     /*TODO - We either have to assign driverId and passengerId while converting the FeedbackDto into FeedbackForDriver

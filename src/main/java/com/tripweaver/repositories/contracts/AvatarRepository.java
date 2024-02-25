@@ -10,4 +10,7 @@ public interface AvatarRepository {
     Avatar getDefaultAvatar();
 
     String uploadPictureToCloudinary(MultipartFile multipartFile);
+
+
+    Avatar getAvatarById(int id);
 }

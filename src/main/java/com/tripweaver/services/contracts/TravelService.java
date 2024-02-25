@@ -11,7 +11,7 @@ public interface TravelService {
     Travel createTravel(Travel travel);
 
     /*ToDo Plamen*/
-    Travel cancelTravel(Travel travel);
+    Travel cancelTravel(Travel travel, User loggedUser);
 
     /*ToDo Yuli - DONE*/
     Travel completeTravel(Travel travel);

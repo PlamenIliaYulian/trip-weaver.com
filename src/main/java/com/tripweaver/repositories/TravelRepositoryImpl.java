@@ -2,6 +2,8 @@ package com.tripweaver.repositories;
 
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.FeedbackForDriver;
+import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.models.Role;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.TravelFilterOptions;
 import com.tripweaver.models.User;
@@ -10,6 +12,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -28,6 +33,7 @@ public class TravelRepositoryImpl implements TravelRepository {
         return null;
     }
 
+    /*TODO I believe we should remove this and complete methods from repo*/
     @Override
     public Travel cancelTravel(Travel travel) {
         return null;
@@ -36,6 +42,17 @@ public class TravelRepositoryImpl implements TravelRepository {
     @Override
     public Travel completeTravel(Travel travel) {
         return null;
+    }
+
+    /*TODO i believe we should have this methods for all updating methods in service*/
+    @Override
+    public Travel updateTravel(Travel travel) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.merge(travel);
+            session.getTransaction().commit();
+        }
+        return getTravelById(travel.getTravelId());
     }
 
     @Override
@@ -56,9 +73,18 @@ public class TravelRepositoryImpl implements TravelRepository {
         return null;
     }
 
+    /*TODo not sure if it's correct*/
     @Override
     public List<Travel> getTravelsByPassenger(User passenger) {
-        return null;
+        try(Session session = sessionFactory.openSession()) {
+            Query<Travel> query = session.createQuery("From Travel t JOIN t.usersApprovedForTheTravel u where u.userId= :userId ", Travel.class);
+            query.setParameter("userId", passenger.getUserId());
+            List<Travel> result = query.list();
+            if(result.isEmpty()){
+                throw new EntityNotFoundException("Travel", "userId", String.valueOf(passenger.getUserId()));
+            }
+            return result;
+        }
     }
 
     @Override
@@ -66,6 +92,8 @@ public class TravelRepositoryImpl implements TravelRepository {
         return null;
     }
 
+
+    /*TODo same here, we should remove this method from repo and use updateTravel instead*/
     @Override
     public Travel applyForATrip(User userToApply, Travel travelToApplyFor) {
         return null;
@@ -79,15 +107,5 @@ public class TravelRepositoryImpl implements TravelRepository {
     @Override
     public Travel declinePassenger(User userToBeDeclined, Travel travel) {
         return null;
-    }
-
-    @Override
-    public Travel updateTravel(Travel travel) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.merge(travel);
-            session.getTransaction().commit();
-        }
-        return travel;
     }
 }

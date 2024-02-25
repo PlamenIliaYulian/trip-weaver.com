@@ -7,6 +7,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +20,6 @@ public class AvatarRepositoryImpl implements AvatarRepository {
 
     private final SessionFactory sessionFactory;
 
-    @Autowired
     public AvatarRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -25,7 +27,12 @@ public class AvatarRepositoryImpl implements AvatarRepository {
 
     @Override
     public Avatar createAvatar(Avatar avatar) {
-        return null;
+        try (Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            session.persist(avatar);
+            session.getTransaction().commit();
+            return getAvatarById(avatar.getAvatarId());
+        }
     }
 
 
@@ -44,5 +51,18 @@ public class AvatarRepositoryImpl implements AvatarRepository {
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
         return null;
+    }
+
+
+    @Override
+    public Avatar getAvatarById(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Avatar> query = session.createQuery("from Avatar where avatarId = :id", Avatar.class);
+            query.setParameter("id", id);
+            if (query.list().isEmpty()) {
+                throw new EntityNotFoundException("Avatar", id);
+            }
+            return query.list().get(0);
+        }
     }
 }

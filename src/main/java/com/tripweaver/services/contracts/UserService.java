@@ -25,7 +25,7 @@ public interface UserService {
     /*ToDo Ilia*/
     User getUserById(int id);
     /*ToDo Plamen*/
-    User blockUser(User userToBeBlocked);
+    User blockUser(User userToBeBlocked, User loggedUser);
 
     /*ToDo Yuli - DONE*/
     User unBlockUser(User userToBeUnBlocked);

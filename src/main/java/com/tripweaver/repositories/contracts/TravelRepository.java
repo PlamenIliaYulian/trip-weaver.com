@@ -14,6 +14,8 @@ public interface TravelRepository {
 
     Travel completeTravel(Travel travel);
 
+    Travel updateTravel(Travel travel);
+
     Travel getTravelById(int travelId);
 
     List<Travel> getTravelsByDriver(User driver);

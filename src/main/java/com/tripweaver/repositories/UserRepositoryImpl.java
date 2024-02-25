@@ -1,6 +1,8 @@
 package com.tripweaver.repositories;
 
 import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.models.FeedbackForDriver;
+import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.User;
 import com.tripweaver.models.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
@@ -121,6 +123,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    /*TODO block and unblock should not exist here. We should use updateUser instead*/
     @Override
     public User blockUser(User userToBeBlocked) {
         return null;
@@ -146,7 +149,10 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public long getAllUsersCount() {
-        return 0;
+        try(Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from User where isDeleted=false ", Long.class);
+            return query.list().get(0);
+        }
     }
 
     @Override
@@ -165,6 +171,42 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getTopTenTravelPassengersByRating() {
+        return null;
+    }
+
+    /*TODO we dont need this method because we are using updateUser instead*/
+    @Override
+    public User addAvatar(User userToBeUpdated, String avatar, User loggedUser) {
+        return null;
+    }
+
+    /*TODO we dont need this method because we are using updateUser instead*/
+    @Override
+    public User deleteAvatar(User userToBeUpdated, User loggedUser) {
+        return null;
+    }
+
+
+
+    /*TODO we dont need this method because we are using updateUser instead*/
+    @Override
+    public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver, User userToReceiveFeedback) {
+        return null;
+    }
+
+    /*TODO we dont need this method because we are using updateUser instead*/
+    @Override
+    public User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger, User userToReceiveFeedback) {
+        return null;
+    }
+
+    @Override
+    public List<FeedbackForDriver> getAllFeedbackForDriver(User user) {
+        return null;
+    }
+
+    @Override
+    public List<FeedbackForPassenger> getAllFeedbackForPassenger(User user) {
         return null;
     }
 

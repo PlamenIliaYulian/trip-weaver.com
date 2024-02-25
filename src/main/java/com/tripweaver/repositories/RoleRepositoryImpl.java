@@ -1,5 +1,6 @@
 package com.tripweaver.repositories;
 
+import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.Role;
 import com.tripweaver.repositories.contracts.RoleRepository;
 import org.hibernate.Session;
@@ -26,7 +27,15 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Role getRoleByName(String name) {
-        return null;
+        try(Session session = sessionFactory.openSession()) {
+            Query<Role> query = session.createQuery("From Role WHERE roleName = :name ", Role.class);
+            query.setParameter("roleName", name);
+            List<Role> result = query.list();
+            if(result.isEmpty()){
+                throw new EntityNotFoundException("Role", "name", name);
+            }
+            return result.get(0);
+        }
     }
 
     @Override
