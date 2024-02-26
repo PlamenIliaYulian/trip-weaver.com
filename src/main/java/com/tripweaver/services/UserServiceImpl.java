@@ -29,26 +29,27 @@ public class UserServiceImpl implements UserService {
 
     public static final String UNAUTHORIZED_OPERATION_NOT_ADMIN = "Unauthorized operation. User not admin.";
     public static final String UNAUTHORIZED_OPERATION_NOT_DRIVER = "Unauthorized operation. User not driver of the travel.";
-    public static final int COMPLETED_STATUS = 3;
-    public static final int ADMIN_ID = 1;
     public static final String TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK = "Travel not completed and cannot leave feedback.";
     public static final String USER_NOT_IN_APPROVED_LIST = "The user is not in the approved list.";
     public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
+    public static final int COMPLETED_STATUS = 3;
+    public static final int ADMIN_ID = 1;
     private final UserRepository userRepository;
     private final PermissionHelper permissionHelper;
-
     private final AvatarService avatarService;
     private final RoleService roleService;
-    private final AvatarService avatarService;
     private final FeedbackService feedbackService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PermissionHelper permissionHelper, AvatarService avatarService) {
+    public UserServiceImpl(UserRepository userRepository,
+                           PermissionHelper permissionHelper,
+                           AvatarService avatarService,
+                           RoleService roleService,
+                           FeedbackService feedbackService) {
         this.userRepository = userRepository;
         this.permissionHelper = permissionHelper;
         this.avatarService = avatarService;
         this.roleService = roleService;
-        this.avatarService = avatarService;
         this.feedbackService = feedbackService;
     }
 

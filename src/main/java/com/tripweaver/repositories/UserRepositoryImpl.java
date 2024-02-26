@@ -143,17 +143,6 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    /*TODO block and unblock should not exist here. We should use updateUser instead*/
-    @Override
-    public User blockUser(User userToBeBlocked) {
-        return null;
-    }
-
-    @Override
-    public User unBlockUser(User userToBeUnBlocked) {
-        return null;
-    }
-
     @Override
     public User getUserByPhoneNumber(String phoneNumber) {
         try (Session session = sessionFactory.openSession()) {
@@ -179,12 +168,8 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> getTopTenTravelOrganizersByRating() {
         try (Session session = sessionFactory.openSession()) {
             Query<User> query = session.createQuery(
-                    "FROM User " +
-                            "WHERE isDeleted = false " +
-                            "AND isBlocked = false " +
-                            "AND isVerified = true " +
-                            "ORDER BY averageDriverRating DESC " +
-                            "LIMIT 10", User.class);
+                    "FROM User WHERE isDeleted = false " +
+                            "ORDER BY averageDriverRating DESC LIMIT 10", User.class);
             return query.list();
         }
     }
@@ -196,71 +181,5 @@ public class UserRepositoryImpl implements UserRepository {
                     "ORDER BY averagePassengerRating DESC LIMIT 10", User.class);
             return query.list();
         }
-    }
-
-    @Override
-    public User addAvatar(User userToBeUpdated, String avatar, User loggedUser) {
-        return null;
-    }
-
-    @Override
-    public User deleteAvatar(User userToBeUpdated, User loggedUser) {
-        return null;
-    }
-
-    /*TODO we dont need this method because we are using updateUser instead*/
-    @Override
-    public User addAvatar(User userToBeUpdated, String avatar, User loggedUser) {
-        return null;
-    }
-
-    /*TODO we dont need this method because we are using updateUser instead*/
-    @Override
-    public User deleteAvatar(User userToBeUpdated, User loggedUser) {
-        return null;
-    }
-
-
-
-    /*TODO we dont need this method because we are using updateUser instead*/
-    @Override
-    public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver, User userToReceiveFeedback) {
-        return null;
-    }
-
-    /*TODO we dont need this method because we are using updateUser instead*/
-    @Override
-    public User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger, User userToReceiveFeedback) {
-        return null;
-    }
-
-    @Override
-    public List<FeedbackForDriver> getAllFeedbackForDriver(User user) {
-        return null;
-    }
-
-    @Override
-    public List<FeedbackForPassenger> getAllFeedbackForPassenger(User user) {
-        return null;
-    }
-
-    @Override
-    public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver, User userToReceiveFeedback) {
-        return null;
-    }
-
-    @Override
-    public User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger, User userToReceiveFeedback) {
-        return null;
-    }
-
-    @Override
-    public List<FeedbackForDriver> getAllFeedbackForDriver(User user) {
-        return null;
-    }
-
-    @Override
-    public List<FeedbackForPassenger> getAllFeedbackForPassenger(User user) {
-        return null;
     }
 }

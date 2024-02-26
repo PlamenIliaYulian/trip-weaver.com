@@ -26,17 +26,10 @@ public class TravelServiceImpl implements TravelService {
     public static final String UNAUTHORIZED_OPERATION_NOT_VERIFIED = "Unauthorized operation. User not verified.";
     public static final String UNAUTHORIZED_OPERATION_NOT_DRIVER = "Unauthorized operation. User not driver of the travel.";
     public static final String USER_NOT_IN_TRAVEL_LISTS = "The user is neither in the waiting list nor in the approved list.";
-
-
-    private final TravelRepository travelRepository;
-
-    /*Ilia*/
-
     public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
     public static final String OUT_OF_SEATS = "Out of seats";
-
-    private final TravelStatusService travelStatusService;
     private final TravelRepository travelRepository;
+    private final TravelStatusService travelStatusService;
 
     @Autowired
     public TravelServiceImpl(TravelStatusService travelStatusService, TravelRepository travelRepository) {
@@ -49,11 +42,6 @@ public class TravelServiceImpl implements TravelService {
         isUserBlocked(creator, UNAUTHORIZED_OPERATION_BLOCKED);
         isUserVerified(creator, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
         return travelRepository.createTravel(travel);
-    }
-
-    @Override
-    public Travel cancelTravel(Travel travel) {
-        return null;
     }
 
     public static void isUserBlocked(User userToBeChecked, String message) {
@@ -84,13 +72,13 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.updateTravel(travel);
     }
 
-    /*Ilia TODO we do not need logged user. The same will be for
-     *       getTravelsByPassenger method.*/
+    /*Ilia TODO return logged user to check if you are the same user.*/
     @Override
     public List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions) {
         return travelRepository.getTravelsByDriver(driver, travelFilterOptions);
     }
 
+    /*TODO Put TravelFilterOptions.*/
     @Override
     public List<Travel> getTravelsByPassenger(User passenger, User loggedUser) {
         if(!passenger.equals(loggedUser)){
