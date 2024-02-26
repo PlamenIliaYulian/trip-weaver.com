@@ -145,22 +145,19 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
     @Override
     public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
                                        Travel travel,
-                                       User userToReceiveFeedback,
                                        User loggedUser) {
         isTravelCompleted(travel);
-        isUserTheDriver(travel, userToReceiveFeedback,UNAUTHORIZED_OPERATION_NOT_DRIVER);
         isTheUserInTheApprovedListOfTheTravelToGiveFeedback(loggedUser, travel);
+        User driver = travel.getDriver();
 
-        feedbackForDriver.setDriverReceivedFeedback(userToReceiveFeedback);
-        feedbackForDriver.setPassengerProvidedFeedback(userToReceiveFeedback);
-        /*TODO TO discuss with the guys globally where to set creation date-and-time.*/
+        feedbackForDriver.setDriverReceivedFeedback(driver);
+        feedbackForDriver.setPassengerProvidedFeedback(loggedUser);
         feedbackForDriver.setCreated(LocalDateTime.now());
         feedbackForDriver = feedbackService.createFeedbackForDriver(feedbackForDriver);
 
-        Set<FeedbackForDriver> feedbackForDriverSet = userToReceiveFeedback.getFeedbackForDriver();
+        Set<FeedbackForDriver> feedbackForDriverSet = driver.getFeedbackForDriver();
         feedbackForDriverSet.add(feedbackForDriver);
-        userToReceiveFeedback.setFeedbackForDriver(feedbackForDriverSet);
-        return userRepository.updateUser(userToReceiveFeedback);
+        return userRepository.updateUser(driver);
     }
 
     private void isTheUserInTheApprovedListOfTheTravelToGiveFeedback(User userToBeChecked, Travel travel) {
@@ -176,11 +173,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
         }
     }
 
-    private void isUserTheDriver(Travel travel, User userToBeChecked, String message) {
-        if (!travel.getDriver().equals(userToBeChecked)) {
-            throw new UnauthorizedOperationException(message);
-        }
-    }
+
 
     /*TODO not sure if this is the correct implementation*/
     @Override
