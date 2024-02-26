@@ -14,13 +14,13 @@ public interface TravelService {
     Travel cancelTravel(Travel travel, User loggedUser);
 
     /*ToDo Yuli - DONE*/
-    Travel completeTravel(Travel travel);
+    Travel completeTravel(Travel travel, User loggedUser);
 
     /*ToDo Ilia*/
-    List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions);
+    List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions);
 
     /*ToDo Plamen*/
-    List<Travel> getTravelsByPassenger(User passenger, User loggedUser);
+    List<Travel> getTravelsByPassenger(User passenger, User loggedUser,TravelFilterOptions travelFilterOptions);
 
     /*ToDo Yuli - DONE*/
     Travel getTravelById(int travelId);

@@ -17,6 +17,9 @@ public class FeedbackServiceImpl implements FeedbackService {
         this.feedbackRepository = feedbackRepository;
     }
 
+    /*TODO - We either have to assign driverId and passengerId while converting the FeedbackDto into FeedbackForPassenger
+     *  or pass "User driver" and "User passenger" to this method too. For the moment I`ll implement it without
+     *  the users.*/
     @Override
     public FeedbackForDriver createFeedbackForDriver(FeedbackForDriver feedbackForDriver) {
         return feedbackRepository.createFeedbackForDriver(feedbackForDriver);

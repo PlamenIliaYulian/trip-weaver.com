@@ -68,7 +68,7 @@ public class TravelRepositoryImpl implements TravelRepository {
 
     /*TODo not sure if it's correct - add Filter Options*/
     @Override
-    public List<Travel> getTravelsByPassenger(User passenger) {
+    public List<Travel> getTravelsByPassenger(User passenger, TravelFilterOptions travelFilterOptions) {
         try(Session session = sessionFactory.openSession()) {
             Query<Travel> query = session.createQuery("From Travel t JOIN t.usersApprovedForTheTravel u " +
                     "where u.userId= :userId ", Travel.class);

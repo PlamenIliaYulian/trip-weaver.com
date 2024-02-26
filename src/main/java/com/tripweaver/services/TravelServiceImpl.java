@@ -22,9 +22,13 @@ public class TravelServiceImpl implements TravelService {
     public static final String UNAUTHORIZED_OPERATION_BLOCKED = "Unauthorized operation. User blocked.";
     public static final String UNAUTHORIZED_OPERATION_NOT_VERIFIED = "Unauthorized operation. User not verified.";
     public static final String UNAUTHORIZED_OPERATION_NOT_DRIVER = "Unauthorized operation. User not driver of the travel.";
+    public static final String UNAUTHORIZED_OPERATION_ALREADY_APPLIED = "Unauthorized operation. User already in waiting list.";
     public static final String USER_NOT_IN_TRAVEL_LISTS = "The user is neither in the waiting list nor in the approved list.";
     public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
-    public static final String OUT_OF_SEATS = "Out of seats";
+    public static final int TRAVEL_STATUS_CREATED_ID = 1;
+    public static final int TRAVEL_STATUS_CANCEL_ID = 2;
+    public static final int TRAVEL_STATUS_COMPLETE_ID = 3;
+    public static final String TRAVEL_NOT_AVAILABLE = "Travel not available";
     private final TravelRepository travelRepository;
     private final TravelStatusService travelStatusService;
 
@@ -53,35 +57,43 @@ public class TravelServiceImpl implements TravelService {
         }
     }
 
-    /*TODO we should implement updateTravel method for cancel + complete*/
+
     @Override
     public Travel cancelTravel(Travel travel, User loggedUser) {
         if(!travel.getDriver().equals(loggedUser)){
-            throw new UnauthorizedOperationException(UNAUTHORIZED_OPERATION);
+            throw new UnauthorizedOperationException(UNAUTHORIZED_OPERATION_NOT_DRIVER);
         }
-        TravelStatus cancelStatus = travelStatusService.getStatusById(2);
+        TravelStatus cancelStatus = travelStatusService.getStatusById(TRAVEL_STATUS_CANCEL_ID);
         travel.setStatus(cancelStatus);
         return travelRepository.updateTravel(travel);
     }
 
     @Override
-    public Travel completeTravel(Travel travel) {
+    public Travel completeTravel(Travel travel, User loggedUser) {
+        if(!travel.getDriver().equals(loggedUser)){
+            throw new UnauthorizedOperationException(UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        }
+        TravelStatus completeStatus = travelStatusService.getStatusById(TRAVEL_STATUS_COMPLETE_ID);
+        travel.setStatus(completeStatus);
         return travelRepository.updateTravel(travel);
     }
 
     /*Ilia TODO return logged user to check if you are the same user.*/
     @Override
-    public List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions) {
+    public List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions) {
+        if(!driver.equals(loggedUser)){
+            throw new UnauthorizedOperationException(UNAUTHORIZED_OPERATION);
+        }
         return travelRepository.getTravelsByDriver(driver, travelFilterOptions);
     }
 
     /*TODO Put TravelFilterOptions.*/
     @Override
-    public List<Travel> getTravelsByPassenger(User passenger, User loggedUser) {
+    public List<Travel> getTravelsByPassenger(User passenger, User loggedUser, TravelFilterOptions travelFilterOptions) {
         if(!passenger.equals(loggedUser)){
             throw new UnauthorizedOperationException(UNAUTHORIZED_OPERATION);
         }
-        return travelRepository.getTravelsByPassenger(passenger);
+        return travelRepository.getTravelsByPassenger(passenger,travelFilterOptions);
     }
 
     @Override
@@ -97,11 +109,11 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel applyForATrip(User userToApply, Travel travelToApplyFor) {
-        if (travelToApplyFor.getFreeSeats() < 1) {
-            throw new InvalidOperationException(OUT_OF_SEATS);
-        }
         if(travelToApplyFor.getUsersAppliedForTheTravel().contains(userToApply)){
-            throw new InvalidOperationException(OUT_OF_SEATS);
+            throw new InvalidOperationException(UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
+        }
+        if(!travelToApplyFor.getStatus().equals(travelStatusService.getStatusById(TRAVEL_STATUS_CREATED_ID))){
+            throw new UnauthorizedOperationException(TRAVEL_NOT_AVAILABLE);
         }
         travelToApplyFor.getUsersAppliedForTheTravel().add(userToApply);
         return travelRepository.updateTravel(travelToApplyFor);
