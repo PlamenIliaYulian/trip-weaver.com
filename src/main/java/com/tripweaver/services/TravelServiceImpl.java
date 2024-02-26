@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tripweaver.services.contracts.TravelStatusService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +31,7 @@ public class TravelServiceImpl implements TravelService {
     public static final int TRAVEL_STATUS_COMPLETE_ID = 3;
     public static final String TRAVEL_NOT_AVAILABLE = "Travel not available";
     public static final String INVALID_OPERATION = "User has not applied for this travel";
+    public static final String INVALID_DEPARTURE_TIME = "Departure time cannot be before current moment.";
     private final TravelRepository travelRepository;
     private final TravelStatusService travelStatusService;
     private final PermissionHelper permissionHelper;
@@ -45,6 +47,7 @@ public class TravelServiceImpl implements TravelService {
     public Travel createTravel(Travel travel, User creator) {
         permissionHelper.isUserBlocked(creator, UNAUTHORIZED_OPERATION_BLOCKED);
         permissionHelper.isUserVerified(creator, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
+        permissionHelper.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
         return travelRepository.createTravel(travel);
     }
 

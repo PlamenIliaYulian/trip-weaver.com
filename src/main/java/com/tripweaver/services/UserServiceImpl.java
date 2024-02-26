@@ -28,7 +28,6 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
     public static final String TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK = "Travel not completed and cannot leave feedback.";
     public static final String USER_NOT_IN_APPROVED_LIST = "The user is not in the approved list.";
     public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
-    public static final int COMPLETED_STATUS = 3;
     private final UserRepository userRepository;
     private final PermissionHelper permissionHelper;
     private final AvatarService avatarService;
@@ -58,7 +57,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
     @Override
     public User updateUser(User user, User loggedUser) {
-        permissionHelper.isSameUser(user, loggedUser,UNAUTHORIZED_OPERATION);
+        permissionHelper.isSameUser(user, loggedUser, UNAUTHORIZED_OPERATION);
         permissionHelper.checkForUniqueEmail(user);
         permissionHelper.checkIfPhoneNumberUnique(user);
         return userRepository.updateUser(user);
@@ -89,14 +88,14 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
     @Override
     public User blockUser(User userToBeBlocked, User loggedUser) {
-        permissionHelper.isAdmin(loggedUser,UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        permissionHelper.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         userToBeBlocked.setBlocked(true);
         return userRepository.updateUser(userToBeBlocked);
     }
 
     @Override
     public User unBlockUser(User userToBeUnBlocked, User loggedUser) {
-        permissionHelper.isAdmin(loggedUser,UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        permissionHelper.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         userToBeUnBlocked.setBlocked(false);
         return userRepository.updateUser(userToBeUnBlocked);
     }
@@ -125,7 +124,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
     @Override
     public User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser) {
-        permissionHelper.isSameUser(userToBeUpdated, loggedUser,UNAUTHORIZED_OPERATION_NOT_SAME_USER);
+        permissionHelper.isSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION_NOT_SAME_USER);
         Avatar avatarToAdd = new Avatar();
         avatarToAdd.setAvatarUrl(avatarUrl);
         avatarToAdd = avatarService.createAvatar(avatarToAdd);
@@ -136,18 +135,18 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
     @Override
     public User deleteAvatar(User userToBeUpdated, User loggedUser) {
-        permissionHelper.isAdminOrSameUser(userToBeUpdated,loggedUser,UNAUTHORIZED_OPERATION);
+        permissionHelper.isAdminOrSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION);
         userToBeUpdated.setAvatar(avatarService.getDefaultAvatar());
         return userRepository.updateUser(userToBeUpdated);
     }
 
-    /*Ilia TODO To carefully discuss the method with the guys.*/
+    /*Ilia*/
     @Override
     public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
                                        Travel travel,
                                        User loggedUser) {
-        isTravelCompleted(travel);
-        isTheUserInTheApprovedListOfTheTravelToGiveFeedback(loggedUser, travel);
+        permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
+        permissionHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
         User driver = travel.getDriver();
 
         feedbackForDriver.setDriverReceivedFeedback(driver);
@@ -160,31 +159,32 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
         return userRepository.updateUser(driver);
     }
 
-    private void isTheUserInTheApprovedListOfTheTravelToGiveFeedback(User userToBeChecked, Travel travel) {
-        if (!travel.getUsersApprovedForTheTravel().contains(userToBeChecked)) {
-            throw new EntityNotFoundException(USER_NOT_IN_APPROVED_LIST);
-        }
-    }
 
-    /*TODO Is this exception appropriate for this case?*/
-    private void isTravelCompleted(Travel travel) {
-        if (travel.getStatus().getTravelStatusId() != COMPLETED_STATUS) {
-            throw new InvalidOperationException(TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
-        }
-    }
-
-
-
-    /*TODO not sure if this is the correct implementation*/
     @Override
-    public User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger, User userToReceiveFeedback) {
+    public User leaveFeedbackForPassenger(
+            FeedbackForPassenger feedbackForPassenger,
+            Travel travel,
+            User loggedUser,
+            User userToReceiveFeedback) {
+        permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
+        permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        permissionHelper.isTheUserInTheApprovedListOfTheTravel(userToReceiveFeedback, travel, USER_NOT_IN_APPROVED_LIST);
+
+        feedbackForPassenger.setPassengerReceivedFeedback(userToReceiveFeedback);
+        feedbackForPassenger.setDriverProvidedFeedback(loggedUser);
+        feedbackForPassenger.setCreated(LocalDateTime.now());
+        feedbackForPassenger = feedbackService.createFeedbackForPassenger(feedbackForPassenger);
+
         userToReceiveFeedback.getFeedbackForPassenger().add(feedbackForPassenger);
         return userRepository.updateUser(userToReceiveFeedback);
     }
 
     @Override
     public List<FeedbackForDriver> getAllFeedbackForDriver(User user) {
-        return null;
+        return user.getFeedbackForDriver()
+                .stream()
+                .sorted(Comparator.comparing(FeedbackForDriver::getCreated).reversed())
+                .collect(Collectors.toList());
     }
 
     /*Ilia*/
@@ -192,7 +192,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
     public List<FeedbackForPassenger> getAllFeedbackForPassenger(User user) {
         return user.getFeedbackForPassenger()
                 .stream()
-                .sorted(Comparator.comparing(FeedbackForPassenger::getCreated))
+                .sorted(Comparator.comparing(FeedbackForPassenger::getCreated).reversed())
                 .collect(Collectors.toList());
     }
 

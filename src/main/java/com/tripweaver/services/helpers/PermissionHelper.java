@@ -11,12 +11,14 @@ import com.tripweaver.services.contracts.TravelStatusService;
 import com.tripweaver.services.contracts.UserService;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Component
 public class PermissionHelper {
     public static final int ADMIN_ID = 1;
     public static final int TRAVEL_STATUS_CREATED_ID = 1;
+    public static final int COMPLETED_STATUS = 3;
     private final UserRepository userRepository;
 
     private final TravelStatusService travelStatusService;
@@ -136,14 +138,32 @@ public class PermissionHelper {
     }
 
     public void hasUserAppliedOrBeingApprovedForTheTravel(User userToBeDeclined,
-                                                           Set<User> usersAppliedForTheTravel,
-                                                           Set<User> usersApprovedForTheTravel,
-                                                           String message) {
+                                                          Set<User> usersAppliedForTheTravel,
+                                                          Set<User> usersApprovedForTheTravel,
+                                                          String message) {
         if (!usersAppliedForTheTravel.contains(userToBeDeclined) ||
                 !usersApprovedForTheTravel.contains(userToBeDeclined)) {
             throw new EntityNotFoundException(message);
         }
     }
 
+    public void isTheUserInTheApprovedListOfTheTravel(User userToBeChecked, Travel travel, String message) {
+        if (!travel.getUsersApprovedForTheTravel().contains(userToBeChecked)) {
+            throw new EntityNotFoundException(message);
+        }
+    }
+
+
+    public void isTravelCompleted(Travel travel, String message) {
+        if (travel.getStatus().getTravelStatusId() != COMPLETED_STATUS) {
+            throw new InvalidOperationException(message);
+        }
+    }
+
+    public void isDepartureTimeBeforeCurrentMoment(Travel travel, String message) {
+        if (travel.getDepartureTime().isBefore(LocalDateTime.now())) {
+            throw new InvalidOperationException(message);
+        }
+    }
 
 }
