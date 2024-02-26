@@ -133,16 +133,27 @@ public class UserRestController {
         return null;
     }
 
-
     /*Ilia - we agreed we can use TravelService*/
-    @GetMapping("/{userId}/travels-as-driver")
+    @GetMapping("/{userId}/travels-for-driver")
     public List<Travel> getTravelsByDriver() {
         return null;
     }
 
     /*Plamen - we agreed we can use TravelService*/
-    @GetMapping("/{userId}/travels-as-passenger")
+    @GetMapping("/{userId}/travels-for-passenger")
     public List<Travel> getTravelsByPassenger() {
+        return null;
+    }
+
+    /*Yuli*/
+    @PostMapping("/{userId}/feedback-for-driver")
+    public List<FeedbackForDriver> createFeedbackForDriver() {
+        return null;
+    }
+
+    /*Ilia*/
+    @PostMapping("/{userId}/feedback-for-passenger")
+    public List<FeedbackForDriver> createFeedbackForPassenger() {
         return null;
     }
 
