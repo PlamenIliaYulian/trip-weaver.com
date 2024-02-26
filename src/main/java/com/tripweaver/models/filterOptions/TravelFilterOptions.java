@@ -72,6 +72,7 @@ public class TravelFilterOptions {
     public Optional<String> getSortBy() {
         return sortBy;
     }
+
     public Optional<String> getSortOrder() {
         return sortOrder;
     }
