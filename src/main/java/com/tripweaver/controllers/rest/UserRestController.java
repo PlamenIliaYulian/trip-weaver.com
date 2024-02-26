@@ -4,6 +4,7 @@ import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
+import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.models.dtos.UserDto;
@@ -129,6 +130,19 @@ public class UserRestController {
     /*Yuli*/
     @GetMapping("/{userId}/feedback-for-passenger")
     public List<FeedbackForPassenger> getAllFeedbackForPassenger() {
+        return null;
+    }
+
+
+    /*Ilia - we agreed we can use TravelService*/
+    @GetMapping("/{userId}/travels-as-driver")
+    public List<Travel> getTravelsByDriver() {
+        return null;
+    }
+
+    /*Plamen - we agreed we can use TravelService*/
+    @GetMapping("/{userId}/travels-as-passenger")
+    public List<Travel> getTravelsByPassenger() {
         return null;
     }
 

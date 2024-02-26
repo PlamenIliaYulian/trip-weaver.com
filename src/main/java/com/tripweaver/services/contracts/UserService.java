@@ -66,4 +66,5 @@ public interface UserService {
 
     /*ToDo Ilia*/
     List<FeedbackForPassenger> getAllFeedbackForPassenger(User user);
+
 }

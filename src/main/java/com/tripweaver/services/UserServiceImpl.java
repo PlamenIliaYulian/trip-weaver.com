@@ -171,6 +171,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
         feedbackForPassenger.setPassengerReceivedFeedback(userToReceiveFeedback);
         feedbackForPassenger.setDriverProvidedFeedback(loggedUser);
+
         feedbackForPassenger = feedbackService.createFeedbackForPassenger(feedbackForPassenger);
 
         userToReceiveFeedback.getFeedbackForPassenger().add(feedbackForPassenger);
