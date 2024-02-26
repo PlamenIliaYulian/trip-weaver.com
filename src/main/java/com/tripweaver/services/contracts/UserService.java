@@ -11,7 +11,7 @@ public interface UserService {
     /*ToDo Plamen*/
     User createUser(User user);
     /*ToDo Yuli - DONE*/
-    User updateUser(User user);
+    User updateUser(User user, User loggedUser);
     /*ToDo Ilia*/
     List<User> getAllUsers(UserFilterOptions userFilterOptions, User loggedInUser);
     /*ToDo Plamen*/
@@ -23,7 +23,7 @@ public interface UserService {
     /*ToDo Plamen*/
     User blockUser(User userToBeBlocked, User loggedUser);
     /*ToDo Yuli - DONE*/
-    User unBlockUser(User userToBeUnBlocked);
+    User unBlockUser(User userToBeUnBlocked, User loggedUser);
     /*ToDo Ilia*/
     User getUserByPhoneNumber(String phoneNumber);
     /*ToDo Plamen*/
@@ -33,7 +33,7 @@ public interface UserService {
     /*ToDo Ilia*/
     List<User> getTopTenTravelPassengersByRating();
     /*ToDo Plamen*/
-    User addAvatar(User userToBeUpdated, String avatar, User loggedUser);
+    User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser);
     /*ToDo Yuli - DONE*/
     User deleteAvatar(User userToBeUpdated, User loggedUser);
     /*ToDo Ilia*/

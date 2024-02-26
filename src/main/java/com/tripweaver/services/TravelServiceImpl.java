@@ -29,6 +29,7 @@ public class TravelServiceImpl implements TravelService {
     public static final int TRAVEL_STATUS_CANCEL_ID = 2;
     public static final int TRAVEL_STATUS_COMPLETE_ID = 3;
     public static final String TRAVEL_NOT_AVAILABLE = "Travel not available";
+    public static final String INVALID_OPERATION = "User has not applied for this travel";
     private final TravelRepository travelRepository;
     private final TravelStatusService travelStatusService;
 
@@ -121,11 +122,15 @@ public class TravelServiceImpl implements TravelService {
 
     /*TODO User who is logged in to be added. We have to check if the logged user is the same as the driver.*/
     @Override
-    public Travel approvePassenger(User userToApprove, Travel travel) {
+    public Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel) {
+        isUserTheDriver(travel,loggedUser,UNAUTHORIZED_OPERATION_NOT_DRIVER);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
-        usersAppliedForTheTravel.remove(userToApprove);
+        if(!usersAppliedForTheTravel.contains(userToBeApproved)){
+            throw new InvalidOperationException(INVALID_OPERATION);
+        }
+        usersAppliedForTheTravel.remove(userToBeApproved);
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
-        usersApprovedForTheTravel.add(userToApprove);
+        usersApprovedForTheTravel.add(userToBeApproved);
         return travelRepository.updateTravel(travel);
     }
 
@@ -141,8 +146,6 @@ public class TravelServiceImpl implements TravelService {
                 usersApprovedForTheTravel);
         usersAppliedForTheTravel.remove(userToBeDeclined);
         usersApprovedForTheTravel.remove(userToBeDeclined);
-        travel.setUsersAppliedForTheTravel(usersAppliedForTheTravel);
-        travel.setUsersApprovedForTheTravel(usersApprovedForTheTravel);
         return travelRepository.updateTravel(travel);
     }
 

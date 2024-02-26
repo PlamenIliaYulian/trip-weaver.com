@@ -32,7 +32,7 @@ public interface TravelService {
     Travel applyForATrip(User userToApply, Travel travelToApplyFor);
 
     /*ToDo Yuli - DONE*/
-    Travel approvePassenger(User userToApprove, Travel travel);
+    Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel);
 
     /*ToDo Ilia*/
     Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn);

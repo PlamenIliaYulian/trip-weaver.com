@@ -4,13 +4,11 @@ import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.*;
-import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.RoleService;
-import com.tripweaver.services.contracts.UserService;
 import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,15 +20,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements com.tripweaver.services.contracts.UserService {
 
     public static final String UNAUTHORIZED_OPERATION_NOT_ADMIN = "Unauthorized operation. User not admin.";
     public static final String UNAUTHORIZED_OPERATION_NOT_DRIVER = "Unauthorized operation. User not driver of the travel.";
+    public static final String UNAUTHORIZED_OPERATION_NOT_SAME_USER = "Unauthorized operation. Not same user.";
     public static final String TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK = "Travel not completed and cannot leave feedback.";
     public static final String USER_NOT_IN_APPROVED_LIST = "The user is not in the approved list.";
     public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
     public static final int COMPLETED_STATUS = 3;
-    public static final int ADMIN_ID = 1;
     private final UserRepository userRepository;
     private final PermissionHelper permissionHelper;
     private final AvatarService avatarService;
@@ -52,30 +50,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        checkForUniqueUsername(user);
-        checkForUniqueEmail(user);
-        checkIfPhoneNumberUnique(user);
+        permissionHelper.checkForUniqueUsername(user);
+        permissionHelper.checkForUniqueEmail(user);
+        permissionHelper.checkIfPhoneNumberUnique(user);
         return userRepository.createUser(user);
     }
 
     @Override
-    public User updateUser(User user) {
+    public User updateUser(User user, User loggedUser) {
+        permissionHelper.isSameUser(user, loggedUser,UNAUTHORIZED_OPERATION);
+        permissionHelper.checkForUniqueEmail(user);
+        permissionHelper.checkIfPhoneNumberUnique(user);
         return userRepository.updateUser(user);
     }
 
     /*Ilia*/
     @Override
     public List<User> getAllUsers(UserFilterOptions userFilterOptions, User loggedInUser) {
-        isAdmin(loggedInUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        permissionHelper.isAdmin(loggedInUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         return userRepository.getAllUsers(userFilterOptions);
-    }
-
-    private void isAdmin(User loggedInUser, String message) {
-        if (loggedInUser.getRoles()
-                .stream()
-                .noneMatch(role -> role.getRoleId() == ADMIN_ID)) {
-            throw new UnauthorizedOperationException(message);
-        }
     }
 
     @Override
@@ -96,15 +89,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User blockUser(User userToBeBlocked, User loggedUser) {
-        if(!loggedUser.getRoles().contains(roleService.getRoleById(1))){
-            throw new UnauthorizedOperationException(UNAUTHORIZED_OPERATION);
-        }
+        permissionHelper.isAdmin(loggedUser,UNAUTHORIZED_OPERATION_NOT_ADMIN);
         userToBeBlocked.setBlocked(true);
         return userRepository.updateUser(userToBeBlocked);
     }
 
     @Override
-    public User unBlockUser(User userToBeUnBlocked) {
+    public User unBlockUser(User userToBeUnBlocked, User loggedUser) {
+        permissionHelper.isAdmin(loggedUser,UNAUTHORIZED_OPERATION_NOT_ADMIN);
         userToBeUnBlocked.setBlocked(false);
         return userRepository.updateUser(userToBeUnBlocked);
     }
@@ -132,12 +124,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addAvatar(User userToBeUpdated, String avatar, User loggedUser) {
-        if(!userToBeUpdated.equals(loggedUser)){
-            throw new UnauthorizedOperationException(UNAUTHORIZED_OPERATION);
-        }
+    public User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser) {
+        permissionHelper.isSameUser(userToBeUpdated, loggedUser,UNAUTHORIZED_OPERATION_NOT_SAME_USER);
         Avatar avatarToAdd = new Avatar();
-        avatarToAdd.setAvatarUrl(avatar);
+        avatarToAdd.setAvatarUrl(avatarUrl);
         avatarToAdd = avatarService.createAvatar(avatarToAdd);
 
         userToBeUpdated.setAvatar(avatarToAdd);
@@ -146,9 +136,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteAvatar(User userToBeUpdated, User loggedUser) {
-        PermissionHelper.isAdminOrSameUser(
-                userRepository.getUserById(userToBeUpdated.getUserId()),
-                loggedUser, UNAUTHORIZED_OPERATION);
+        permissionHelper.isAdminOrSameUser(userToBeUpdated,loggedUser,UNAUTHORIZED_OPERATION);
         userToBeUpdated.setAvatar(avatarService.getDefaultAvatar());
         return userRepository.updateUser(userToBeUpdated);
     }
@@ -158,10 +146,10 @@ public class UserServiceImpl implements UserService {
     public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
                                        Travel travel,
                                        User userToReceiveFeedback,
-                                       User userToGiveFeedback) {
+                                       User loggedUser) {
         isTravelCompleted(travel);
         isUserTheDriver(travel, userToReceiveFeedback,UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        isTheUserInTheApprovedListOfTheTravelToGiveFeedback(userToGiveFeedback, travel);
+        isTheUserInTheApprovedListOfTheTravelToGiveFeedback(loggedUser, travel);
 
         feedbackForDriver.setDriverReceivedFeedback(userToReceiveFeedback);
         feedbackForDriver.setPassengerProvidedFeedback(userToReceiveFeedback);
@@ -172,7 +160,7 @@ public class UserServiceImpl implements UserService {
         Set<FeedbackForDriver> feedbackForDriverSet = userToReceiveFeedback.getFeedbackForDriver();
         feedbackForDriverSet.add(feedbackForDriver);
         userToReceiveFeedback.setFeedbackForDriver(feedbackForDriverSet);
-        return updateUser(userToReceiveFeedback);
+        return userRepository.updateUser(userToReceiveFeedback);
     }
 
     private void isTheUserInTheApprovedListOfTheTravelToGiveFeedback(User userToBeChecked, Travel travel) {
@@ -215,52 +203,5 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private void checkForUniqueUsername(User user) {
-        boolean duplicateExists = true;
 
-        try {
-            userRepository.getUserByUsername(user.getUsername());
-
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new DuplicateEntityException("User", "username", user.getUsername());
-        }
-    }
-
-    private void checkForUniqueEmail(User user) {
-        boolean duplicateExists = true;
-
-        try {
-            User existingUser = userRepository.getUserByEmail(user.getEmail());
-            if (existingUser.getUserId() == user.getUserId()) {
-                duplicateExists = false;
-            }
-
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new DuplicateEntityException("User", "email", user.getEmail());
-        }
-    }
-    private void checkIfPhoneNumberUnique(User userToBeUpdated) {
-        boolean duplicateExists = true;
-
-        try {
-            User user = userRepository.getUserByPhoneNumber(userToBeUpdated.getPhoneNumber());
-            if (user.getUserId() == userToBeUpdated.getUserId()) {
-                duplicateExists = false;
-            }
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new DuplicateEntityException("User", "Phone number", userToBeUpdated.getPhoneNumber());
-        }
-    }
 }
