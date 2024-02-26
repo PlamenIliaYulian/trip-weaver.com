@@ -151,7 +151,6 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
         feedbackForDriver.setDriverReceivedFeedback(driver);
         feedbackForDriver.setPassengerProvidedFeedback(loggedUser);
-        feedbackForDriver.setCreated(LocalDateTime.now());
         feedbackForDriver = feedbackService.createFeedbackForDriver(feedbackForDriver);
 
         Set<FeedbackForDriver> feedbackForDriverSet = driver.getFeedbackForDriver();
@@ -172,7 +171,6 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
         feedbackForPassenger.setPassengerReceivedFeedback(userToReceiveFeedback);
         feedbackForPassenger.setDriverProvidedFeedback(loggedUser);
-        feedbackForPassenger.setCreated(LocalDateTime.now());
         feedbackForPassenger = feedbackService.createFeedbackForPassenger(feedbackForPassenger);
 
         userToReceiveFeedback.getFeedbackForPassenger().add(feedbackForPassenger);
