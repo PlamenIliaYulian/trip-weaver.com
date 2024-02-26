@@ -32,13 +32,18 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
             session.beginTransaction();
             session.persist(feedbackForDriver);
             session.getTransaction().commit();
-            return getFeedbackForDriverById(feedbackForDriver.getFeedbackId());
         }
+        return feedbackForDriver;
     }
 
     @Override
     public FeedbackForPassenger createFeedbackForPassenger(FeedbackForPassenger FeedbackForPassenger) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(FeedbackForPassenger);
+            session.getTransaction().commit();
+        }
+        return FeedbackForPassenger;
     }
 
     /*Ilia*/

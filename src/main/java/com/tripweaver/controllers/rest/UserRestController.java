@@ -3,14 +3,13 @@ package com.tripweaver.controllers.rest;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.models.User;
-import com.tripweaver.models.UserFilterOptions;
+import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 

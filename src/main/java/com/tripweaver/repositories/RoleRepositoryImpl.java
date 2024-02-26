@@ -12,8 +12,8 @@ import java.util.List;
 
 @Repository
 public class RoleRepositoryImpl implements RoleRepository {
-    private final SessionFactory sessionFactory;
 
+    private final SessionFactory sessionFactory;
     @Autowired
     public RoleRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;

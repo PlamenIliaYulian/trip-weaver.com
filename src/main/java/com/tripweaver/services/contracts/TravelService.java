@@ -1,7 +1,7 @@
 package com.tripweaver.services.contracts;
 
 import com.tripweaver.models.Travel;
-import com.tripweaver.models.TravelFilterOptions;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.User;
 import java.util.List;
 

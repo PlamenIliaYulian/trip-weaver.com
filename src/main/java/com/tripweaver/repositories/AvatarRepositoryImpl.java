@@ -29,7 +29,7 @@ import java.util.Map;
 public class AvatarRepositoryImpl implements AvatarRepository {
 
     private final String CLOUDINARY_URL = "cloudinary://242857587276945:B5ODyO381gN-4aFLKDNVcrAFzxM@dol3hflxs";
-
+    public static final int DEFAULT_AVATAR_ID = 1;
     private final SessionFactory sessionFactory;
 
     @Autowired
@@ -43,17 +43,18 @@ public class AvatarRepositoryImpl implements AvatarRepository {
             session.beginTransaction();
             session.persist(avatar);
             session.getTransaction().commit();
-            return getAvatarById(avatar.getAvatarId());
         }
+        return avatar;
     }
 
     @Override
     public Avatar getDefaultAvatar() {
         try (Session session = sessionFactory.openSession()) {
-            Query<Avatar> query = session.createQuery("FROM Avatar WHERE avatarId = 1", Avatar.class);
+            Query<Avatar> query = session.createQuery("FROM Avatar WHERE avatarId = :id", Avatar.class);
+            query.setParameter("id", DEFAULT_AVATAR_ID);
             List<Avatar> result = query.list();
             if (result.isEmpty()) {
-                throw new EntityNotFoundException("Avatar", "avatar ID", "1");
+                throw new EntityNotFoundException("Avatar", "avatar ID", String.valueOf(DEFAULT_AVATAR_ID));
             }
             return result.get(0);
         }

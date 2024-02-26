@@ -1,9 +1,7 @@
 package com.tripweaver.repositories.contracts;
 
-import com.tripweaver.models.FeedbackForDriver;
-import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.User;
-import com.tripweaver.models.UserFilterOptions;
+import com.tripweaver.models.filterOptions.UserFilterOptions;
 
 import java.util.List;
 

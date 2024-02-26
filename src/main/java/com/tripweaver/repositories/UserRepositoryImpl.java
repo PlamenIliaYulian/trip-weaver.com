@@ -1,10 +1,8 @@
 package com.tripweaver.repositories;
 
 import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.models.FeedbackForDriver;
-import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.User;
-import com.tripweaver.models.UserFilterOptions;
+import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -25,7 +23,6 @@ public class UserRepositoryImpl implements UserRepository {
         this.sessionFactory = sessionFactory;
     }
 
-
     @Override
     public User createUser(User user) {
         try (Session session = sessionFactory.openSession()) {
@@ -43,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.merge(user);
             session.getTransaction().commit();
         }
-        return user;
+        return getUserById(user.getUserId());
     }
 
     @Override
@@ -98,7 +95,8 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
         orderBy = String.format(" order by %s", orderBy);
-        if (userFilterOptions.getSortOrder().isPresent() && userFilterOptions.getSortOrder().get().equalsIgnoreCase("desc")) {
+        if (userFilterOptions.getSortOrder().isPresent() &&
+                userFilterOptions.getSortOrder().get().equalsIgnoreCase("desc")) {
             orderBy = String.format("%s desc", orderBy);
         }
         return orderBy;
@@ -107,7 +105,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getUserByUsername(String username) {
         try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("FROM User WHERE username = :username AND isDeleted = false ", User.class);
+            Query<User> query = session.createQuery("FROM User WHERE username = :username " +
+                    "AND isDeleted = false ", User.class);
             query.setParameter("username", username);
             List<User> result = query.list();
             if (result.isEmpty()) {

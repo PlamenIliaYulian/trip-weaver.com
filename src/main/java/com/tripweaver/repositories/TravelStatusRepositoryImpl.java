@@ -21,7 +21,8 @@ public class TravelStatusRepositoryImpl implements TravelStatusRepository {
     @Override
     public TravelStatus getStatusById(int travelStatusId) {
         try (Session session = sessionFactory.openSession()) {
-            Query<TravelStatus> query = session.createQuery("FROM TravelStatus WHERE travelStatusId = :travelStatusId ", TravelStatus.class);
+            Query<TravelStatus> query = session.createQuery("FROM TravelStatus " +
+                    "WHERE travelStatusId = :travelStatusId ", TravelStatus.class);
             query.setParameter("travelStatusId", travelStatusId);
             List<TravelStatus> result = query.list();
             if (result.isEmpty()) {

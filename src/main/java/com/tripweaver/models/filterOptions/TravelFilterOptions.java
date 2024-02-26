@@ -1,23 +1,16 @@
-package com.tripweaver.models;
+package com.tripweaver.models.filterOptions;
 
 import java.util.Optional;
 
 public class TravelFilterOptions {
 
     private Optional<String> startingPoint;
-
     private Optional<String> endingPoint;
-
     private Optional<String> departureBefore;
-
     private Optional<String> departureAfter;
-
     private Optional<Integer> minFreeSeats;
-
     private Optional<String> driverUsername;
-
     private Optional<String> commentContains;
-
     private Optional<Integer> statusId;
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
@@ -79,7 +72,6 @@ public class TravelFilterOptions {
     public Optional<String> getSortBy() {
         return sortBy;
     }
-
     public Optional<String> getSortOrder() {
         return sortOrder;
     }

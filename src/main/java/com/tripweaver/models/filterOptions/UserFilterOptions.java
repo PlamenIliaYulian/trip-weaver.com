@@ -1,4 +1,4 @@
-package com.tripweaver.models;
+package com.tripweaver.models.filterOptions;
 
 import java.util.Optional;
 
