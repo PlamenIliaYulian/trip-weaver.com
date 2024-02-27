@@ -1,13 +1,16 @@
 package com.tripweaver.controllers.helpers;
 
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
+import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Role;
 import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.RoleService;
+import com.tripweaver.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
@@ -64,13 +67,16 @@ public class ModelsMapperImpl implements ModelsMapper {
         return feedbackForPassenger;
     }
 
+    private UserService userService;
     private AvatarService avatarService;
     private RoleService roleService;
 
     @Autowired
     public ModelsMapperImpl(
+            UserService userService,
             AvatarService avatarService,
             RoleService roleService) {
+        this.userService = userService;
         this.avatarService = avatarService;
         this.roleService = roleService;
     }
@@ -98,5 +104,24 @@ public class ModelsMapperImpl implements ModelsMapper {
         user.setFeedbackForDriver(feedbackForDriver);
         user.setFeedbackForPassenger(feedbackForPassenger);
         return user;
+    }
+
+    @Override
+    public FeedbackForDriver feedbackForDriverFromDto(
+            FeedbackDto feedbackDto,
+            User passengerProvidingTheFeedback) {
+        FeedbackForDriver feedbackForDriver = new FeedbackForDriver();
+        feedbackForDriver.setRating(feedbackDto.getRating());
+        feedbackForDriver.setContent(feedbackDto.getContent());
+        feedbackForDriver.setPassengerProvidedFeedback(passengerProvidingTheFeedback);
+        feedbackForDriver.setCreated(LocalDateTime.now());
+        try{
+            User driver = userService.getUserById(feedbackDto.getReceiverUserId());
+            feedbackForDriver.setDriverReceivedFeedback(driver);
+            return feedbackForDriver;
+        }
+        catch (EntityNotFoundException e){
+            throw new EntityNotFoundException(e.getMessage());
+        }
     }
 }
