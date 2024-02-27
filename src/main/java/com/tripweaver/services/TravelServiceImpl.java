@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -68,18 +69,20 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.updateTravel(travel);
     }
 
-    /*Ilia TODO return logged user to check if you are the same user.*/
+    /*Ilia*/
     @Override
     public List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions) {
         permissionHelper.isSameUser(driver, loggedUser, UNAUTHORIZED_OPERATION);
-        return travelRepository.getTravelsByDriver(driver, travelFilterOptions);
+        travelFilterOptions.setDriverId(Optional.of(driver.getUserId()));
+        return travelRepository.getAllTravels(travelFilterOptions);
     }
 
     /*TODO Put TravelFilterOptions.*/
     @Override
     public List<Travel> getTravelsByPassenger(User passenger, User loggedUser, TravelFilterOptions travelFilterOptions) {
         permissionHelper.isSameUser(passenger, loggedUser, UNAUTHORIZED_OPERATION);
-        return travelRepository.getTravelsByPassenger(passenger, travelFilterOptions);
+        travelFilterOptions.setPassengerId(Optional.of(passenger.getUserId()));
+        return travelRepository.getAllTravels(travelFilterOptions);
     }
 
     @Override

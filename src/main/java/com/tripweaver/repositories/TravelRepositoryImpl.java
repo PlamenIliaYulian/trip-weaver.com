@@ -63,6 +63,7 @@ public class TravelRepositoryImpl implements TravelRepository {
     *       to reuse its functionality. I suggest we do the same with getTravelsByPassenger.*/
     @Override
     public List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions) {
+        /*TODO will add driverId in travelFilterOptions in the service layer.*/
         return null;
     }
 
@@ -89,57 +90,70 @@ public class TravelRepositoryImpl implements TravelRepository {
             Map<String, Object> parameters = new HashMap<>();
 
             travelFilterOptions.getStartingPoint().ifPresent(value -> {
-                filters.add(" startingPoint like :startingPoint ");
+                filters.add(" travel.startingPoint like :startingPoint ");
                 parameters.put("startingPoint", String.format("%%%s%%", value));
             });
             travelFilterOptions.getEndingPoint().ifPresent(value -> {
-                filters.add(" endingPoint like :endingPoint ");
+                filters.add(" travel.endingPoint like :endingPoint ");
                 parameters.put("endingPoint", String.format("%%%s%%", value));
             });
             travelFilterOptions.getDepartureBefore().ifPresent(value -> {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 LocalDateTime date = LocalDateTime.parse(value, formatter);
-                filters.add(" departureTime <= :departureBefore ");
+                filters.add(" travel.departureTime <= :departureBefore ");
                 parameters.put("departureBefore", date);
             });
             travelFilterOptions.getDepartureAfter().ifPresent(value -> {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 LocalDateTime date = LocalDateTime.parse(value, formatter);
-                filters.add(" departureTime >= :departureAfter ");
+                filters.add(" travel.departureTime >= :departureAfter ");
                 parameters.put("departureAfter", date);
             });
             travelFilterOptions.getMinFreeSeats().ifPresent(value -> {
-                filters.add(" freeSeats >= :minFreeSeats ");
+                filters.add(" travel.freeSeats >= :minFreeSeats ");
                 parameters.put("minFreeSeats", value);
             });
             travelFilterOptions.getDriverUsername().ifPresent(value -> {
-                filters.add(" driver.username like :driverUsername ");
-                parameters.put("driverUsername", String.format("%%%s%%", value));
-            });
-            travelFilterOptions.getDriverUsername().ifPresent(value -> {
-                filters.add(" driver.username like :driverUsername ");
+                filters.add(" travel.driver.username like :driverUsername ");
                 parameters.put("driverUsername", String.format("%%%s%%", value));
             });
             travelFilterOptions.getCommentContains().ifPresent(value -> {
-                filters.add(" comment like :commentContains ");
+                filters.add(" travel.comment like :commentContains ");
                 parameters.put("commentContains", String.format("%%%s%%", value));
             });
             travelFilterOptions.getStatusId().ifPresent(value -> {
-                filters.add(" status.travelStatusId = :statusId ");
+                filters.add(" travel.status.travelStatusId = :statusId ");
                 parameters.put("statusId", value);
             });
 
-            filters.add(" post.isDeleted = false ");
+            if (travelFilterOptions.getDriverId().isPresent() && travelFilterOptions.getDriverId().get() != 0) {
+                travelFilterOptions.getDriverId().ifPresent(value -> {
+                    filters.add(" travel.userId = :userId ");
+                    parameters.put("userId", value);
+                });
+            }
+            /* TODO Have to test it carefully.*/
+            StringBuilder queryString;
+            if (!travelFilterOptions.getPassengerId().isPresent() || travelFilterOptions.getPassengerId().get() == 0) {
+                queryString = new StringBuilder("FROM Travel AS travel ");
+                queryString.append(" WHERE ")
+                        .append(String.join(" AND ", filters));
 
-            StringBuilder queryString = new StringBuilder("from Travel ");
-            queryString.append(" where ")
-                    .append(String.join(" and ", filters));
+            } else {
+                travelFilterOptions.getPassengerId().ifPresent(value -> {
+                    filters.add(" passengers.userId = :userId ");
+                    parameters.put("userId", value);
+                });
+
+                queryString = new StringBuilder("FROM Travel AS travel JOIN travel.usersApprovedForTheTravel passengers ");
+                queryString.append(" WHERE ")
+                        .append(String.join(" AND ", filters));
+            }
+
             queryString.append(generateOrderBy(travelFilterOptions));
-
             Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
             query.setProperties(parameters);
             return query.list();
-
         }
     }
     private String generateOrderBy(TravelFilterOptions filterOptions) {

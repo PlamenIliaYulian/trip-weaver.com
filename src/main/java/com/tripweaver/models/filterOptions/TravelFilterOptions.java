@@ -12,6 +12,8 @@ public class TravelFilterOptions {
     private Optional<String> driverUsername;
     private Optional<String> commentContains;
     private Optional<Integer> statusId;
+    private Optional<Integer> driverId;
+    private Optional<Integer> passengerId;
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
 
@@ -69,11 +71,27 @@ public class TravelFilterOptions {
         return statusId;
     }
 
+    public Optional<Integer> getDriverId() {
+        return driverId;
+    }
+
+    public Optional<Integer> getPassengerId() {
+        return passengerId;
+    }
+
     public Optional<String> getSortBy() {
         return sortBy;
     }
 
     public Optional<String> getSortOrder() {
         return sortOrder;
+    }
+
+    public void setDriverId(Optional<Integer> driverId) {
+        this.driverId = driverId;
+    }
+
+    public void setPassengerId(Optional<Integer> passengerId) {
+        this.passengerId = passengerId;
     }
 }
