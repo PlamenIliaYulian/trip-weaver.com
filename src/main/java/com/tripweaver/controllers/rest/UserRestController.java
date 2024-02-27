@@ -217,7 +217,7 @@ public class UserRestController {
 
     /*Yuli*/
     /*Had to add >>> {travelId}*/
-    @PostMapping("/{userId}/{travelId}/feedback-for-driver")
+    @PostMapping("/{userId}/travels/{travelId}/feedback-for-driver")
     public List<FeedbackForDriver> leaveFeedbackForDriver(
             @RequestHeader HttpHeaders headers,
             @PathVariable int userId,
