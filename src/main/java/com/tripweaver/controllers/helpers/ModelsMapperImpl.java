@@ -1,6 +1,14 @@
 package com.tripweaver.controllers.helpers;
 
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
+import com.tripweaver.models.FeedbackForDriver;
+import com.tripweaver.models.FeedbackForPassenger;
+import com.tripweaver.models.Role;
+import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.UserDto;
+import com.tripweaver.services.contracts.AvatarService;
+import com.tripweaver.services.contracts.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
@@ -9,6 +17,10 @@ import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.services.contracts.UserService;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class ModelsMapperImpl implements ModelsMapper {
@@ -50,5 +62,41 @@ public class ModelsMapperImpl implements ModelsMapper {
         feedbackForPassenger.setRating(feedbackDto.getRating());
         feedbackForPassenger.setContent(feedbackDto.getContent());
         return feedbackForPassenger;
+    }
+
+    private AvatarService avatarService;
+    private RoleService roleService;
+
+    @Autowired
+    public ModelsMapperImpl(
+            AvatarService avatarService,
+            RoleService roleService) {
+        this.avatarService = avatarService;
+        this.roleService = roleService;
+    }
+
+    public User userFromDto(UserDto userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        /*Ilia and Plamen might decide that the part below is not needed. Can be removed, if this is the case.*/
+        user.setCreated(LocalDateTime.now());
+        user.setDeleted(false);
+        user.setBlocked(false);
+        user.setAveragePassengerRating(0);
+        user.setAverageDriverRating(0);
+        user.setAvatar(avatarService.getDefaultAvatar());
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.getRoleById(2));
+        user.setRoles(roles);
+        Set<FeedbackForDriver> feedbackForDriver = new HashSet<>();
+        Set<FeedbackForPassenger> feedbackForPassenger = new HashSet<>();
+        user.setFeedbackForDriver(feedbackForDriver);
+        user.setFeedbackForPassenger(feedbackForPassenger);
+        return user;
     }
 }

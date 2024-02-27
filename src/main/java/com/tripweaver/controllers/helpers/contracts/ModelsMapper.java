@@ -8,7 +8,11 @@ import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.models.dtos.UserDtoUpdate;
 
+import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.UserDto;
+
 public interface ModelsMapper {
+    User userFromDto(UserDto userDto);
 
     Travel travelFromDto (TravelDto travelDto);
     User userFromDtoUpdate (UserDtoUpdate userDtoUpdate, int userId);
