@@ -1,6 +1,10 @@
 package com.tripweaver.controllers.rest;
 
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
+import com.tripweaver.exceptions.AuthenticationException;
+import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.exceptions.UnauthorizedOperationException;
+import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
@@ -9,6 +13,8 @@ import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import com.tripweaver.services.contracts.TravelService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.services.contracts.TravelService;
@@ -16,6 +22,7 @@ import com.tripweaver.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -69,8 +76,24 @@ public class TravelRestController {
     /*Yuli*/
     @PutMapping("/{travelId}/status-completed")
     public Travel completeTravel(@RequestHeader HttpHeaders headers,
-                                 @PathVariable int travelId){
-        return null;
+                                 @PathVariable int travelId) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            Travel travelToMarkAsCompleted = travelService.getTravelById(travelId);
+            return travelService.completeTravel(travelToMarkAsCompleted, loggedInUser);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    e.getMessage());
+        }
     }
 
     /*Ilia*/
