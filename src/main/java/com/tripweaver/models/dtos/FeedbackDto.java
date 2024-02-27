@@ -14,6 +14,9 @@ public class FeedbackDto {
     @Size(max = 200, message = "Content must contain between 1 and 200 symbols.")
     private String content;
 
+    public FeedbackDto() {
+    }
+
     public int getReceiverUserId() {
         return receiverUserId;
     }
