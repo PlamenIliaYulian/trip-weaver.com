@@ -2,7 +2,10 @@ package com.tripweaver.controllers.rest;
 
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
+import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.DuplicateEntityException;
+import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.exceptions.*;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
@@ -93,10 +96,23 @@ public class UserRestController {
     }
 
     /*Yuli*/
+    /*The public part of the project does not say anything about allowing users to browse other users
+     * without logging in. Hence - made this endpoint require validation.*/
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable int id) {
-
-        return userService.getUserById(id);
+    public User getUserById(@RequestHeader HttpHeaders headers,
+                            @PathVariable int userId) {
+        try {
+            authenticationHelper.tryGetUser(headers);
+            return userService.getUserById(userId);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    e.getMessage());
+        }
     }
 
     /*Ilia*/
