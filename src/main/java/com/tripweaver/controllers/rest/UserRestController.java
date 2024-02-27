@@ -7,21 +7,17 @@ import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
-import com.tripweaver.exceptions.*;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.*;
 import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
-import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -44,7 +39,6 @@ public class UserRestController {
     private final AuthenticationHelper authenticationHelper;
     private final ModelsMapper modelsMapper;
     private final AvatarService avatarService;
-    private final TravelService travelService;
 
 
     @Autowired
@@ -52,22 +46,22 @@ public class UserRestController {
                               AuthenticationHelper authenticationHelper,
                               ModelsMapper modelsMapper,
                               AvatarService avatarService,
-                              TravelService travelService) {
+                              TravelService travelService,
+                              FeedbackService feedbackService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
         this.feedbackService = feedbackService;
         this.travelService = travelService;
         this.avatarService = avatarService;
-        this.travelService = travelService;
     }
 
     /*Yuli*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public User createUser(@RequestBody @Valid UserDto userDto) {
+    public User createUser(@RequestBody @Valid UserDtoCreate userDtoCreate) {
         try {
-            User user = modelsMapper.userFromDto(userDto);
+            User user = modelsMapper.userFromDtoCreate(userDtoCreate);
             return userService.createUser(user);
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -113,7 +107,7 @@ public class UserRestController {
     public User getUserById(@RequestHeader HttpHeaders headers,
                             @PathVariable int userId) {
         try {
-            authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUserFromHeaders(headers);
             return userService.getUserById(userId);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(
@@ -208,7 +202,7 @@ public class UserRestController {
             @PathVariable int travelId,
             @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
-            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            User loggedInUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User driver = userService.getUserById(userId);
             Travel travel = travelService.getTravelById(travelId);
             FeedbackForDriver feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto, loggedInUser);

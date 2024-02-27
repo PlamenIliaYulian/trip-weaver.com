@@ -1,24 +1,19 @@
 package com.tripweaver.controllers.helpers.contracts;
 
 import com.tripweaver.models.FeedbackForDriver;
-import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
-import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.dtos.TravelDto;
-import com.tripweaver.models.dtos.UserDtoUpdate;
-
-import com.tripweaver.models.User;
-import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.dtos.UserDto;
+import com.tripweaver.models.dtos.*;
 
 public interface ModelsMapper {
-    User userFromDto(UserDto userDto);
+    User userFromDtoCreate(UserDtoCreate userDto);
 
     FeedbackForDriver feedbackForDriverFromDto(FeedbackDto feedbackDto, User passengerProvidingTheFeedback);
 
-    Travel travelFromDto (TravelDto travelDto);
-    User userFromDtoUpdate (UserDtoUpdate userDtoUpdate, int userId);
-    FeedbackForPassenger feedbackForPassengerFromDto (FeedbackDto feedbackDto);
+    Travel travelFromDto(TravelDto travelDto);
+
+    User userFromDtoUpdate(UserDtoUpdate userDtoUpdate, int userId);
+
+    FeedbackForPassenger feedbackForPassengerFromDto(FeedbackDto feedbackDto);
 }

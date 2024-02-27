@@ -6,11 +6,6 @@ import com.tripweaver.models.User;
 import com.tripweaver.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import com.tripweaver.exceptions.AuthenticationException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.models.User;
-import com.tripweaver.services.contracts.UserService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +20,7 @@ public class AuthenticationHelper {
         this.userService = userService;
     }
 
-    public User tryGetUser(HttpHeaders headers) {
+    public User tryGetUserFromHeaders(HttpHeaders headers) {
         if (!headers.containsKey(AUTHORIZATION_HEADER_NAME)) {
             throw new AuthenticationException(INVALID_AUTHENTICATION_ERROR);
         }

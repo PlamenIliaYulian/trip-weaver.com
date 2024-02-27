@@ -5,25 +5,15 @@ import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
-import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
-import com.tripweaver.exceptions.AuthenticationException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.InvalidOperationException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
-import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.services.contracts.TravelService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import com.tripweaver.models.dtos.TravelDto;
-import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -79,7 +69,7 @@ public class TravelRestController {
     public Travel completeTravel(@RequestHeader HttpHeaders headers,
                                  @PathVariable int travelId) {
         try {
-            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            User loggedInUser = authenticationHelper.tryGetUserFromHeaders(headers);
             Travel travelToMarkAsCompleted = travelService.getTravelById(travelId);
             return travelService.completeTravel(travelToMarkAsCompleted, loggedInUser);
         } catch (AuthenticationException e) {
@@ -122,7 +112,7 @@ public class TravelRestController {
     public Travel applyForATrip(@RequestHeader HttpHeaders headers,
                                 @PathVariable int travelId) {
         try {
-            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            User loggedInUser = authenticationHelper.tryGetUserFromHeaders(headers);
             Travel travelToApplyFor = travelService.getTravelById(travelId);
             return travelService.applyForATrip(loggedInUser, travelToApplyFor);
         } catch (AuthenticationException e) {

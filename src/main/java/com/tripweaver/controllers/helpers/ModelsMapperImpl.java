@@ -6,8 +6,7 @@ import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Role;
 import com.tripweaver.models.User;
-import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.dtos.UserDto;
+import com.tripweaver.models.dtos.*;
 import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.UserService;
@@ -16,8 +15,6 @@ import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.dtos.TravelDto;
-import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.services.contracts.UserService;
 import org.springframework.stereotype.Component;
 
@@ -27,11 +24,18 @@ import java.util.Set;
 
 @Component
 public class ModelsMapperImpl implements ModelsMapper {
+    private UserService userService;
+    private AvatarService avatarService;
+    private RoleService roleService;
 
-    private final UserService userService;
-
-    public ModelsMapperImpl(UserService userService) {
+    @Autowired
+    public ModelsMapperImpl(
+            UserService userService,
+            AvatarService avatarService,
+            RoleService roleService) {
         this.userService = userService;
+        this.avatarService = avatarService;
+        this.roleService = roleService;
     }
 
     @Override
@@ -67,42 +71,15 @@ public class ModelsMapperImpl implements ModelsMapper {
         return feedbackForPassenger;
     }
 
-    private UserService userService;
-    private AvatarService avatarService;
-    private RoleService roleService;
-
-    @Autowired
-    public ModelsMapperImpl(
-            UserService userService,
-            AvatarService avatarService,
-            RoleService roleService) {
-        this.userService = userService;
-        this.avatarService = avatarService;
-        this.roleService = roleService;
-    }
-
-    public User userFromDto(UserDto userDto) {
+    @Override
+    public User userFromDtoCreate(UserDtoCreate userDtoCreate) {
         User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(userDto.getPassword());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        /*Ilia and Plamen might decide that the part below is not needed. Can be removed, if this is the case.*/
-        user.setCreated(LocalDateTime.now());
-        user.setDeleted(false);
-        user.setBlocked(false);
-        user.setAveragePassengerRating(0);
-        user.setAverageDriverRating(0);
-        user.setAvatar(avatarService.getDefaultAvatar());
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleService.getRoleById(2));
-        user.setRoles(roles);
-        Set<FeedbackForDriver> feedbackForDriver = new HashSet<>();
-        Set<FeedbackForPassenger> feedbackForPassenger = new HashSet<>();
-        user.setFeedbackForDriver(feedbackForDriver);
-        user.setFeedbackForPassenger(feedbackForPassenger);
+        user.setUsername(userDtoCreate.getUsername());
+        user.setPassword(userDtoCreate.getPassword());
+        user.setFirstName(userDtoCreate.getFirstName());
+        user.setLastName(userDtoCreate.getLastName());
+        user.setEmail(userDtoCreate.getEmail());
+        user.setPhoneNumber(userDtoCreate.getPhoneNumber());
         return user;
     }
 
