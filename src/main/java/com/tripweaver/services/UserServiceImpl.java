@@ -144,10 +144,11 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
     @Override
     public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
                                        Travel travel,
-                                       User loggedUser) {
+                                       User loggedUser,
+                                       User driver) {
         permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         permissionHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
-        User driver = travel.getDriver();
+        permissionHelper.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
 
         feedbackForDriver.setDriverReceivedFeedback(driver);
         feedbackForDriver.setPassengerProvidedFeedback(loggedUser);

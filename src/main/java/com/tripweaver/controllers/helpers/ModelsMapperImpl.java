@@ -115,13 +115,8 @@ public class ModelsMapperImpl implements ModelsMapper {
         feedbackForDriver.setContent(feedbackDto.getContent());
         feedbackForDriver.setPassengerProvidedFeedback(passengerProvidingTheFeedback);
         feedbackForDriver.setCreated(LocalDateTime.now());
-        try{
-            User driver = userService.getUserById(feedbackDto.getReceiverUserId());
-            feedbackForDriver.setDriverReceivedFeedback(driver);
-            return feedbackForDriver;
-        }
-        catch (EntityNotFoundException e){
-            throw new EntityNotFoundException(e.getMessage());
-        }
+        User driver = userService.getUserById(feedbackDto.getReceiverUserId());
+        feedbackForDriver.setDriverReceivedFeedback(driver);
+        return feedbackForDriver;
     }
 }

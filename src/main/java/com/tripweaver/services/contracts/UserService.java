@@ -53,7 +53,8 @@ public interface UserService {
     /*ToDo Ilia*/
     User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
                                 Travel travel,
-                                User userToGiveFeedback);
+                                User userToGiveFeedback,
+                                User driver);
 
     /*ToDo Plamen*/
     User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger,

@@ -2,6 +2,7 @@ package com.tripweaver.controllers.rest;
 
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
+import com.tripweaver.exceptions.*;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
@@ -12,14 +13,18 @@ import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.FeedbackDto;
+import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.models.dtos.UserDto;
+import com.tripweaver.services.contracts.FeedbackService;
+import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +39,15 @@ import java.util.List;
 public class UserRestController {
 
     private final UserService userService;
+    private final FeedbackService feedbackService;
+    private final TravelService travelService;
     private final AuthenticationHelper authenticationHelper;
     private final ModelsMapper modelsMapper;
     private final AvatarService avatarService;
     private final TravelService travelService;
 
+
+    @Autowired
     public UserRestController(UserService userService,
                               AuthenticationHelper authenticationHelper,
                               ModelsMapper modelsMapper,
@@ -47,6 +56,8 @@ public class UserRestController {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
+        this.feedbackService = feedbackService;
+        this.travelService = travelService;
         this.avatarService = avatarService;
         this.travelService = travelService;
     }
@@ -189,9 +200,36 @@ public class UserRestController {
     }
 
     /*Yuli*/
-    @PostMapping("/{userId}/feedback-for-driver")
-    public User leaveFeedbackForDriver() {
-        return null;
+    /*Had to add >>> {travelId}*/
+    @PostMapping("/{userId}/{travelId}/feedback-for-driver")
+    public User leaveFeedbackForDriver(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int userId,
+            @PathVariable int travelId,
+            @Valid @RequestBody FeedbackDto feedbackDto) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            User driver = userService.getUserById(userId);
+            Travel travel = travelService.getTravelById(travelId);
+            FeedbackForDriver feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto, loggedInUser);
+            return userService.leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser, driver);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    e.getMessage());
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    e.getMessage());
+        }
     }
 
     /*Ilia*/

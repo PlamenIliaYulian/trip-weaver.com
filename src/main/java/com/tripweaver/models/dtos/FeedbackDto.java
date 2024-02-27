@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class FeedbackDto {
-    @NotNull(message = "Comment can't be empty.")
+    @NotNull(message = "Receiver ID cannot be empty.")
     private int receiverUserId;
 
-    @NotNull(message = "Comment can't be empty.")
+    @NotNull(message = "Rating cannot be empty.")
     @Size(min = 0, max = 5, message = "Rating must be between 1 and 5.")
     private int rating;
 
@@ -40,4 +40,5 @@ public class FeedbackDto {
     public void setContent(String content) {
         this.content = content;
     }
+
 }
