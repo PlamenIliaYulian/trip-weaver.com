@@ -154,7 +154,7 @@ public class UserRestController {
     /*Yuli*/
     @GetMapping("/top-10-passengers")
     public List<User> getTopTenTravelPassengersByRating() {
-        return null;
+        return userService.getTopTenTravelPassengersByRating();
     }
 
     /*Ilia*/
