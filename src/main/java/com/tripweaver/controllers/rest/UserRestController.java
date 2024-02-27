@@ -202,7 +202,7 @@ public class UserRestController {
     /*Yuli*/
     /*Had to add >>> {travelId}*/
     @PostMapping("/{userId}/{travelId}/feedback-for-driver")
-    public User leaveFeedbackForDriver(
+    public List<FeedbackForDriver> leaveFeedbackForDriver(
             @RequestHeader HttpHeaders headers,
             @PathVariable int userId,
             @PathVariable int travelId,
@@ -212,7 +212,11 @@ public class UserRestController {
             User driver = userService.getUserById(userId);
             Travel travel = travelService.getTravelById(travelId);
             FeedbackForDriver feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto, loggedInUser);
-            return userService.leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser, driver);
+            return userService
+                    .leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser, driver)
+                    .getFeedbackForDriver()
+                    .stream()
+                    .toList();
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
