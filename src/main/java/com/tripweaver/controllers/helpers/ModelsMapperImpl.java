@@ -1,41 +1,29 @@
 package com.tripweaver.controllers.helpers;
 
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
-import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.FeedbackForDriver;
-import com.tripweaver.models.FeedbackForPassenger;
-import com.tripweaver.models.Role;
-import com.tripweaver.models.User;
-import com.tripweaver.models.dtos.*;
-import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.services.contracts.RoleService;
-import com.tripweaver.services.contracts.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.FeedbackDto;
+import com.tripweaver.models.dtos.TravelDto;
+import com.tripweaver.models.dtos.UserDtoCreate;
+import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.services.contracts.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class ModelsMapperImpl implements ModelsMapper {
     private UserService userService;
-    private AvatarService avatarService;
-    private RoleService roleService;
 
     @Autowired
     public ModelsMapperImpl(
-            UserService userService,
-            AvatarService avatarService,
-            RoleService roleService) {
+            UserService userService) {
         this.userService = userService;
-        this.avatarService = avatarService;
-        this.roleService = roleService;
+
     }
 
     @Override

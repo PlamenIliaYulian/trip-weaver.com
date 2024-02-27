@@ -1,19 +1,15 @@
 package com.tripweaver.services;
 
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.InvalidOperationException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.*;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
-import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.AvatarService;
+import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;

@@ -1,7 +1,6 @@
 package com.tripweaver.models.dtos;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 public class UserDtoUpdate extends UserDto{
     @NotNull

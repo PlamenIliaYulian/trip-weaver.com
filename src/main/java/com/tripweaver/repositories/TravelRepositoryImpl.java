@@ -3,7 +3,6 @@ package com.tripweaver.repositories;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
-import com.tripweaver.models.User;
 import com.tripweaver.repositories.contracts.TravelRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

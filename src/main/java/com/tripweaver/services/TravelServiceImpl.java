@@ -1,20 +1,16 @@
 package com.tripweaver.services;
 
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
-import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.Travel;
-import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.TravelStatus;
 import com.tripweaver.models.User;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.repositories.contracts.TravelRepository;
 import com.tripweaver.services.contracts.TravelService;
+import com.tripweaver.services.contracts.TravelStatusService;
 import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.tripweaver.services.contracts.TravelStatusService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

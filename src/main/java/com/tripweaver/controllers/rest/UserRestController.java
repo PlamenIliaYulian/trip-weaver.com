@@ -3,26 +3,16 @@ package com.tripweaver.controllers.rest;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.*;
-import com.tripweaver.exceptions.AuthenticationException;
-import com.tripweaver.exceptions.DuplicateEntityException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
-import com.tripweaver.exceptions.AuthenticationException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
-import com.tripweaver.models.dtos.*;
 import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import com.tripweaver.models.dtos.UserDtoCreate;
+import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
-import com.tripweaver.services.contracts.FeedbackService;
-import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.validation.Valid;
@@ -30,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -41,7 +30,7 @@ import java.util.List;
 public class UserRestController {
 
     private final UserService userService;
-    private final FeedbackService feedbackService;
+
     private final TravelService travelService;
     private final AuthenticationHelper authenticationHelper;
     private final ModelsMapper modelsMapper;
@@ -53,12 +42,10 @@ public class UserRestController {
                               AuthenticationHelper authenticationHelper,
                               ModelsMapper modelsMapper,
                               AvatarService avatarService,
-                              TravelService travelService,
-                              FeedbackService feedbackService) {
+                              TravelService travelService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
-        this.feedbackService = feedbackService;
         this.travelService = travelService;
         this.avatarService = avatarService;
     }
@@ -104,7 +91,7 @@ public class UserRestController {
                                   @RequestParam(required = false) String sortBy,
                                   @RequestParam(required = false) String sortOrder) {
         try {
-            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             UserFilterOptions userFilterOptions = new UserFilterOptions(username, email, phoneNumber, sortBy, sortOrder);
             return userService.getAllUsers(userFilterOptions, loggedUser);
         } catch (AuthenticationException e) {
@@ -156,7 +143,7 @@ public class UserRestController {
     public User unblockUser(@PathVariable int userId,
                             @RequestHeader HttpHeaders httpHeaders) {
         try {
-            User loggedUser = authenticationHelper.tryGetUser(httpHeaders);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(httpHeaders);
             User userToBeUnblocked = userService.getUserById(userId);
             return userService.unBlockUser(userToBeUnblocked, loggedUser);
         } catch (AuthenticationException e) {
@@ -216,7 +203,7 @@ public class UserRestController {
     public User deleteAvatar(@PathVariable int userId,
                              @RequestHeader HttpHeaders headers) {
         try {
-            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User userToBeRemovedAvatarFrom = userService.getUserById(userId);
             return userService.deleteAvatar(userToBeRemovedAvatarFrom, loggedUser);
         } catch (AuthenticationException e) {
@@ -302,7 +289,7 @@ public class UserRestController {
     public List<FeedbackForDriver> getAllFeedbackForDriver(@PathVariable int userId,
                                                            @RequestHeader HttpHeaders headers) {
         try {
-            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User driver = userService.getUserById(userId);
             return userService.getAllFeedbackForDriver(driver);
         } catch (EntityNotFoundException e) {
@@ -373,7 +360,7 @@ public class UserRestController {
                     statusId,
                     sortBy,
                     sortOrder);
-            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User passenger = userService.getUserById(userId);
             return travelService.getTravelsByPassenger(passenger, loggedUser, travelFilterOptions);
         } catch (AuthenticationException e){

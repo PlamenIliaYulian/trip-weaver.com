@@ -1,15 +1,9 @@
 package com.tripweaver.repositories;
 
 import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.models.Avatar;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.repositories.contracts.FeedbackRepository;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

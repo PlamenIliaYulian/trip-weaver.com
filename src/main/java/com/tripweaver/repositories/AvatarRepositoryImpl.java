@@ -3,26 +3,17 @@ package com.tripweaver.repositories;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.Avatar;
 import com.tripweaver.repositories.contracts.AvatarRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Repository

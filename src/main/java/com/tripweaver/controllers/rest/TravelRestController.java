@@ -1,27 +1,19 @@
 package com.tripweaver.controllers.rest;
 
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
+import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
-import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
-import com.tripweaver.controllers.helpers.AuthenticationHelper;
-import com.tripweaver.exceptions.AuthenticationException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
-import com.tripweaver.services.contracts.TravelService;
-import org.springframework.http.HttpHeaders;
 import com.tripweaver.models.dtos.TravelDto;
-import com.tripweaver.services.contracts.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +64,7 @@ public class TravelRestController {
     public Travel cancelTravel(@PathVariable int travelId,
                                @RequestHeader HttpHeaders httpHeaders) {
         try {
-            User loggedUser = authenticationHelper.tryGetUser(httpHeaders);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(httpHeaders);
             Travel travel = travelService.getTravelById(travelId);
             return travelService.cancelTravel(travel, loggedUser);
         } catch (EntityNotFoundException e) {
@@ -135,7 +127,7 @@ public class TravelRestController {
                                       @RequestParam(required = false) String sortBy,
                                       @RequestParam(required = false) String sortOrder) {
         try {
-            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             TravelFilterOptions travelFilterOptions = new TravelFilterOptions(
                     startingPoint,
                     endingPoint,
@@ -207,7 +199,7 @@ public class TravelRestController {
                                    @PathVariable int userId,
                                    @RequestHeader HttpHeaders headers) {
         try {
-            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User userToBeDeclined = userService.getUserById(userId);
             Travel travel = travelService.getTravelById(travelId);
             return travelService.declinePassenger(userToBeDeclined, travel, loggedUser);
