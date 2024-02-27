@@ -58,28 +58,6 @@ public class TravelRepositoryImpl implements TravelRepository {
         }
     }
 
-   /* *//*Ilia TODO will implement this method after implementation of getAllTravels method
-    *       to reuse its functionality. I suggest we do the same with getTravelsByPassenger.*//*
-    @Override
-    public List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions) {
-        *//*TODO will add driverId in travelFilterOptions in the service layer.*//*
-        return null;
-    }
-
-    *//*TODo not sure if it's correct - add Filter Options*//*
-    @Override
-    public List<Travel> getTravelsByPassenger(User passenger, TravelFilterOptions travelFilterOptions) {
-        try(Session session = sessionFactory.openSession()) {
-            Query<Travel> query = session.createQuery("From Travel t JOIN t.usersApprovedForTheTravel u " +
-                    "where u.userId= :userId ", Travel.class);
-            query.setParameter("userId", passenger.getUserId());
-            List<Travel> result = query.list();
-            if(result.isEmpty()){
-                throw new EntityNotFoundException("Travel", "userId", String.valueOf(passenger.getUserId()));
-            }
-            return result;
-        }
-    }*/
 
     /*Ilia*/
     @Override

@@ -5,10 +5,10 @@ import com.tripweaver.models.FeedbackForPassenger;
 
 public interface FeedbackService {
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     FeedbackForDriver createFeedbackForDriver(FeedbackForDriver feedbackForDriver);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     FeedbackForPassenger createFeedbackForPassenger(FeedbackForPassenger FeedbackForPassenger);
 
     /*Ilia*/

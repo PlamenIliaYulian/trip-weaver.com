@@ -7,34 +7,34 @@ import java.util.List;
 
 public interface TravelService {
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     Travel createTravel(Travel travel,User creator);
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     Travel cancelTravel(Travel travel, User loggedUser);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     Travel completeTravel(Travel travel, User loggedUser);
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions);
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     List<Travel> getTravelsByPassenger(User passenger, User loggedUser,TravelFilterOptions travelFilterOptions);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     Travel getTravelById(int travelId);
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     List<Travel> getAllTravels(TravelFilterOptions travelFilterOptions);
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     Travel applyForATrip(User userToApply, Travel travelToApplyFor);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel);
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn);
 
 }

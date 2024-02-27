@@ -14,10 +14,6 @@ public interface TravelRepository {
 
     Travel getTravelById(int travelId);
 
-/*    List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions);
-
-    List<Travel> getTravelsByPassenger(User passenger, TravelFilterOptions travelFilterOptions);*/
-
     List<Travel> getAllTravels(TravelFilterOptions travelFilterOptions);
 
 }

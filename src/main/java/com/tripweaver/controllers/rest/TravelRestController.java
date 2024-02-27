@@ -73,6 +73,8 @@ public class TravelRestController {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                     e.getMessage());
+        } catch (UnauthorizedOperationException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
@@ -127,7 +129,7 @@ public class TravelRestController {
                                       @RequestParam(required = false) String sortBy,
                                       @RequestParam(required = false) String sortOrder) {
         try {
-            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
+            authenticationHelper.tryGetUserFromHeaders(headers);
             TravelFilterOptions travelFilterOptions = new TravelFilterOptions(
                     startingPoint,
                     endingPoint,
@@ -167,7 +169,7 @@ public class TravelRestController {
                     e.getMessage());
         } catch (InvalidOperationException e) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
                     e.getMessage());
         }
     }

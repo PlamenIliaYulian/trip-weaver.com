@@ -73,7 +73,7 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.getAllTravels(travelFilterOptions);
     }
 
-    /*TODO Put TravelFilterOptions.*/
+
     @Override
     public List<Travel> getTravelsByPassenger(User passenger, User loggedUser, TravelFilterOptions travelFilterOptions) {
         permissionHelper.isSameUser(passenger, loggedUser, UNAUTHORIZED_OPERATION);
@@ -103,7 +103,6 @@ public class TravelServiceImpl implements TravelService {
     }
 
 
-    /*TODO User who is logged in to be added. We have to check if the logged user is the same as the driver.*/
     @Override
     public Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel) {
         permissionHelper.isUserBlocked(userToBeApproved, UNAUTHORIZED_OPERATION_BLOCKED);

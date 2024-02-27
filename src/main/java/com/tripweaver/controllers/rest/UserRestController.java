@@ -51,6 +51,7 @@ public class UserRestController {
     }
 
     /*Yuli*/
+    /*TODO we should send verification email*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public User createUser(@RequestBody @Valid UserDtoCreate userDtoCreate) {
@@ -102,8 +103,6 @@ public class UserRestController {
     }
 
     /*Yuli*/
-    /*The public part of the project does not say anything about allowing users to browse other users
-     * without logging in. Hence - made this endpoint require validation.*/
     @GetMapping("/{userId}")
     public User getUserById(@RequestHeader HttpHeaders headers,
                             @PathVariable int userId) {
@@ -174,14 +173,10 @@ public class UserRestController {
     }
 
     /*Ilia*/
-    /*ToDo This userId is unnecessary because we can use endpoint where
-    *  you only have to be login. We get your details from headers/session
-    *  and then change your picture.*/
     @PutMapping("/{userId}/avatar")
     public User addAvatar(@PathVariable int userId,
-                          @RequestParam("avatar")MultipartFile multipartFile,
+                          @RequestParam("avatar") MultipartFile multipartFile,
                           @RequestHeader HttpHeaders headers) {
-
         try {
             User user = userService.getUserById(userId);
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
@@ -216,23 +211,17 @@ public class UserRestController {
     }
 
     /*Yuli*/
-    /*Had to add >>> {travelId}*/
     @PostMapping("/{userId}/travels/{travelId}/feedback-for-driver")
-    public List<FeedbackForDriver> leaveFeedbackForDriver(
-            @RequestHeader HttpHeaders headers,
-            @PathVariable int userId,
-            @PathVariable int travelId,
-            @Valid @RequestBody FeedbackDto feedbackDto) {
+    public FeedbackForDriver leaveFeedbackForDriver(@RequestHeader HttpHeaders headers,
+                                                    @PathVariable int userId,
+                                                    @PathVariable int travelId,
+                                                    @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User driver = userService.getUserById(userId);
             Travel travel = travelService.getTravelById(travelId);
-            FeedbackForDriver feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto, loggedInUser);
-            return userService
-                    .leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser, driver)
-                    .getFeedbackForDriver()
-                    .stream()
-                    .toList();
+            FeedbackForDriver feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto);
+            return userService.leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser, driver);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
@@ -253,26 +242,17 @@ public class UserRestController {
     }
 
     /*Ilia*/
-    /*ToDo FeedbackDto must be changed. We either point the receiver of the feedback
-    *  through endpoint or through the body. We do not need the two at the same time.*/
-
-    /*ToDo This method is not ready. Have to discuss how to get the travel to pass it
-    *  to the service.*/
-    @PostMapping("/{userId}/feedback-for-passenger")
-    public User leaveFeedbackForPassenger(@PathVariable int userId,
-                                          @RequestHeader HttpHeaders headers,
-                                          @RequestBody FeedbackDto feedbackDto) {
-
+    @PostMapping("/{userId}/travels/{travelId}/feedback-for-passenger")
+    public FeedbackForPassenger leaveFeedbackForPassenger(@PathVariable int userId,
+                                                          @PathVariable int travelId,
+                                                          @RequestHeader HttpHeaders headers,
+                                                          @RequestBody FeedbackDto feedbackDto) {
         try {
-            User user = userService.getUserById(userId);
+            User passenger = userService.getUserById(userId);
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
+            Travel travel = travelService.getTravelById(travelId);
             FeedbackForPassenger feedbackForPassenger = modelsMapper.feedbackForPassengerFromDto(feedbackDto);
-           /* return userService.leaveFeedbackForPassenger(
-                    feedbackForPassenger,
-                    travel,
-                    loggedUser,
-                    user);*/
-            return null;
+            return userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, loggedUser, passenger);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthenticationException e) {
@@ -285,12 +265,12 @@ public class UserRestController {
     }
 
     /*Plamen*/
-    @GetMapping("/{userId}/feedback-for-driver")
-    public List<FeedbackForDriver> getAllFeedbackForDriver(@PathVariable int userId,
+    @GetMapping("/{driverId}/feedback-for-driver")
+    public List<FeedbackForDriver> getAllFeedbackForDriver(@PathVariable int driverId,
                                                            @RequestHeader HttpHeaders headers) {
         try {
-            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
-            User driver = userService.getUserById(userId);
+            authenticationHelper.tryGetUserFromHeaders(headers);
+            User driver = userService.getUserById(driverId);
             return userService.getAllFeedbackForDriver(driver);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -301,8 +281,17 @@ public class UserRestController {
 
     /*Yuli*/
     @GetMapping("/{userId}/feedback-for-passenger")
-    public List<FeedbackForPassenger> getAllFeedbackForPassenger() {
-        return null;
+    public List<FeedbackForPassenger> getAllFeedbackForPassenger(@PathVariable int userId,
+                                                                 @RequestHeader HttpHeaders httpHeaders) {
+        try {
+            authenticationHelper.tryGetUserFromHeaders(httpHeaders);
+            User passenger = userService.getUserById(userId);
+            return userService.getAllFeedbackForPassenger(passenger);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 
     /*Ilia - we agreed we can use TravelService*/
@@ -330,10 +319,12 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    /*Plamen - we agreed we can use TravelService*/
+    /*Plamen*/
     @GetMapping("/{userId}/travels-for-passenger")
     public List<Travel> getTravelsByPassenger(@PathVariable int userId,
                                               @RequestHeader HttpHeaders headers,
@@ -347,7 +338,7 @@ public class UserRestController {
                                               @RequestParam(required = false) Integer statusId,
                                               @RequestParam(required = false) String sortBy,
                                               @RequestParam(required = false) String sortOrder
-                                              ) {
+    ) {
         try {
             TravelFilterOptions travelFilterOptions = new TravelFilterOptions(
                     startingPoint,
@@ -363,16 +354,14 @@ public class UserRestController {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User passenger = userService.getUserById(userId);
             return travelService.getTravelsByPassenger(passenger, loggedUser, travelFilterOptions);
-        } catch (AuthenticationException e){
+        } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedOperationException e){
+        } catch (UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
-
-
 
 
 }

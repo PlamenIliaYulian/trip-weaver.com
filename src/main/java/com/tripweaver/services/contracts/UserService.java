@@ -8,64 +8,64 @@ import java.util.List;
 public interface UserService {
 
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     User createUser(User user);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     User updateUser(User user, User loggedUser);
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     List<User> getAllUsers(UserFilterOptions userFilterOptions, User loggedInUser);
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     User getUserByUsername(String username);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     User getUserByEmail(String email);
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     User getUserById(int id);
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     User blockUser(User userToBeBlocked, User loggedUser);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     User unBlockUser(User userToBeUnBlocked, User loggedUser);
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     User getUserByPhoneNumber(String phoneNumber);
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     long getAllUsersCount();
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     List<User> getTopTenTravelOrganizersByRating();
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     List<User> getTopTenTravelPassengersByRating();
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     User deleteAvatar(User userToBeUpdated, User loggedUser);
 
-    /*ToDo Ilia*/
-    User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
+    /*Ilia*/
+    FeedbackForDriver leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
                                 Travel travel,
                                 User userToGiveFeedback,
                                 User driver);
 
-    /*ToDo Plamen*/
-    User leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger,
+    /*Plamen*/
+    FeedbackForPassenger leaveFeedbackForPassenger(FeedbackForPassenger feedbackForPassenger,
                                    Travel travel,
                                    User loggedUser,
                                    User userToReceiveFeedback);
 
-    /*ToDo Yuli*/
+    /*Yuli*/
     List<FeedbackForDriver> getAllFeedbackForDriver(User user);
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     List<FeedbackForPassenger> getAllFeedbackForPassenger(User user);
 
 }

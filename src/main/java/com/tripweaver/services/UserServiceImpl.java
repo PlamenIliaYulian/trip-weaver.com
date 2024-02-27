@@ -138,7 +138,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
     /*Ilia*/
     @Override
-    public User leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
+    public FeedbackForDriver leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
                                        Travel travel,
                                        User loggedUser,
                                        User driver) {
@@ -157,12 +157,13 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
                 .mapToDouble(FeedbackForDriver::getRating)
                 .average()
                 .orElseThrow());
-        return userRepository.updateUser(driver);
+        userRepository.updateUser(driver);
+        return feedbackForDriver;
     }
 
 
     @Override
-    public User leaveFeedbackForPassenger(
+    public FeedbackForPassenger leaveFeedbackForPassenger(
             FeedbackForPassenger feedbackForPassenger,
             Travel travel,
             User loggedUser,
@@ -182,7 +183,8 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
                 .mapToDouble(FeedbackForPassenger::getRating)
                 .average()
                 .orElseThrow());
-        return userRepository.updateUser(userToReceiveFeedback);
+        userRepository.updateUser(userToReceiveFeedback);
+        return feedbackForPassenger;
     }
 
     @Override

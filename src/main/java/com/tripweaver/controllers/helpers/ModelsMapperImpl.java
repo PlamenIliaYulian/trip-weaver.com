@@ -37,7 +37,6 @@ public class ModelsMapperImpl implements ModelsMapper {
         return travel;
     }
 
-    /*ToDo To add a check if the value is not null, then to change fields.*/
     @Override
     public User userFromDtoUpdate(UserDtoUpdate userDtoUpdate, int userId) {
         User user = userService.getUserById(userId);
@@ -73,12 +72,10 @@ public class ModelsMapperImpl implements ModelsMapper {
 
     @Override
     public FeedbackForDriver feedbackForDriverFromDto(
-            FeedbackDto feedbackDto,
-            User passengerProvidingTheFeedback) {
+            FeedbackDto feedbackDto) {
         FeedbackForDriver feedbackForDriver = new FeedbackForDriver();
         feedbackForDriver.setRating(feedbackDto.getRating());
         feedbackForDriver.setContent(feedbackDto.getContent());
-        feedbackForDriver.setPassengerProvidedFeedback(passengerProvidingTheFeedback);
         feedbackForDriver.setCreated(LocalDateTime.now());
         User driver = userService.getUserById(feedbackDto.getReceiverUserId());
         feedbackForDriver.setDriverReceivedFeedback(driver);

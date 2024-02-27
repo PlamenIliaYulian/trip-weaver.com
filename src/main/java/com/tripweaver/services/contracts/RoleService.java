@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface RoleService {
 
-    /*ToDo Ilia*/
+    /*Ilia*/
     Role getRoleById(int id);
 
-    /*ToDo Plamen*/
+    /*Plamen*/
     Role getRoleByName(String name);
 
-    /*ToDo Yuli - DONE*/
+    /*Yuli - DONE*/
     List<Role> getAllRoles();
 }
