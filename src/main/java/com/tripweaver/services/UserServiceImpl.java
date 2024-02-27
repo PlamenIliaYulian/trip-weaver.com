@@ -152,9 +152,14 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
         feedbackForDriver.setDriverReceivedFeedback(driver);
         feedbackForDriver.setPassengerProvidedFeedback(loggedUser);
         feedbackForDriver = feedbackService.createFeedbackForDriver(feedbackForDriver);
-
         Set<FeedbackForDriver> feedbackForDriverSet = driver.getFeedbackForDriver();
         feedbackForDriverSet.add(feedbackForDriver);
+
+        driver.setAverageDriverRating(feedbackForDriverSet
+                .stream()
+                .mapToDouble(FeedbackForDriver::getRating)
+                .average()
+                .orElseThrow());
         return userRepository.updateUser(driver);
     }
 
@@ -171,10 +176,15 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
         feedbackForPassenger.setPassengerReceivedFeedback(userToReceiveFeedback);
         feedbackForPassenger.setDriverProvidedFeedback(loggedUser);
-
         feedbackForPassenger = feedbackService.createFeedbackForPassenger(feedbackForPassenger);
+        Set<FeedbackForPassenger> feedbackForPassengerSet = userToReceiveFeedback.getFeedbackForPassenger();
+        feedbackForPassengerSet.add(feedbackForPassenger);
 
-        userToReceiveFeedback.getFeedbackForPassenger().add(feedbackForPassenger);
+        userToReceiveFeedback.setAveragePassengerRating(feedbackForPassengerSet
+                .stream()
+                .mapToDouble(FeedbackForPassenger::getRating)
+                .average()
+                .orElseThrow());
         return userRepository.updateUser(userToReceiveFeedback);
     }
 

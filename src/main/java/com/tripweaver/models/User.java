@@ -36,9 +36,9 @@ public class User implements Comparable<User> {
     @Column(name = "is_blocked")
     private boolean isBlocked;
     @Column(name = "average_passenger_rating")
-    private int averagePassengerRating;
+    private double averagePassengerRating;
     @Column(name = "average_driver_rating")
-    private int averageDriverRating;
+    private double averageDriverRating;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "avatars_users",
@@ -150,19 +150,19 @@ public class User implements Comparable<User> {
         isBlocked = blocked;
     }
 
-    public int getAveragePassengerRating() {
+    public double getAveragePassengerRating() {
         return averagePassengerRating;
     }
 
-    public void setAveragePassengerRating(int averagePassengerRating) {
+    public void setAveragePassengerRating(double averagePassengerRating) {
         this.averagePassengerRating = averagePassengerRating;
     }
 
-    public int getAverageDriverRating() {
+    public double getAverageDriverRating() {
         return averageDriverRating;
     }
 
-    public void setAverageDriverRating(int averageDriverRating) {
+    public void setAverageDriverRating(double averageDriverRating) {
         this.averageDriverRating = averageDriverRating;
     }
 

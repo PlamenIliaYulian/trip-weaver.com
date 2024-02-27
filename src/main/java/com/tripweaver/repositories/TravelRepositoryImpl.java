@@ -59,15 +59,15 @@ public class TravelRepositoryImpl implements TravelRepository {
         }
     }
 
-    /*Ilia TODO will implement this method after implementation of getAllTravels method
-    *       to reuse its functionality. I suggest we do the same with getTravelsByPassenger.*/
+   /* *//*Ilia TODO will implement this method after implementation of getAllTravels method
+    *       to reuse its functionality. I suggest we do the same with getTravelsByPassenger.*//*
     @Override
     public List<Travel> getTravelsByDriver(User driver, TravelFilterOptions travelFilterOptions) {
-        /*TODO will add driverId in travelFilterOptions in the service layer.*/
+        *//*TODO will add driverId in travelFilterOptions in the service layer.*//*
         return null;
     }
 
-    /*TODo not sure if it's correct - add Filter Options*/
+    *//*TODo not sure if it's correct - add Filter Options*//*
     @Override
     public List<Travel> getTravelsByPassenger(User passenger, TravelFilterOptions travelFilterOptions) {
         try(Session session = sessionFactory.openSession()) {
@@ -80,7 +80,7 @@ public class TravelRepositoryImpl implements TravelRepository {
             }
             return result;
         }
-    }
+    }*/
 
     /*Ilia*/
     @Override

@@ -145,17 +145,4 @@ public class UserRestController {
         return null;
     }
 
-    /*Yuli*/
-    @PostMapping("/{userId}/feedback-for-driver")
-    public List<FeedbackForDriver> createFeedbackForDriver() {
-        return null;
-    }
-
-    /*Ilia*/
-    @PostMapping("/{userId}/feedback-for-passenger")
-    public List<FeedbackForDriver> createFeedbackForPassenger() {
-        return null;
-    }
-
-
 }
