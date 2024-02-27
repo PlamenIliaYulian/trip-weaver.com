@@ -8,6 +8,8 @@ import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import org.springframework.http.HttpHeaders;
 import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
@@ -66,7 +68,8 @@ public class TravelRestController {
 
     /*Yuli*/
     @PutMapping("/{travelId}/status-completed")
-    public Travel completeTravel(){
+    public Travel completeTravel(@RequestHeader HttpHeaders headers,
+                                 @PathVariable int travelId){
         return null;
     }
 
