@@ -3,6 +3,7 @@ package com.tripweaver.controllers.rest;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
@@ -69,7 +70,7 @@ public class TravelRestController {
 
     /*Plamen*/
     @PutMapping("/{travelId}/status-cancelled")
-    public Travel cancelTravel(){
+    public Travel cancelTravel() {
         return null;
     }
 
@@ -112,14 +113,35 @@ public class TravelRestController {
 
     /*Plamen*/
     @GetMapping
-    public List<Travel> getAllTravels(){
+    public List<Travel> getAllTravels() {
         return null;
     }
 
     /*Yuli*/
     @PostMapping("/{travelId}/applications")
-    public Travel applyForATrip(){
-        return null;
+    public Travel applyForATrip(@RequestHeader HttpHeaders headers,
+                                @PathVariable int travelId) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            Travel travelToApplyFor = travelService.getTravelById(travelId);
+            return travelService.applyForATrip(loggedInUser, travelToApplyFor);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    e.getMessage());
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    e.getMessage());
+        }
     }
 
     /*Ilia*/
@@ -145,7 +167,7 @@ public class TravelRestController {
 
     /*Plamen*/
     @DeleteMapping("/{travelId}/applications/{userId}")
-    public Travel declinePassenger(){
+    public Travel declinePassenger() {
         return null;
     }
 
