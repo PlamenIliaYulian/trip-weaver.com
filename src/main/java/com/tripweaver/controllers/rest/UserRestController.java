@@ -7,6 +7,9 @@ import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
+import com.tripweaver.exceptions.AuthenticationException;
+import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.models.Travel;
@@ -14,10 +17,13 @@ import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.*;
 import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.AvatarService;
+import com.tripweaver.models.dtos.UserDto;
+import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -93,11 +100,18 @@ public class UserRestController {
     public List<User> getAllUsers(@RequestHeader HttpHeaders headers,
                                   @RequestParam(required = false) String username,
                                   @RequestParam(required = false) String email,
-                                  @RequestParam(required = false) String firstName,
+                                  @RequestParam(required = false) String phoneNumber,
                                   @RequestParam(required = false) String sortBy,
                                   @RequestParam(required = false) String sortOrder) {
-
-        return userService.getAllUsers(new UserFilterOptions(null, null, null, null, null), new User());
+        try {
+            User loggedUser = authenticationHelper.tryGetUser(headers);
+            UserFilterOptions userFilterOptions = new UserFilterOptions(username, email, phoneNumber, sortBy, sortOrder);
+            return userService.getAllUsers(userFilterOptions, loggedUser);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
     }
 
     /*Yuli*/
@@ -139,9 +153,19 @@ public class UserRestController {
 
     /*Plamen*/
     @PutMapping("/{userId}/unblock")
-    public User unblockUser(@PathVariable int id) {
-
-        return userService.getUserById(id);
+    public User unblockUser(@PathVariable int userId,
+                            @RequestHeader HttpHeaders httpHeaders) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUser(httpHeaders);
+            User userToBeUnblocked = userService.getUserById(userId);
+            return userService.unBlockUser(userToBeUnblocked, loggedUser);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
     }
 
     /*Ilia*/
@@ -153,7 +177,7 @@ public class UserRestController {
     /*Plamen*/
     @GetMapping("/top-10-travel-organizers")
     public List<User> getTopTenTravelOrganizersByRating() {
-        return null;
+        return userService.getTopTenTravelOrganizersByRating();
     }
 
     /*Yuli*/
@@ -189,8 +213,19 @@ public class UserRestController {
 
     /*Plamen*/
     @DeleteMapping("/{userId}/avatar")
-    public User deleteAvatar() {
-        return null;
+    public User deleteAvatar(@PathVariable int userId,
+                             @RequestHeader HttpHeaders headers) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User userToBeRemovedAvatarFrom = userService.getUserById(userId);
+            return userService.deleteAvatar(userToBeRemovedAvatarFrom, loggedUser);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
     }
 
     /*Yuli*/
@@ -264,8 +299,17 @@ public class UserRestController {
 
     /*Plamen*/
     @GetMapping("/{userId}/feedback-for-driver")
-    public List<FeedbackForDriver> getAllFeedbackForDriver() {
-        return null;
+    public List<FeedbackForDriver> getAllFeedbackForDriver(@PathVariable int userId,
+                                                           @RequestHeader HttpHeaders headers) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User driver = userService.getUserById(userId);
+            return userService.getAllFeedbackForDriver(driver);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 
     /*Yuli*/
@@ -304,8 +348,44 @@ public class UserRestController {
 
     /*Plamen - we agreed we can use TravelService*/
     @GetMapping("/{userId}/travels-for-passenger")
-    public List<Travel> getTravelsByPassenger() {
-        return null;
+    public List<Travel> getTravelsByPassenger(@PathVariable int userId,
+                                              @RequestHeader HttpHeaders headers,
+                                              @RequestParam(required = false) String startingPoint,
+                                              @RequestParam(required = false) String endingPoint,
+                                              @RequestParam(required = false) String departureBefore,
+                                              @RequestParam(required = false) String departureAfter,
+                                              @RequestParam(required = false) Integer minFreeSeats,
+                                              @RequestParam(required = false) String driverUsername,
+                                              @RequestParam(required = false) String commentContains,
+                                              @RequestParam(required = false) Integer statusId,
+                                              @RequestParam(required = false) String sortBy,
+                                              @RequestParam(required = false) String sortOrder
+                                              ) {
+        try {
+            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(
+                    startingPoint,
+                    endingPoint,
+                    departureBefore,
+                    departureAfter,
+                    minFreeSeats,
+                    driverUsername,
+                    commentContains,
+                    statusId,
+                    sortBy,
+                    sortOrder);
+            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User passenger = userService.getUserById(userId);
+            return travelService.getTravelsByPassenger(passenger, loggedUser, travelFilterOptions);
+        } catch (AuthenticationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnauthorizedOperationException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
     }
+
+
+
 
 }

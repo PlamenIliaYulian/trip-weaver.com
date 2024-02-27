@@ -6,6 +6,10 @@ import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
+import com.tripweaver.controllers.helpers.AuthenticationHelper;
+import com.tripweaver.exceptions.AuthenticationException;
+import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.services.contracts.TravelService;
@@ -14,6 +18,11 @@ import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import com.tripweaver.services.contracts.TravelService;
+import com.tripweaver.services.contracts.UserService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -60,8 +69,19 @@ public class TravelRestController {
 
     /*Plamen*/
     @PutMapping("/{travelId}/status-cancelled")
-    public Travel cancelTravel() {
-        return null;
+    public Travel cancelTravel(@PathVariable int travelId,
+                               @RequestHeader HttpHeaders httpHeaders) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUser(httpHeaders);
+            Travel travel = travelService.getTravelById(travelId);
+            return travelService.cancelTravel(travel, loggedUser);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    e.getMessage());
+        }
     }
 
     /*Yuli*/
@@ -103,8 +123,34 @@ public class TravelRestController {
 
     /*Plamen*/
     @GetMapping
-    public List<Travel> getAllTravels() {
-        return null;
+    public List<Travel> getAllTravels(@RequestHeader HttpHeaders headers,
+                                      @RequestParam(required = false) String startingPoint,
+                                      @RequestParam(required = false) String endingPoint,
+                                      @RequestParam(required = false) String departureBefore,
+                                      @RequestParam(required = false) String departureAfter,
+                                      @RequestParam(required = false) Integer minFreeSeats,
+                                      @RequestParam(required = false) String driverUsername,
+                                      @RequestParam(required = false) String commentContains,
+                                      @RequestParam(required = false) Integer statusId,
+                                      @RequestParam(required = false) String sortBy,
+                                      @RequestParam(required = false) String sortOrder) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUser(headers);
+            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(
+                    startingPoint,
+                    endingPoint,
+                    departureBefore,
+                    departureAfter,
+                    minFreeSeats,
+                    driverUsername,
+                    commentContains,
+                    statusId,
+                    sortBy,
+                    sortOrder);
+            return travelService.getAllTravels(travelFilterOptions);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 
     /*Yuli*/
@@ -157,8 +203,23 @@ public class TravelRestController {
 
     /*Plamen*/
     @DeleteMapping("/{travelId}/applications/{userId}")
-    public Travel declinePassenger() {
-        return null;
+    public Travel declinePassenger(@PathVariable int travelId,
+                                   @PathVariable int userId,
+                                   @RequestHeader HttpHeaders headers) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUser(headers);
+            User userToBeDeclined = userService.getUserById(userId);
+            Travel travel = travelService.getTravelById(travelId);
+            return travelService.declinePassenger(userToBeDeclined, travel, loggedUser);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
     }
 
 
