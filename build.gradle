@@ -26,6 +26,9 @@ dependencies {
 	implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.37.0'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

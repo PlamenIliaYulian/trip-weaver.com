@@ -1,15 +1,20 @@
 package com.tripweaver.controllers.rest;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
+import com.tripweaver.models.BingMapLocation;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import com.tripweaver.services.contracts.BingMapService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -30,14 +35,17 @@ public class TravelRestController {
     private final TravelService travelService;
     private final UserService userService;
 
+    private final BingMapService bingMapService;
+
     public TravelRestController(ModelsMapper modelsMapper,
                                 AuthenticationHelper authenticationHelper,
                                 TravelService travelService,
-                                UserService userService) {
+                                UserService userService, BingMapService bingMapService) {
         this.modelsMapper = modelsMapper;
         this.authenticationHelper = authenticationHelper;
         this.travelService = travelService;
         this.userService = userService;
+        this.bingMapService = bingMapService;
     }
 
     /*Ilia*/
@@ -213,6 +221,11 @@ public class TravelRestController {
         } catch (UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
+    }
+
+    @GetMapping("/getLocation")
+    public String getStartingCoordinates(@RequestParam("address") String address){
+        return bingMapService.getLocation(address);
     }
 
 

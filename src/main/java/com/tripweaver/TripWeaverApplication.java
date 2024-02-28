@@ -8,6 +8,7 @@ public class TripWeaverApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TripWeaverApplication.class, args);
+
 	}
 
 }

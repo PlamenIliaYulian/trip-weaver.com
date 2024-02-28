@@ -133,4 +133,6 @@ public class TravelServiceImpl implements TravelService {
         usersApprovedForTheTravel.remove(userToBeDeclined);
         return travelRepository.updateTravel(travel);
     }
+
+
 }
