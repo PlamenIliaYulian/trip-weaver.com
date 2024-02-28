@@ -5,11 +5,12 @@ import com.tripweaver.models.enums.FeedbackType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @Entity
 @Table(name = "feedback")
 @SecondaryTable(name = "comments_for_feedback", pkJoinColumns = @PrimaryKeyJoinColumn(name = "feedback_id"))
-public class Feedback {
+public class Feedback implements Comparable<Feedback>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,5 +102,13 @@ public class Feedback {
 
     public void setTravel(Travel travel) {
         this.travel = travel;
+    }
+
+    @Override
+    public int compareTo(Feedback o){
+        return Comparator.comparing(Feedback::getAuthor)
+                .thenComparing(Feedback::getReceiver)
+                .thenComparing(Feedback::getTravel)
+                .compare(this, o);
     }
 }
