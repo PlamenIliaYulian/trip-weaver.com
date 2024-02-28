@@ -4,8 +4,9 @@ import com.tripweaver.models.Feedback;
 
 public interface FeedbackService {
 
+    /*Plamen*/
     Feedback createFeedback (Feedback feedback);
-    /*Ilia*/
+    /*Yuli*/
     Feedback getFeedbackForDriverById (int id);
     /*Ilia*/
     Feedback getFeedbackForPassengerById (int id);

@@ -219,10 +219,15 @@ public class TravelRestController {
         }
     }
 
+    @GetMapping("/count")
+    public Long getAllTravelsCount() {
+        return travelService.getAllTravelsCount();
+    }
+
+
     @GetMapping("/getLocation")
     public String getStartingCoordinates(@RequestParam("q") String address){
         return bingMapService.getLocation(address);
     }
-
 
 }

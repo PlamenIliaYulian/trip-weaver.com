@@ -36,5 +36,6 @@ public interface TravelService {
 
     /*Ilia*/
     Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn);
-
+    /*Plamen*/
+    Long getAllTravelsCount();
 }

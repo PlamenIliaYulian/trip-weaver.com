@@ -134,5 +134,10 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.updateTravel(travel);
     }
 
+    @Override
+    public Long getAllTravelsCount() {
+        return travelRepository.getAllTravelsCount();
+    }
+
 
 }

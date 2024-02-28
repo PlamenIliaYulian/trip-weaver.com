@@ -16,4 +16,5 @@ public interface TravelRepository {
 
     List<Travel> getAllTravels(TravelFilterOptions travelFilterOptions);
 
+    Long getAllTravelsCount();
 }

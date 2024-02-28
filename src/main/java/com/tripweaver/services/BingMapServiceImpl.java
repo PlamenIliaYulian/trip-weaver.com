@@ -24,8 +24,7 @@ public class BingMapServiceImpl implements BingMapService {
     @Override
     public String getLocation(String address){
         StringBuilder sb = new StringBuilder();
-        address = address.replaceAll(" ", "%20");
-        sb.append(url).append(address).append(apiKey);
+        sb.append(url).append(address.replaceAll(" ", "%20")).append(apiKey);
 
         try {
             HttpRequest getRequest = HttpRequest.newBuilder()

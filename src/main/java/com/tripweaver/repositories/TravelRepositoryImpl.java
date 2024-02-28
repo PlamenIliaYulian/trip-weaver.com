@@ -133,6 +133,17 @@ public class TravelRepositoryImpl implements TravelRepository {
             return query.list();
         }
     }
+
+    @Override
+    public Long getAllTravelsCount() {
+        try(Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from Travel travel " +
+                    "JOIN travel.status status where status.statusName = :name ", Long.class);
+            query.setParameter("name", "COMPLETED");
+            return query.list().get(0);
+        }
+    }
+
     private String generateOrderBy(TravelFilterOptions filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {
             return "";
