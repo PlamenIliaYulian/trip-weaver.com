@@ -1,15 +1,11 @@
 package com.tripweaver.controllers.rest;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
-import com.tripweaver.models.BingMapLocation;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.TravelDto;
@@ -224,7 +220,7 @@ public class TravelRestController {
     }
 
     @GetMapping("/getLocation")
-    public String getStartingCoordinates(@RequestParam("address") String address){
+    public String getStartingCoordinates(@RequestParam("q") String address){
         return bingMapService.getLocation(address);
     }
 
