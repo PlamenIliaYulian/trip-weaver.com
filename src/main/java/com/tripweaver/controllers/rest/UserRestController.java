@@ -291,7 +291,7 @@ public class UserRestController {
         }
     }
 
-    /*Ilia - we agreed we can use TravelService*/
+    /*Ilia*/
     @GetMapping("/{userId}/travels-for-driver")
     public List<Travel> getTravelsByDriver(@PathVariable int userId,
                                            @RequestHeader HttpHeaders headers,

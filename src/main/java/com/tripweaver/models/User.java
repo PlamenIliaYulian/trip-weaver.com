@@ -53,13 +53,6 @@ public class User implements Comparable<User> {
     private Set<Role> roles;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "driverReceivedFeedback", fetch = FetchType.EAGER)
-    private Set<FeedbackForDriver> feedbackForDriver;
-    @JsonIgnore
-    @OneToMany(mappedBy = "passengerReceivedFeedback", fetch = FetchType.EAGER)
-    private Set<FeedbackForPassenger> feedbackForPassenger;
-
-    @JsonIgnore
     @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
     private Set<Feedback> feedback;
 
@@ -184,22 +177,6 @@ public class User implements Comparable<User> {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public Set<FeedbackForDriver> getFeedbackForDriver() {
-        return feedbackForDriver;
-    }
-
-    public void setFeedbackForDriver(Set<FeedbackForDriver> feedbackForDriver) {
-        this.feedbackForDriver = feedbackForDriver;
-    }
-
-    public Set<FeedbackForPassenger> getFeedbackForPassenger() {
-        return feedbackForPassenger;
-    }
-
-    public void setFeedbackForPassenger(Set<FeedbackForPassenger> feedbackForPassenger) {
-        this.feedbackForPassenger = feedbackForPassenger;
     }
 
     public Set<Feedback> getFeedback() {

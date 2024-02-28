@@ -2,8 +2,7 @@ package com.tripweaver.repositories;
 
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.Feedback;
-import com.tripweaver.models.FeedbackForDriver;
-import com.tripweaver.models.FeedbackForPassenger;
+import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.repositories.contracts.FeedbackRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,33 +20,15 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    @Override
-    public FeedbackForDriver createFeedbackForDriver(FeedbackForDriver feedbackForDriver) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.persist(feedbackForDriver);
-            session.getTransaction().commit();
-        }
-        return feedbackForDriver;
-    }
-
-    @Override
-    public FeedbackForPassenger createFeedbackForPassenger(FeedbackForPassenger FeedbackForPassenger) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.persist(FeedbackForPassenger);
-            session.getTransaction().commit();
-        }
-        return FeedbackForPassenger;
-    }
 
     /*Ilia*/
     @Override
-    public FeedbackForDriver getFeedbackForDriverById(int id) {
+    public Feedback getFeedbackForDriverById(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Query<FeedbackForDriver> query =
-                    session.createQuery("from FeedbackForDriver where feedbackId = :id", FeedbackForDriver.class);
+            Query<Feedback> query =
+                    session.createQuery("from Feedback where feedbackId = :id AND feedbackType = :type", Feedback.class);
             query.setParameter("id", id);
+            query.setParameter("type", FeedbackType.FOR_DRIVER);
             if (query.list().isEmpty()) {
                 throw new EntityNotFoundException("Feedback for driver", id);
             }
@@ -57,13 +38,14 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 
     /*Ilia*/
     @Override
-    public FeedbackForPassenger getFeedbackForPassengerById(int id) {
+    public Feedback getFeedbackForPassengerById(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Query<FeedbackForPassenger> query =
-                    session.createQuery("from FeedbackForPassenger where feedbackId = :id", FeedbackForPassenger.class);
+            Query<Feedback> query =
+                    session.createQuery("from Feedback where feedbackId = :id AND feedbackType = :type", Feedback.class);
             query.setParameter("id", id);
+            query.setParameter("type", FeedbackType.FOR_PASSENGER);
             if (query.list().isEmpty()) {
-                throw new EntityNotFoundException("Feedback for passenger", id);
+                throw new EntityNotFoundException("Feedback for driver", id);
             }
             return query.list().get(0);
         }

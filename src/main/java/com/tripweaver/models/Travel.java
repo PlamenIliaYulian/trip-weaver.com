@@ -18,12 +18,12 @@ public class Travel implements Comparable<Travel> {
     private int travelId;
     @Column(name = "starting_point")
     private String startingPoint;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity=City.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "starting_point_city_id")
     private City startingPointCity;
     @Column(name = "starting_point_address")
     private String startingPointAddress;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity=City.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "ending_point_city_id")
     private City endingPointCity;
     @Column(name = "ending_point_address")

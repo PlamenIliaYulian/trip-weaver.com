@@ -18,7 +18,6 @@ public class Feedback {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_author_id")
     private User author;
-
     @JsonIgnore
     @ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
     @JoinColumn(name = "user_receiver_id")

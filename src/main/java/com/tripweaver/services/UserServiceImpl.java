@@ -1,6 +1,7 @@
 package com.tripweaver.services;
 
 import com.tripweaver.models.*;
+import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
 import com.tripweaver.services.contracts.AvatarService;
@@ -153,6 +154,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
         driver.setAverageDriverRating(feedbackForDriverSet
                 .stream()
+                .filter(feedback -> feedback.getFeedbackType().equals(FeedbackType.FOR_DRIVER))
                 .mapToDouble(Feedback::getRating)
                 .average()
                 .orElseThrow());
@@ -177,6 +179,7 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
         userToReceiveFeedback.setAveragePassengerRating(feedbackForPassengerSet
                 .stream()
+                .filter(feedback -> feedback.getFeedbackType().equals(FeedbackType.FOR_PASSENGER))
                 .mapToDouble(Feedback::getRating)
                 .average()
                 .orElseThrow());
