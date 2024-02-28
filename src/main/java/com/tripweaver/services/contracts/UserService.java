@@ -51,10 +51,10 @@ public interface UserService {
     User deleteAvatar(User userToBeUpdated, User loggedUser);
 
     /*Ilia*/
-    Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,Travel travel,User userToGiveFeedback);
+    Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,Travel travel,User userToGiveFeedback, User driver);
 
     /*Plamen*/
-    Feedback leaveFeedbackForPassenger(Feedback feedbackForPassenger,Travel travel,User loggedUser);
+    Feedback leaveFeedbackForPassenger(Feedback feedbackForPassenger,Travel travel,User loggedUser, User passenger);
 
     /*Yuli*/
     List<Feedback> getAllFeedbackForDriver(User user);

@@ -49,7 +49,6 @@ public class ModelsMapperImpl implements ModelsMapper {
     @Override
     public Feedback feedbackForPassengerFromDto(FeedbackDto feedbackDto) {
         Feedback feedbackForPassenger = new Feedback();
-        feedbackForPassenger.setReceiver(userService.getUserById(feedbackDto.getReceiverUserId()));
         feedbackForPassenger.setRating(feedbackDto.getRating());
         feedbackForPassenger.setFeedbackType(FeedbackType.FOR_PASSENGER);
         feedbackForPassenger.setContent(feedbackDto.getContent());
@@ -71,7 +70,6 @@ public class ModelsMapperImpl implements ModelsMapper {
     @Override
     public Feedback feedbackForDriverFromDto(FeedbackDto feedbackDto) {
         Feedback feedbackForDriver = new Feedback();
-        feedbackForDriver.setReceiver(userService.getUserById(feedbackDto.getReceiverUserId()));
         feedbackForDriver.setRating(feedbackDto.getRating());
         feedbackForDriver.setFeedbackType(FeedbackType.FOR_DRIVER);
         feedbackForDriver.setContent(feedbackDto.getContent());

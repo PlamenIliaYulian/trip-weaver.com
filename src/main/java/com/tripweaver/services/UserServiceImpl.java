@@ -141,13 +141,15 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
     @Override
     public Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,
                                            Travel travel,
-                                           User loggedUser) {
+                                           User loggedUser,
+                                           User driver) {
         permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         permissionHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
-        User driver = feedbackForDriver.getReceiver();
         permissionHelper.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
 
+        feedbackForDriver.setReceiver(driver);
         feedbackForDriver.setAuthor(loggedUser);
+        feedbackForDriver.setTravel(travel);
         feedbackForDriver = feedbackService.createFeedback(feedbackForDriver);
         Set<Feedback> feedbackForDriverSet = driver.getFeedback();
         feedbackForDriverSet.add(feedbackForDriver);
@@ -166,24 +168,26 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
     @Override
     public Feedback leaveFeedbackForPassenger(Feedback feedbackForPassenger,
                                               Travel travel,
-                                              User loggedUser) {
+                                              User loggedUser,
+                                              User passenger) {
         permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        User userToReceiveFeedback = feedbackForPassenger.getReceiver();
-        permissionHelper.isTheUserInTheApprovedListOfTheTravel(userToReceiveFeedback, travel, USER_NOT_IN_APPROVED_LIST);
+        permissionHelper.isTheUserInTheApprovedListOfTheTravel(passenger, travel, USER_NOT_IN_APPROVED_LIST);
 
+        feedbackForPassenger.setReceiver(passenger);
         feedbackForPassenger.setAuthor(loggedUser);
+        feedbackForPassenger.setTravel(travel);
         feedbackForPassenger = feedbackService.createFeedback(feedbackForPassenger);
-        Set<Feedback> feedbackForPassengerSet = userToReceiveFeedback.getFeedback();
+        Set<Feedback> feedbackForPassengerSet = passenger.getFeedback();
         feedbackForPassengerSet.add(feedbackForPassenger);
 
-        userToReceiveFeedback.setAveragePassengerRating(feedbackForPassengerSet
+        passenger.setAveragePassengerRating(feedbackForPassengerSet
                 .stream()
                 .filter(feedback -> feedback.getFeedbackType().equals(FeedbackType.FOR_PASSENGER))
                 .mapToDouble(Feedback::getRating)
                 .average()
                 .orElseThrow());
-        userRepository.updateUser(userToReceiveFeedback);
+        userRepository.updateUser(passenger);
         return feedbackForPassenger;
     }
 

@@ -31,6 +31,10 @@ public class Feedback {
     private LocalDateTime created;
     @Column(name = "content", table = "comments_for_feedback")
     private String content;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "travel_id")
+    private Travel travel;
 
     public Feedback() {
     }
@@ -89,5 +93,13 @@ public class Feedback {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Travel getTravel() {
+        return travel;
+    }
+
+    public void setTravel(Travel travel) {
+        this.travel = travel;
     }
 }

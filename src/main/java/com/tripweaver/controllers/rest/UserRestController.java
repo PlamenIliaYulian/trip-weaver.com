@@ -218,7 +218,7 @@ public class UserRestController {
             User driver = userService.getUserById(userId);
             Travel travel = travelService.getTravelById(travelId);
             Feedback feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto);
-            return userService.leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser);
+            return userService.leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser, driver);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
@@ -249,7 +249,7 @@ public class UserRestController {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             Travel travel = travelService.getTravelById(travelId);
             Feedback feedbackForPassenger = modelsMapper.feedbackForPassengerFromDto(feedbackDto);
-            return userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, loggedUser);
+            return userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, loggedUser, passenger);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthenticationException e) {
