@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/travels")
 public class TravelRestController {
-
+    public static final int TRAVEL_STATUS_CREATED_ID = 1;
     private final ModelsMapper modelsMapper;
     private final AuthenticationHelper authenticationHelper;
     private final TravelService travelService;
@@ -125,7 +125,6 @@ public class TravelRestController {
                                       @RequestParam(required = false) Integer minFreeSeats,
                                       @RequestParam(required = false) String driverUsername,
                                       @RequestParam(required = false) String commentContains,
-                                      @RequestParam(required = false) Integer statusId,
                                       @RequestParam(required = false) String sortBy,
                                       @RequestParam(required = false) String sortOrder) {
         try {
@@ -138,7 +137,7 @@ public class TravelRestController {
                     minFreeSeats,
                     driverUsername,
                     commentContains,
-                    statusId,
+                    TRAVEL_STATUS_CREATED_ID,
                     sortBy,
                     sortOrder);
             return travelService.getAllTravels(travelFilterOptions);

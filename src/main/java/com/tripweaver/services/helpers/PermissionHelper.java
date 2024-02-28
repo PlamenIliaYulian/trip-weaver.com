@@ -21,18 +21,17 @@ public class PermissionHelper {
     public static final int COMPLETED_STATUS = 3;
     private final UserRepository userRepository;
 
-    private final TravelStatusService travelStatusService;
-
-    public PermissionHelper(UserRepository userRepository, TravelStatusService travelStatusService) {
+    public PermissionHelper(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.travelStatusService = travelStatusService;
     }
 
     public void isAdminOrSameUser(User userToBeUpdated,
                                   User loggedUser,
                                   String message) {
-        isSameUser(userToBeUpdated, loggedUser, message);
-        isAdmin(loggedUser, message);
+        if (loggedUser.getRoles().stream().noneMatch(role -> role.getRoleId() == ADMIN_ID) ||
+                !loggedUser.equals(userToBeUpdated)) {
+            throw new UnauthorizedOperationException(message);
+        }
     }
 
     public void isSameUser(User userToBeUpdated,
@@ -126,7 +125,7 @@ public class PermissionHelper {
     }
 
     public void isTravelOpenForApplication(Travel travelToApplyFor, String message) {
-        if (!travelToApplyFor.getStatus().equals(travelStatusService.getStatusById(TRAVEL_STATUS_CREATED_ID))) {
+        if (travelToApplyFor.getStatus().getTravelStatusId() != TRAVEL_STATUS_CREATED_ID) {
             throw new UnauthorizedOperationException(message);
         }
     }
@@ -166,4 +165,12 @@ public class PermissionHelper {
         }
     }
 
+    public void isDriverOrSameUser(Travel travel,
+                                   User userToBeUpdated,
+                                   User loggedUser,
+                                   String message) {
+       if (!travel.getDriver().equals(loggedUser) || !userToBeUpdated.equals(loggedUser)) {
+           throw new UnauthorizedOperationException(message);
+       }
+    }
 }

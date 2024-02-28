@@ -48,10 +48,10 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.createTravel(travel);
     }
 
-
     @Override
     public Travel cancelTravel(Travel travel, User loggedUser) {
         permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         TravelStatus cancelStatus = travelStatusService.getStatusById(TRAVEL_STATUS_CANCEL_ID);
         travel.setStatus(cancelStatus);
         return travelRepository.updateTravel(travel);
@@ -60,6 +60,7 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public Travel completeTravel(Travel travel, User loggedUser) {
         permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         TravelStatus completeStatus = travelStatusService.getStatusById(TRAVEL_STATUS_COMPLETE_ID);
         travel.setStatus(completeStatus);
         return travelRepository.updateTravel(travel);
@@ -102,12 +103,12 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.updateTravel(travelToApplyFor);
     }
 
-
     @Override
     public Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel) {
         permissionHelper.isUserBlocked(userToBeApproved, UNAUTHORIZED_OPERATION_BLOCKED);
         permissionHelper.isUserBlocked(loggedUser, UNAUTHORIZED_OPERATION_BLOCKED);
         permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
         permissionHelper.hasAlreadyApplied(userToBeApproved, travel, INVALID_OPERATION);
         usersAppliedForTheTravel.remove(userToBeApproved);
@@ -119,7 +120,8 @@ public class TravelServiceImpl implements TravelService {
     /*Ilia*/
     @Override
     public Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn) {
-        permissionHelper.isUserTheDriver(travel, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        permissionHelper.isDriverOrSameUser(travel, userToBeDeclined, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
         permissionHelper.hasUserAppliedOrBeingApprovedForTheTravel(
@@ -131,6 +133,4 @@ public class TravelServiceImpl implements TravelService {
         usersApprovedForTheTravel.remove(userToBeDeclined);
         return travelRepository.updateTravel(travel);
     }
-
-
 }

@@ -24,7 +24,7 @@ public class TravelFilterOptions {
                                int minFreeSeats,
                                String driverUsername,
                                String commentContains,
-                               int passengerId,
+                               int statusId,
                                String sortBy,
                                String sortOrder) {
         this.startingPoint = Optional.ofNullable(startingPoint);
@@ -34,7 +34,7 @@ public class TravelFilterOptions {
         this.minFreeSeats = Optional.of(minFreeSeats);
         this.driverUsername = Optional.ofNullable(driverUsername);
         this.commentContains = Optional.ofNullable(commentContains);
-        this.statusId = Optional.of(passengerId);
+        this.statusId = Optional.of(statusId);
         this.sortBy = Optional.ofNullable(sortBy);
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
