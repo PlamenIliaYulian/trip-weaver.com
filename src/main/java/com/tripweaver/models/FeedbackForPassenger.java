@@ -33,8 +33,9 @@ public class FeedbackForPassenger implements Comparable<FeedbackForPassenger>{
     @Column(name = "created")
     private LocalDateTime created;
 
-    @Column(name = "content", table = "feedback_for_passengers_comments")
-    private String content;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "starting_point_city_id")
+    private CommentForPassenger content;
 
     public FeedbackForPassenger() {
     }

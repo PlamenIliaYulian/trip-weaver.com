@@ -18,10 +18,22 @@ public class Travel implements Comparable<Travel> {
     private int travelId;
     @Column(name = "starting_point")
     private String startingPoint;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "starting_point_city_id")
+    private City startingPointCity;
+    @Column(name = "starting_point_address")
+    private String startingPointAddress;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ending_point_city_id")
+    private City endingPointCity;
+    @Column(name = "ending_point_address")
+    private String endingPointAddress;
     @Column(name = "ending_point")
     private String endingPoint;
+
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
+
     @Column(name = "free_seats")
     private int freeSeats;
     @Column(name = "created")
@@ -46,7 +58,6 @@ public class Travel implements Comparable<Travel> {
             joinColumns = @JoinColumn(name = "travel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> usersApprovedForTheTravel;
-
     public Travel() {
     }
 
@@ -136,6 +147,38 @@ public class Travel implements Comparable<Travel> {
 
     public void setDriver(User driver) {
         this.driver = driver;
+    }
+
+    public City getStartingPointCity() {
+        return startingPointCity;
+    }
+
+    public void setStartingPointCity(City startingPointCity) {
+        this.startingPointCity = startingPointCity;
+    }
+
+    public String getStartingPointAddress() {
+        return startingPointAddress;
+    }
+
+    public void setStartingPointAddress(String startingPointAddress) {
+        this.startingPointAddress = startingPointAddress;
+    }
+
+    public City getEndingPointCity() {
+        return endingPointCity;
+    }
+
+    public void setEndingPointCity(City endingPointCity) {
+        this.endingPointCity = endingPointCity;
+    }
+
+    public String getEndingPointAddress() {
+        return endingPointAddress;
+    }
+
+    public void setEndingPointAddress(String endingPointAddress) {
+        this.endingPointAddress = endingPointAddress;
     }
 
     @Override
