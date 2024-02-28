@@ -138,23 +138,22 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
     /*Ilia*/
     @Override
-    public FeedbackForDriver leaveFeedbackForDriver(FeedbackForDriver feedbackForDriver,
-                                       Travel travel,
-                                       User loggedUser,
-                                       User driver) {
+    public Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,
+                                           Travel travel,
+                                           User loggedUser) {
         permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         permissionHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
+        User driver = feedbackForDriver.getReceiver();
         permissionHelper.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
 
-        feedbackForDriver.setDriverReceivedFeedback(driver);
-        feedbackForDriver.setPassengerProvidedFeedback(loggedUser);
-        feedbackForDriver = feedbackService.createFeedbackForDriver(feedbackForDriver);
-        Set<FeedbackForDriver> feedbackForDriverSet = driver.getFeedbackForDriver();
+        feedbackForDriver.setAuthor(loggedUser);
+        feedbackForDriver = feedbackService.createFeedback(feedbackForDriver);
+        Set<Feedback> feedbackForDriverSet = driver.getFeedback();
         feedbackForDriverSet.add(feedbackForDriver);
 
         driver.setAverageDriverRating(feedbackForDriverSet
                 .stream()
-                .mapToDouble(FeedbackForDriver::getRating)
+                .mapToDouble(Feedback::getRating)
                 .average()
                 .orElseThrow());
         userRepository.updateUser(driver);
@@ -163,24 +162,22 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
 
 
     @Override
-    public FeedbackForPassenger leaveFeedbackForPassenger(
-            FeedbackForPassenger feedbackForPassenger,
-            Travel travel,
-            User loggedUser,
-            User userToReceiveFeedback) {
+    public Feedback leaveFeedbackForPassenger(Feedback feedbackForPassenger,
+                                              Travel travel,
+                                              User loggedUser) {
         permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        User userToReceiveFeedback = feedbackForPassenger.getReceiver();
         permissionHelper.isTheUserInTheApprovedListOfTheTravel(userToReceiveFeedback, travel, USER_NOT_IN_APPROVED_LIST);
 
-        feedbackForPassenger.setPassengerReceivedFeedback(userToReceiveFeedback);
-        feedbackForPassenger.setDriverProvidedFeedback(loggedUser);
-        feedbackForPassenger = feedbackService.createFeedbackForPassenger(feedbackForPassenger);
-        Set<FeedbackForPassenger> feedbackForPassengerSet = userToReceiveFeedback.getFeedbackForPassenger();
+        feedbackForPassenger.setAuthor(loggedUser);
+        feedbackForPassenger = feedbackService.createFeedback(feedbackForPassenger);
+        Set<Feedback> feedbackForPassengerSet = userToReceiveFeedback.getFeedback();
         feedbackForPassengerSet.add(feedbackForPassenger);
 
         userToReceiveFeedback.setAveragePassengerRating(feedbackForPassengerSet
                 .stream()
-                .mapToDouble(FeedbackForPassenger::getRating)
+                .mapToDouble(Feedback::getRating)
                 .average()
                 .orElseThrow());
         userRepository.updateUser(userToReceiveFeedback);
@@ -188,19 +185,19 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
     }
 
     @Override
-    public List<FeedbackForDriver> getAllFeedbackForDriver(User user) {
-        return user.getFeedbackForDriver()
+    public List<Feedback> getAllFeedbackForDriver(User user) {
+        return user.getFeedback()
                 .stream()
-                .sorted(Comparator.comparing(FeedbackForDriver::getCreated).reversed())
+                .sorted(Comparator.comparing(Feedback::getCreated).reversed())
                 .collect(Collectors.toList());
     }
 
     /*Ilia*/
     @Override
-    public List<FeedbackForPassenger> getAllFeedbackForPassenger(User user) {
-        return user.getFeedbackForPassenger()
+    public List<Feedback> getAllFeedbackForPassenger(User user) {
+        return user.getFeedback()
                 .stream()
-                .sorted(Comparator.comparing(FeedbackForPassenger::getCreated).reversed())
+                .sorted(Comparator.comparing(Feedback::getCreated).reversed())
                 .collect(Collectors.toList());
     }
 

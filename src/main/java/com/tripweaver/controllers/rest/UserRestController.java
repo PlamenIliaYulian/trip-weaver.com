@@ -3,10 +3,7 @@ package com.tripweaver.controllers.rest;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.*;
-import com.tripweaver.models.FeedbackForDriver;
-import com.tripweaver.models.FeedbackForPassenger;
-import com.tripweaver.models.Travel;
-import com.tripweaver.models.User;
+import com.tripweaver.models.*;
 import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
 import com.tripweaver.models.dtos.UserDtoUpdate;
@@ -212,16 +209,16 @@ public class UserRestController {
 
     /*Yuli*/
     @PostMapping("/{userId}/travels/{travelId}/feedback-for-driver")
-    public FeedbackForDriver leaveFeedbackForDriver(@RequestHeader HttpHeaders headers,
-                                                    @PathVariable int userId,
-                                                    @PathVariable int travelId,
-                                                    @Valid @RequestBody FeedbackDto feedbackDto) {
+    public Feedback leaveFeedbackForDriver(@RequestHeader HttpHeaders headers,
+                                           @PathVariable int userId,
+                                           @PathVariable int travelId,
+                                           @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User driver = userService.getUserById(userId);
             Travel travel = travelService.getTravelById(travelId);
-            FeedbackForDriver feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto);
-            return userService.leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser, driver);
+            Feedback feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto);
+            return userService.leaveFeedbackForDriver(feedbackForDriver, travel, loggedInUser);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
@@ -243,16 +240,16 @@ public class UserRestController {
 
     /*Ilia*/
     @PostMapping("/{userId}/travels/{travelId}/feedback-for-passenger")
-    public FeedbackForPassenger leaveFeedbackForPassenger(@PathVariable int userId,
-                                                          @PathVariable int travelId,
-                                                          @RequestHeader HttpHeaders headers,
-                                                          @RequestBody FeedbackDto feedbackDto) {
+    public Feedback leaveFeedbackForPassenger(@PathVariable int userId,
+                                              @PathVariable int travelId,
+                                              @RequestHeader HttpHeaders headers,
+                                              @RequestBody FeedbackDto feedbackDto) {
         try {
             User passenger = userService.getUserById(userId);
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             Travel travel = travelService.getTravelById(travelId);
-            FeedbackForPassenger feedbackForPassenger = modelsMapper.feedbackForPassengerFromDto(feedbackDto);
-            return userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, loggedUser, passenger);
+            Feedback feedbackForPassenger = modelsMapper.feedbackForPassengerFromDto(feedbackDto);
+            return userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, loggedUser);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthenticationException e) {
@@ -266,8 +263,8 @@ public class UserRestController {
 
     /*Plamen*/
     @GetMapping("/{driverId}/feedback-for-driver")
-    public List<FeedbackForDriver> getAllFeedbackForDriver(@PathVariable int driverId,
-                                                           @RequestHeader HttpHeaders headers) {
+    public List<Feedback> getAllFeedbackForDriver(@PathVariable int driverId,
+                                                  @RequestHeader HttpHeaders headers) {
         try {
             authenticationHelper.tryGetUserFromHeaders(headers);
             User driver = userService.getUserById(driverId);
@@ -281,7 +278,7 @@ public class UserRestController {
 
     /*Yuli*/
     @GetMapping("/{userId}/feedback-for-passenger")
-    public List<FeedbackForPassenger> getAllFeedbackForPassenger(@PathVariable int userId,
+    public List<Feedback> getAllFeedbackForPassenger(@PathVariable int userId,
                                                                  @RequestHeader HttpHeaders httpHeaders) {
         try {
             authenticationHelper.tryGetUserFromHeaders(httpHeaders);

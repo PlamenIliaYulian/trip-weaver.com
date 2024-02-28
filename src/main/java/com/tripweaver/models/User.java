@@ -59,6 +59,10 @@ public class User implements Comparable<User> {
     @OneToMany(mappedBy = "passengerReceivedFeedback", fetch = FetchType.EAGER)
     private Set<FeedbackForPassenger> feedbackForPassenger;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
+    private Set<Feedback> feedback;
+
     public User() {
     }
 
@@ -196,6 +200,14 @@ public class User implements Comparable<User> {
 
     public void setFeedbackForPassenger(Set<FeedbackForPassenger> feedbackForPassenger) {
         this.feedbackForPassenger = feedbackForPassenger;
+    }
+
+    public Set<Feedback> getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(Set<Feedback> feedback) {
+        this.feedback = feedback;
     }
 
     @Override

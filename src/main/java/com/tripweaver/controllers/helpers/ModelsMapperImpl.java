@@ -1,14 +1,12 @@
 package com.tripweaver.controllers.helpers;
 
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
-import com.tripweaver.models.FeedbackForDriver;
-import com.tripweaver.models.FeedbackForPassenger;
-import com.tripweaver.models.Travel;
-import com.tripweaver.models.User;
+import com.tripweaver.models.*;
 import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
 import com.tripweaver.models.dtos.UserDtoUpdate;
+import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,11 +47,11 @@ public class ModelsMapperImpl implements ModelsMapper {
     }
 
     @Override
-    public FeedbackForPassenger feedbackForPassengerFromDto(FeedbackDto feedbackDto) {
-        FeedbackForPassenger feedbackForPassenger = new FeedbackForPassenger();
-        User userReceivingFeedback = userService.getUserById(feedbackDto.getReceiverUserId());
-        feedbackForPassenger.setPassengerReceivedFeedback(userReceivingFeedback);
+    public Feedback feedbackForPassengerFromDto(FeedbackDto feedbackDto) {
+        Feedback feedbackForPassenger = new Feedback();
+        feedbackForPassenger.setReceiver(userService.getUserById(feedbackDto.getReceiverUserId()));
         feedbackForPassenger.setRating(feedbackDto.getRating());
+        feedbackForPassenger.setFeedbackType(FeedbackType.FOR_PASSENGER);
         feedbackForPassenger.setContent(feedbackDto.getContent());
         return feedbackForPassenger;
     }
@@ -71,14 +69,12 @@ public class ModelsMapperImpl implements ModelsMapper {
     }
 
     @Override
-    public FeedbackForDriver feedbackForDriverFromDto(
-            FeedbackDto feedbackDto) {
-        FeedbackForDriver feedbackForDriver = new FeedbackForDriver();
+    public Feedback feedbackForDriverFromDto(FeedbackDto feedbackDto) {
+        Feedback feedbackForDriver = new Feedback();
+        feedbackForDriver.setReceiver(userService.getUserById(feedbackDto.getReceiverUserId()));
         feedbackForDriver.setRating(feedbackDto.getRating());
+        feedbackForDriver.setFeedbackType(FeedbackType.FOR_DRIVER);
         feedbackForDriver.setContent(feedbackDto.getContent());
-        feedbackForDriver.setCreated(LocalDateTime.now());
-        User driver = userService.getUserById(feedbackDto.getReceiverUserId());
-        feedbackForDriver.setDriverReceivedFeedback(driver);
         return feedbackForDriver;
     }
 }

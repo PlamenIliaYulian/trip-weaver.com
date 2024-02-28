@@ -1,6 +1,7 @@
 package com.tripweaver.repositories;
 
 import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.models.Feedback;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.repositories.contracts.FeedbackRepository;
@@ -66,5 +67,15 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
             }
             return query.list().get(0);
         }
+    }
+
+    @Override
+    public Feedback createFeedback(Feedback feedback) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(feedback);
+            session.getTransaction().commit();
+        }
+        return feedback;
     }
 }

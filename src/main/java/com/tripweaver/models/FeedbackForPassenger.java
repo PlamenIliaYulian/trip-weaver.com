@@ -80,11 +80,11 @@ public class FeedbackForPassenger implements Comparable<FeedbackForPassenger>{
         this.created = created;
     }
 
-    public String getContent() {
+    public CommentForPassenger getContent() {
         return content;
     }
 
-    public void setContent(String comment) {
+    public void setContent(CommentForPassenger comment) {
         this.content = comment;
     }
 

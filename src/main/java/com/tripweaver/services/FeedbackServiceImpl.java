@@ -1,5 +1,6 @@
 package com.tripweaver.services;
 
+import com.tripweaver.models.Feedback;
 import com.tripweaver.models.FeedbackForDriver;
 import com.tripweaver.models.FeedbackForPassenger;
 import com.tripweaver.repositories.contracts.FeedbackRepository;
@@ -17,6 +18,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         this.feedbackRepository = feedbackRepository;
     }
 
+
+    @Override
+    public Feedback createFeedback(Feedback feedback) {
+        return feedbackRepository.createFeedback(feedback);
+    }
 
     @Override
     public FeedbackForDriver createFeedbackForDriver(FeedbackForDriver feedbackForDriver) {
