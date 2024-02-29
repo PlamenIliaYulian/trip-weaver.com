@@ -62,4 +62,6 @@ public interface UserService {
     /*Ilia*/
     List<Feedback> getAllFeedbackForPassenger(User user);
 
+    /*Plamen*/
+    User verifyEmail(User userToBeVerified);
 }

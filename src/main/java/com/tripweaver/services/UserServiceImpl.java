@@ -7,6 +7,7 @@ import com.tripweaver.repositories.contracts.UserRepository;
 import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
+import com.tripweaver.services.contracts.UserService;
 import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements com.tripweaver.services.contracts.UserService {
+public class UserServiceImpl implements UserService {
 
     public static final String UNAUTHORIZED_OPERATION_NOT_ADMIN = "Unauthorized operation. User not admin.";
     public static final String UNAUTHORIZED_OPERATION_NOT_DRIVER = "Unauthorized operation. User not driver of the travel.";
@@ -206,6 +207,12 @@ public class UserServiceImpl implements com.tripweaver.services.contracts.UserSe
                 .stream()
                 .sorted(Comparator.comparing(Feedback::getCreated).reversed())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public User verifyEmail(User userToBeVerified) {
+        userToBeVerified.setVerified(true);
+        return userRepository.updateUser(userToBeVerified);
     }
 
 

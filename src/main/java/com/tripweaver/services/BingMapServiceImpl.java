@@ -46,7 +46,6 @@ public class BingMapServiceImpl implements BingMapService {
 
     @Override
     public HashMap<String, Integer> calculateDistanceAndDuration(String startingPoint, String endingPoint) {
-
         StringBuilder sb = new StringBuilder(calculateDistanceEndpointUrl)
                 .append(startingPoint)
                 .append("&destinations=")

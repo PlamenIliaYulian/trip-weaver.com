@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/travels")
+@RequestMapping("/api/v1/travels")
 public class TravelRestController {
     public static final int TRAVEL_STATUS_CREATED_ID = 1;
     private final ModelsMapper modelsMapper;

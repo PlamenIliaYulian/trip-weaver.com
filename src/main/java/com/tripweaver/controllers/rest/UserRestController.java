@@ -10,6 +10,7 @@ import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.AvatarService;
+import com.tripweaver.services.contracts.MailSenderService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.validation.Valid;
@@ -23,11 +24,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("/api/v1/users")
 public class UserRestController {
 
     private final UserService userService;
-
+    private final MailSenderService mailService;
     private final TravelService travelService;
     private final AuthenticationHelper authenticationHelper;
     private final ModelsMapper modelsMapper;
@@ -35,12 +36,13 @@ public class UserRestController {
 
 
     @Autowired
-    public UserRestController(UserService userService,
+    public UserRestController(UserService userService, MailSenderService mailService,
                               AuthenticationHelper authenticationHelper,
                               ModelsMapper modelsMapper,
                               AvatarService avatarService,
                               TravelService travelService) {
         this.userService = userService;
+        this.mailService = mailService;
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
         this.travelService = travelService;
@@ -54,7 +56,9 @@ public class UserRestController {
     public User createUser(@RequestBody @Valid UserDtoCreate userDtoCreate) {
         try {
             User user = modelsMapper.userFromDtoCreate(userDtoCreate);
-            return userService.createUser(user);
+            user = userService.createUser(user);
+            mailService.sendEmail(user);
+            return user;
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
