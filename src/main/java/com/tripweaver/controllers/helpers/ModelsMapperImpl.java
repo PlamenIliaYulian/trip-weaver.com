@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Component
 public class ModelsMapperImpl implements ModelsMapper {
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public ModelsMapperImpl(
@@ -27,8 +27,14 @@ public class ModelsMapperImpl implements ModelsMapper {
     @Override
     public Travel travelFromDto(TravelDto dto) {
         Travel travel = new Travel();
-        travel.setStartingPoint(dto.getStartingPoint());
-        travel.setEndingPoint(dto.getEndingPoint());
+        travel.setStartingPointCity(dto.getStartingPointCity());
+        travel.setStartingPointAddress(dto.getStartingPointAddress());
+        travel.setEndingPointCity(dto.getEndingPointCity());
+        if (dto.getEndingPointAddress().isEmpty() || dto.getEndingPointAddress() == null) {
+            travel.setEndingPointAddress("");
+        } else {
+            travel.setEndingPointAddress(dto.getEndingPointAddress());
+        }
         travel.setDepartureTime(dto.getDepartureTime());
         travel.setFreeSeats(dto.getFreeSeats());
         travel.setComment(dto.getComment());

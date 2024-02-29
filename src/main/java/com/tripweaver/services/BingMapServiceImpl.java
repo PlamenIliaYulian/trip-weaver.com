@@ -24,7 +24,7 @@ public class BingMapServiceImpl implements BingMapService {
     private String apiKey;
 
     @Override
-    public String getLocation(String address) {
+    public HashMap<String, String> getCoordinatesAndValidCityName(String address) {
         StringBuilder sb = new StringBuilder();
         sb.append(locationEndpointUrl).append(address.replaceAll(" ", "%20")).append(apiKey);
         try {
@@ -33,12 +33,18 @@ public class BingMapServiceImpl implements BingMapService {
                     .build();
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpResponse<String> getResponse = httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
+
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(getResponse.body());
-            JsonNode childNode = jsonNode.get("resourceSets").get(0).get("resources").get(0).get("point").get("coordinates");
+            JsonNode coordinates = jsonNode.get("resourceSets").get(0).get("resources").get(0).get("point").get("coordinates");
+            JsonNode city = jsonNode.get("resourceSets").get(0).get("resources").get(0).get("address").get("locality");
+
             StringBuilder builder = new StringBuilder();
-            builder.append(childNode.get(0)).append(System.lineSeparator()).append(childNode.get(1));
-            return builder.toString();
+            builder.append(coordinates.get(0)).append(",").append(coordinates.get(1));
+            HashMap<String, String> result = new HashMap<>();
+            result.put("coordinates", builder.toString());
+            result.put("city", city.asText());
+            return result;
         } catch (URISyntaxException | IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -58,6 +64,7 @@ public class BingMapServiceImpl implements BingMapService {
                     .build();
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpResponse<String> getResponse = httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
+
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(getResponse.body());
             JsonNode travelDistance =
@@ -66,6 +73,7 @@ public class BingMapServiceImpl implements BingMapService {
             JsonNode travelDuration =
                     jsonNode.get("resourceSets").get(0)
                             .get("resources").get(0).get("results").get(0).get("travelDuration");
+
             HashMap<String, Integer> result = new HashMap<>();
             result.put("travelDistance", travelDistance.asInt());
             result.put("travelDuration", travelDuration.asInt());

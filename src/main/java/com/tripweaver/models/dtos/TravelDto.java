@@ -7,11 +7,13 @@ import java.time.LocalDateTime;
 
 public class TravelDto {
 
-    @NotNull(message = "Starting point cannot be empty.")
-    private String startingPoint;
-    @NotNull(message = "Ending point cannot be empty.")
-    private String endingPoint;
-
+    @NotNull(message = "Starting point city cannot be empty.")
+    private String startingPointCity;
+    @NotNull(message = "Starting point address cannot be empty.")
+    private String startingPointAddress;
+    @NotNull(message = "Ending point city cannot be empty.")
+    private String endingPointCity;
+    private String endingPointAddress;
     @NotNull(message = "Departure time cannot be empty.")
     private LocalDateTime departureTime;
 
@@ -25,20 +27,36 @@ public class TravelDto {
     public TravelDto() {
     }
 
-    public String getStartingPoint() {
-        return startingPoint;
+    public String getStartingPointCity() {
+        return startingPointCity;
     }
 
-    public void setStartingPoint(String startingPoint) {
-        this.startingPoint = startingPoint;
+    public void setStartingPointCity(String startingPointCity) {
+        this.startingPointCity = startingPointCity;
     }
 
-    public String getEndingPoint() {
-        return endingPoint;
+    public String getStartingPointAddress() {
+        return startingPointAddress;
     }
 
-    public void setEndingPoint(String endingPoint) {
-        this.endingPoint = endingPoint;
+    public void setStartingPointAddress(String startingPointAddress) {
+        this.startingPointAddress = startingPointAddress;
+    }
+
+    public String getEndingPointCity() {
+        return endingPointCity;
+    }
+
+    public void setEndingPointCity(String endingPointCity) {
+        this.endingPointCity = endingPointCity;
+    }
+
+    public String getEndingPointAddress() {
+        return endingPointAddress;
+    }
+
+    public void setEndingPointAddress(String endingPointAddress) {
+        this.endingPointAddress = endingPointAddress;
     }
 
     public LocalDateTime getDepartureTime() {

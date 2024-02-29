@@ -18,22 +18,18 @@ public class Travel implements Comparable<Travel> {
     private int travelId;
     @Column(name = "starting_point")
     private String startingPoint;
-    @ManyToOne(targetEntity=City.class,fetch = FetchType.EAGER)
-    @JoinColumn(name = "starting_point_city_id")
-    private City startingPointCity;
+    @Column(name = "starting_point_city")
+    private String startingPointCity;
     @Column(name = "starting_point_address")
     private String startingPointAddress;
-    @ManyToOne(targetEntity=City.class,fetch = FetchType.EAGER)
-    @JoinColumn(name = "ending_point_city_id")
-    private City endingPointCity;
+    @Column(name = "ending_point_city")
+    private String endingPointCity;
     @Column(name = "ending_point_address")
     private String endingPointAddress;
     @Column(name = "ending_point")
     private String endingPoint;
-
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
-
     @Column(name = "free_seats")
     private int freeSeats;
     @Column(name = "created")
@@ -43,6 +39,12 @@ public class Travel implements Comparable<Travel> {
     private User driver;
     @Column(name = "travel_comment_content", table = "travel_comments")
     private String comment;
+    @Column(name = "ride_duration")
+    private int rideDurationInMinutes;
+    @Column(name = "estimated_arrival_time")
+    private LocalDateTime estimatedArrivalTime;
+    @Column(name = "distance")
+    private int distanceInKm;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "travels_travel_statuses",
             joinColumns = @JoinColumn(name = "travel_id"),
@@ -149,11 +151,11 @@ public class Travel implements Comparable<Travel> {
         this.driver = driver;
     }
 
-    public City getStartingPointCity() {
+    public String getStartingPointCity() {
         return startingPointCity;
     }
 
-    public void setStartingPointCity(City startingPointCity) {
+    public void setStartingPointCity(String startingPointCity) {
         this.startingPointCity = startingPointCity;
     }
 
@@ -165,11 +167,11 @@ public class Travel implements Comparable<Travel> {
         this.startingPointAddress = startingPointAddress;
     }
 
-    public City getEndingPointCity() {
+    public String getEndingPointCity() {
         return endingPointCity;
     }
 
-    public void setEndingPointCity(City endingPointCity) {
+    public void setEndingPointCity(String endingPointCity) {
         this.endingPointCity = endingPointCity;
     }
 
@@ -179,6 +181,30 @@ public class Travel implements Comparable<Travel> {
 
     public void setEndingPointAddress(String endingPointAddress) {
         this.endingPointAddress = endingPointAddress;
+    }
+
+    public int getRideDurationInMinutes() {
+        return rideDurationInMinutes;
+    }
+
+    public void setRideDurationInMinutes(int rideDurationInMinutes) {
+        this.rideDurationInMinutes = rideDurationInMinutes;
+    }
+
+    public LocalDateTime getEstimatedArrivalTime() {
+        return estimatedArrivalTime;
+    }
+
+    public void setEstimatedArrivalTime(LocalDateTime estimatedArrivalTime) {
+        this.estimatedArrivalTime = estimatedArrivalTime;
+    }
+
+    public int getDistanceInKm() {
+        return distanceInKm;
+    }
+
+    public void setDistanceInKm(int distanceInKm) {
+        this.distanceInKm = distanceInKm;
     }
 
     @Override

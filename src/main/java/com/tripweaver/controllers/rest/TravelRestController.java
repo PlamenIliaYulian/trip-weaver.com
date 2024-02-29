@@ -178,12 +178,12 @@ public class TravelRestController {
 
 
     @GetMapping("/getLocation")
-    public String getStartingCoordinates(@RequestParam("q") String address) {
-        return bingMapService.getLocation(address);
+    public HashMap<String, String> getCoordinatesAndValidCityName(@RequestParam("q") String address) {
+        return bingMapService.getCoordinatesAndValidCityName(address);
     }
 
     @GetMapping("/getDistanceAndDuration")
-    public HashMap<String, Integer> getStartingCoordinates(@RequestParam("startingPoint") String startingPoint,
+    public HashMap<String, Integer> calculateDistanceAndDuration(@RequestParam("startingPoint") String startingPoint,
                                                            @RequestParam("endingPoint") String endingPoint) {
         return bingMapService.calculateDistanceAndDuration(startingPoint, endingPoint);
     }

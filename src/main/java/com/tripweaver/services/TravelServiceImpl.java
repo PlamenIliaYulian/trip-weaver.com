@@ -5,12 +5,14 @@ import com.tripweaver.models.TravelStatus;
 import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.repositories.contracts.TravelRepository;
+import com.tripweaver.services.contracts.BingMapService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.TravelStatusService;
 import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -29,22 +31,56 @@ public class TravelServiceImpl implements TravelService {
     public static final String TRAVEL_NOT_AVAILABLE = "Travel not available";
     public static final String INVALID_OPERATION = "User has not applied for this travel";
     public static final String INVALID_DEPARTURE_TIME = "Departure time cannot be before current moment.";
+    public static final String KEY_COORDINATES = "coordinates";
+    public static final String KEY_CITY = "city";
+    public static final String KEY_TRAVEL_DISTANCE = "travelDistance";
+    public static final String KEY_TRAVEL_DURATION = "travelDuration";
     private final TravelRepository travelRepository;
     private final TravelStatusService travelStatusService;
     private final PermissionHelper permissionHelper;
+    private final BingMapService bingMapService;
 
     @Autowired
-    public TravelServiceImpl(TravelStatusService travelStatusService, TravelRepository travelRepository, PermissionHelper permissionHelper) {
+    public TravelServiceImpl(TravelStatusService travelStatusService,
+                             TravelRepository travelRepository,
+                             PermissionHelper permissionHelper,
+                             BingMapService bingMapService) {
         this.travelStatusService = travelStatusService;
         this.travelRepository = travelRepository;
         this.permissionHelper = permissionHelper;
+        this.bingMapService = bingMapService;
     }
 
     @Override
-    public Travel createTravel(Travel travel, User creator) {
-        permissionHelper.isUserBlocked(creator, UNAUTHORIZED_OPERATION_BLOCKED);
-        permissionHelper.isUserVerified(creator, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
+    public Travel createTravel(Travel travel, User creatorDriver) {
+        permissionHelper.isUserBlocked(creatorDriver, UNAUTHORIZED_OPERATION_BLOCKED);
+        permissionHelper.isUserVerified(creatorDriver, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
         permissionHelper.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
+        travel.setDriver(creatorDriver);
+
+        StringBuilder startingPointAddress = new StringBuilder();
+        startingPointAddress.append(travel.getStartingPointAddress()).append(",").append(travel.getStartingPointCity());
+        HashMap<String, String> startingPointCoordinatesAndCity =
+                bingMapService.getCoordinatesAndValidCityName(startingPointAddress.toString());
+        StringBuilder endingPointAddress = new StringBuilder();
+        endingPointAddress.append(travel.getEndingPointAddress()).append(",").append(travel.getEndingPointCity());
+        HashMap<String, String> endingPointCoordinatesAndCity =
+                bingMapService.getCoordinatesAndValidCityName(endingPointAddress.toString());
+
+        String startingPointCoordinates = startingPointCoordinatesAndCity.get(KEY_COORDINATES);
+        travel.setStartingPoint(startingPointCoordinates);
+        travel.setStartingPointCity(startingPointCoordinatesAndCity.get(KEY_CITY));
+        String endingPointCoordinates = endingPointCoordinatesAndCity.get(KEY_COORDINATES);
+        travel.setEndingPoint(endingPointCoordinates);
+        travel.setEndingPointCity(endingPointCoordinatesAndCity.get(KEY_CITY));
+
+        HashMap<String, Integer> distanceAndDuration =
+                bingMapService.calculateDistanceAndDuration(startingPointCoordinates, endingPointCoordinates);
+        travel.setDistanceInKm(distanceAndDuration.get(KEY_TRAVEL_DISTANCE));
+        int rideDurationInMinutes = distanceAndDuration.get(KEY_TRAVEL_DURATION);
+        travel.setRideDurationInMinutes(rideDurationInMinutes);
+        travel.setEstimatedArrivalTime(travel.getDepartureTime().plusMinutes(rideDurationInMinutes));
+
         return travelRepository.createTravel(travel);
     }
 
