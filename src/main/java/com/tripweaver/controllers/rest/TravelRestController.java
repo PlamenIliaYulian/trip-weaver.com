@@ -106,8 +106,17 @@ public class TravelRestController {
     }
 
     /*Plamen*/
-    @GetMapping
-    public List<Travel> getAllTravels(@RequestHeader HttpHeaders headers, @RequestParam(required = false) String startingPoint, @RequestParam(required = false) String endingPoint, @RequestParam(required = false) String departureBefore, @RequestParam(required = false) String departureAfter, @RequestParam(required = false) Integer minFreeSeats, @RequestParam(required = false) String driverUsername, @RequestParam(required = false) String commentContains, @RequestParam(required = false) String sortBy, @RequestParam(required = false) String sortOrder) {
+    @GetMapping("/search")
+    public List<Travel> getAllTravels(@RequestHeader HttpHeaders headers,
+                                      @RequestParam(required = false) String startingPoint,
+                                      @RequestParam(required = false) String endingPoint,
+                                      @RequestParam(required = false) String departureBefore,
+                                      @RequestParam(required = false) String departureAfter,
+                                      @RequestParam(required = false) Integer minFreeSeats,
+                                      @RequestParam(required = false) String driverUsername,
+                                      @RequestParam(required = false) String commentContains,
+                                      @RequestParam(required = false) String sortBy,
+                                      @RequestParam(required = false) String sortOrder) {
         try {
             authenticationHelper.tryGetUserFromHeaders(headers);
             TravelFilterOptions travelFilterOptions = new TravelFilterOptions(startingPoint, endingPoint, departureBefore, departureAfter, minFreeSeats, driverUsername, commentContains, TRAVEL_STATUS_CREATED_ID, sortBy, sortOrder);

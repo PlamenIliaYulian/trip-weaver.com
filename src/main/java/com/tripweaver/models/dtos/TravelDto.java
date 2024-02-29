@@ -18,7 +18,7 @@ public class TravelDto {
     private LocalDateTime departureTime;
 
     @NotNull(message = "Free seats cannot be empty.")
-    @Size(min = 1, max = 50, message = "Free seats must be between 1 and 50")
+    /*@Size(min = 1, max = 50, message = "Free seats must be between 1 and 50")*/
     private int freeSeats;
 
     @Size(max = 100, message = "The comment cannot be more than 100 symbols long.")

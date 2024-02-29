@@ -21,20 +21,20 @@ public class TravelFilterOptions {
                                String endingPoint,
                                String departureBefore,
                                String departureAfter,
-                               int minFreeSeats,
+                               Integer minFreeSeats,
                                String driverUsername,
                                String commentContains,
-                               int statusId,
+                               Integer statusId,
                                String sortBy,
                                String sortOrder) {
         this.startingPoint = Optional.ofNullable(startingPoint);
         this.endingPoint = Optional.ofNullable(endingPoint);
         this.departureBefore = Optional.ofNullable(departureBefore);
         this.departureAfter = Optional.ofNullable(departureAfter);
-        this.minFreeSeats = Optional.of(minFreeSeats);
+        this.minFreeSeats = Optional.ofNullable(minFreeSeats);
         this.driverUsername = Optional.ofNullable(driverUsername);
         this.commentContains = Optional.ofNullable(commentContains);
-        this.statusId = Optional.of(statusId);
+        this.statusId = Optional.ofNullable(statusId);
         this.sortBy = Optional.ofNullable(sortBy);
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
