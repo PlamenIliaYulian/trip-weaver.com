@@ -35,7 +35,7 @@ public class AvatarRepositoryImpl implements AvatarRepository {
             session.persist(avatar);
             session.getTransaction().commit();
         }
-        return avatar;
+        return getAvatarById(avatar.getAvatarId());
     }
 
     @Override

@@ -64,7 +64,7 @@ public class UserRepositoryImpl implements UserRepository {
             filters.add(" isDeleted = false ");
             params.put("isDeleted", false);
 
-            StringBuilder queryString = new StringBuilder("FROM User ");
+            StringBuilder queryString = new StringBuilder("SELECT DISTINCT u FROM User u ");
             queryString.append(" WHERE ")
                     .append(String.join(" AND ", filters));
 
