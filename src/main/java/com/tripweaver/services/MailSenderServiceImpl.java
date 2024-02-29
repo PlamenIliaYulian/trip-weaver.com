@@ -24,7 +24,9 @@ public class MailSenderServiceImpl implements MailSenderService {
             Thank you,
             Trip Weavers
             """;
-    private String verificationLink = "localhost:8080/auth/email-verification?email=%s";
+
+    /*TODO don't forget to update the verificationLink*/
+    private String verificationLink = "http://localhost:8080/api/v1/auth/email-verification?email=%s";
 
     @Value("${spring.mail.username}")
     private String senderMail;

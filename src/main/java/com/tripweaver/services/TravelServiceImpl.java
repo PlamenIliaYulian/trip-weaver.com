@@ -12,6 +12,7 @@ import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +58,7 @@ public class TravelServiceImpl implements TravelService {
         permissionHelper.isUserVerified(creatorDriver, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
         permissionHelper.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
         travel.setDriver(creatorDriver);
+        travel.setCreatedOn(LocalDateTime.now());
 
         StringBuilder startingPointAddress = new StringBuilder();
         startingPointAddress.append(travel.getStartingPointAddress()).append(",").append(travel.getStartingPointCity());

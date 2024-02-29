@@ -1,6 +1,8 @@
 package com.tripweaver.controllers.helpers;
 
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
+import com.tripweaver.exceptions.InvalidOperationException;
+import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.*;
 import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.TravelDto;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 
 @Component
 public class ModelsMapperImpl implements ModelsMapper {
+    public static final String CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD = "Confirm password should match password";
     private final UserService userService;
 
     @Autowired
@@ -44,6 +47,9 @@ public class ModelsMapperImpl implements ModelsMapper {
     @Override
     public User userFromDtoUpdate(UserDtoUpdate userDtoUpdate, int userId) {
         User user = userService.getUserById(userId);
+        if(!userDtoUpdate.getConfirmPassword().equals(userDtoUpdate.getPassword())){
+            throw new InvalidOperationException(CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD);
+        }
         user.setPassword(userDtoUpdate.getPassword());
         user.setFirstName(userDtoUpdate.getFirstName());
         user.setLastName(userDtoUpdate.getLastName());

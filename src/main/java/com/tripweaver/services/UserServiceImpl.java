@@ -12,7 +12,9 @@ import com.tripweaver.services.helpers.PermissionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,6 +52,11 @@ public class UserServiceImpl implements UserService {
         permissionHelper.checkForUniqueUsername(user);
         permissionHelper.checkForUniqueEmail(user);
         permissionHelper.checkIfPhoneNumberUnique(user);
+        user.setCreated(LocalDateTime.now());
+        user.setAvatar(avatarService.getDefaultAvatar());
+        HashSet<Role> roles = new HashSet<>();
+        roles.add(roleService.getRoleById(2));
+        user.setRoles(roles);
         return userRepository.createUser(user);
     }
 

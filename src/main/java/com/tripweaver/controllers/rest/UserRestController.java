@@ -61,13 +61,15 @@ public class UserRestController {
             return user;
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     /*Ilia*/
     @PutMapping("/{userId}")
     User updateUser(@PathVariable int userId,
-                    @RequestBody UserDtoUpdate userDtoUpdate,
+                    @Valid @RequestBody UserDtoUpdate userDtoUpdate,
                     @RequestHeader HttpHeaders headers) {
         try {
             User userToBeUpdated = modelsMapper.userFromDtoUpdate(userDtoUpdate, userId);
@@ -81,6 +83,10 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage());
         }
     }
 
@@ -283,7 +289,7 @@ public class UserRestController {
     /*Yuli*/
     @GetMapping("/{userId}/feedback-for-passenger")
     public List<Feedback> getAllFeedbackForPassenger(@PathVariable int userId,
-                                                                 @RequestHeader HttpHeaders httpHeaders) {
+                                                     @RequestHeader HttpHeaders httpHeaders) {
         try {
             authenticationHelper.tryGetUserFromHeaders(httpHeaders);
             User passenger = userService.getUserById(userId);
