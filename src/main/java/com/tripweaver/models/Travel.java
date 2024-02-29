@@ -45,10 +45,8 @@ public class Travel implements Comparable<Travel> {
     private LocalDateTime estimatedArrivalTime;
     @Column(name = "distance")
     private int distanceInKm;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "travels_travel_statuses",
-            joinColumns = @JoinColumn(name = "travel_id"),
-            inverseJoinColumns = @JoinColumn(name = "travel_status_id"))
+    @ManyToOne
+    @JoinColumn(name = "travel_status_id")
     private TravelStatus status;
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "travels_users_applied",

@@ -13,7 +13,6 @@ import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.services.contracts.BingMapService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,7 +44,7 @@ public class TravelRestController {
     /*Ilia*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Travel createTravel(@Valid @RequestBody TravelDto travelDto, @RequestHeader HttpHeaders headers) {
+    public Travel createTravel(@RequestBody @Valid TravelDto travelDto, @RequestHeader HttpHeaders headers) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             Travel travel = modelsMapper.travelFromDto(travelDto);
@@ -57,7 +56,6 @@ public class TravelRestController {
         } catch (InvalidOperationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
     }
 
     /*Plamen*/
@@ -145,7 +143,7 @@ public class TravelRestController {
     }
 
     /*Ilia*/
-    @PutMapping("/{travelId}/applications/{userId}")
+    @PutMapping("/{travelId}/applications/user/{userId}")
     public Travel approvePassenger(@PathVariable int travelId, @PathVariable int userId, @RequestHeader HttpHeaders headers) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);

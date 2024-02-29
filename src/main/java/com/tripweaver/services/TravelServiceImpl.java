@@ -31,11 +31,13 @@ public class TravelServiceImpl implements TravelService {
     public static final int TRAVEL_STATUS_COMPLETE_ID = 3;
     public static final String TRAVEL_NOT_AVAILABLE = "Travel not available";
     public static final String INVALID_OPERATION = "User has not applied for this travel";
+    public static final String INVALID_OPERATION_DRIVER = "User is the driver, so could not leaver Driver's feedback";
     public static final String INVALID_DEPARTURE_TIME = "Departure time cannot be before current moment.";
     public static final String KEY_COORDINATES = "coordinates";
     public static final String KEY_CITY = "city";
     public static final String KEY_TRAVEL_DISTANCE = "travelDistance";
     public static final String KEY_TRAVEL_DURATION = "travelDuration";
+    public static final int TRAVEL_STATUS_CREATED_ID = 1;
     private final TravelRepository travelRepository;
     private final TravelStatusService travelStatusService;
     private final PermissionHelper permissionHelper;
@@ -59,6 +61,7 @@ public class TravelServiceImpl implements TravelService {
         permissionHelper.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
         travel.setDriver(creatorDriver);
         travel.setCreatedOn(LocalDateTime.now());
+        travel.setStatus(travelStatusService.getStatusById(TRAVEL_STATUS_CREATED_ID));
 
         StringBuilder startingPointAddress = new StringBuilder();
         startingPointAddress.append(travel.getStartingPointAddress()).append(",").append(travel.getStartingPointCity());
@@ -137,6 +140,7 @@ public class TravelServiceImpl implements TravelService {
         permissionHelper.isUserBlocked(userToApply, UNAUTHORIZED_OPERATION_BLOCKED);
         permissionHelper.hasYetToApply(userToApply, travelToApplyFor, UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
         permissionHelper.isTravelOpenForApplication(travelToApplyFor, TRAVEL_NOT_AVAILABLE);
+        permissionHelper.checkNotToBeDriver(travelToApplyFor, userToApply,INVALID_OPERATION_DRIVER);
         travelToApplyFor.getUsersAppliedForTheTravel().add(userToApply);
         return travelRepository.updateTravel(travelToApplyFor);
     }

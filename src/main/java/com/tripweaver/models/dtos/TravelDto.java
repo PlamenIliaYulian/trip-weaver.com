@@ -1,5 +1,6 @@
 package com.tripweaver.models.dtos;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -13,6 +14,7 @@ public class TravelDto {
     private String startingPointAddress;
     @NotNull(message = "Ending point city cannot be empty.")
     private String endingPointCity;
+
     private String endingPointAddress;
     @NotNull(message = "Departure time cannot be empty.")
     private LocalDateTime departureTime;

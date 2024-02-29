@@ -33,7 +33,7 @@ public class ModelsMapperImpl implements ModelsMapper {
         travel.setStartingPointCity(dto.getStartingPointCity());
         travel.setStartingPointAddress(dto.getStartingPointAddress());
         travel.setEndingPointCity(dto.getEndingPointCity());
-        if (dto.getEndingPointAddress().isEmpty() || dto.getEndingPointAddress() == null) {
+        if (dto.getEndingPointAddress() == null || dto.getEndingPointAddress().isEmpty()) {
             travel.setEndingPointAddress("");
         } else {
             travel.setEndingPointAddress(dto.getEndingPointAddress());

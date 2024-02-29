@@ -173,4 +173,10 @@ public class PermissionHelper {
            throw new UnauthorizedOperationException(message);
        }
     }
+
+    public void checkNotToBeDriver(Travel travel, User loggedUser,String message){
+        if(travel.getDriver().equals(loggedUser)){
+            throw new InvalidOperationException(message);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.*;
 import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.tripweaver.services.TravelServiceImpl.INVALID_OPERATION_DRIVER;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -28,6 +31,7 @@ public class UserServiceImpl implements UserService {
     public static final String TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK = "Travel not completed and cannot leave feedback.";
     public static final String USER_NOT_IN_APPROVED_LIST = "The user is not in the approved list.";
     public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
+    public static final String YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE = "You have already left feedback for this ride.";
     private final UserRepository userRepository;
     private final PermissionHelper permissionHelper;
     private final AvatarService avatarService;
@@ -154,12 +158,20 @@ public class UserServiceImpl implements UserService {
         permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         permissionHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
         permissionHelper.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-
+        permissionHelper.checkNotToBeDriver(travel, loggedUser, INVALID_OPERATION_DRIVER);
         feedbackForDriver.setReceiver(driver);
         feedbackForDriver.setAuthor(loggedUser);
         feedbackForDriver.setTravel(travel);
         feedbackForDriver = feedbackService.createFeedback(feedbackForDriver);
         Set<Feedback> feedbackForDriverSet = driver.getFeedback();
+        if(!feedbackForDriverSet.stream()
+                .filter(feedback -> feedback.getAuthor().equals(loggedUser))
+                .filter(feedback -> feedback.getTravel().equals(travel))
+                .filter(feedback -> feedback.getReceiver().equals(driver))
+                .collect(Collectors.toList()).isEmpty()){
+            throw new InvalidOperationException(YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE);
+        }
+
         feedbackForDriverSet.add(feedbackForDriver);
 
         driver.setAverageDriverRating(feedbackForDriverSet
