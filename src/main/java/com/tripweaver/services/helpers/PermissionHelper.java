@@ -28,7 +28,7 @@ public class PermissionHelper {
     public void isAdminOrSameUser(User userToBeUpdated,
                                   User loggedUser,
                                   String message) {
-        if (loggedUser.getRoles().stream().noneMatch(role -> role.getRoleId() == ADMIN_ID) ||
+        if (loggedUser.getRoles().stream().noneMatch(role -> role.getRoleId() == ADMIN_ID) &&
                 !loggedUser.equals(userToBeUpdated)) {
             throw new UnauthorizedOperationException(message);
         }
@@ -140,7 +140,7 @@ public class PermissionHelper {
                                                           Set<User> usersAppliedForTheTravel,
                                                           Set<User> usersApprovedForTheTravel,
                                                           String message) {
-        if (!usersAppliedForTheTravel.contains(userToBeDeclined) ||
+        if (!usersAppliedForTheTravel.contains(userToBeDeclined) &&
                 !usersApprovedForTheTravel.contains(userToBeDeclined)) {
             throw new EntityNotFoundException(message);
         }
@@ -169,7 +169,7 @@ public class PermissionHelper {
                                    User userToBeUpdated,
                                    User loggedUser,
                                    String message) {
-       if (!travel.getDriver().equals(loggedUser) || !userToBeUpdated.equals(loggedUser)) {
+       if (!travel.getDriver().equals(loggedUser) && !userToBeUpdated.equals(loggedUser)) {
            throw new UnauthorizedOperationException(message);
        }
     }

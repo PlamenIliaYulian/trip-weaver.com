@@ -305,8 +305,8 @@ public class UserRestController {
     @GetMapping("/{userId}/travels-for-driver")
     public List<Travel> getTravelsByDriver(@PathVariable int userId,
                                            @RequestHeader HttpHeaders headers,
-                                           @RequestParam(required = false) String startingPoint,
-                                           @RequestParam(required = false) String endingPoint,
+                                           @RequestParam(required = false) String startingPointCity,
+                                           @RequestParam(required = false) String endingPointCity,
                                            @RequestParam(required = false) String departureBefore,
                                            @RequestParam(required = false) String departureAfter,
                                            @RequestParam(required = false) Integer minFreeSeats,
@@ -319,7 +319,7 @@ public class UserRestController {
             User user = userService.getUserById(userId);
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             TravelFilterOptions filterOptions = new TravelFilterOptions(
-                    startingPoint, endingPoint, departureBefore, departureAfter, minFreeSeats,
+                    startingPointCity, endingPointCity, departureBefore, departureAfter, minFreeSeats,
                     driverUsername, commentContains, statusId, sortBy, sortOrder);
             return travelService.getTravelsByDriver(user, loggedUser, filterOptions);
         } catch (AuthenticationException e) {
@@ -335,8 +335,8 @@ public class UserRestController {
     @GetMapping("/{userId}/travels-for-passenger")
     public List<Travel> getTravelsByPassenger(@PathVariable int userId,
                                               @RequestHeader HttpHeaders headers,
-                                              @RequestParam(required = false) String startingPoint,
-                                              @RequestParam(required = false) String endingPoint,
+                                              @RequestParam(required = false) String startingPointCity,
+                                              @RequestParam(required = false) String endingPointCity,
                                               @RequestParam(required = false) String departureBefore,
                                               @RequestParam(required = false) String departureAfter,
                                               @RequestParam(required = false) Integer minFreeSeats,
@@ -348,8 +348,8 @@ public class UserRestController {
     ) {
         try {
             TravelFilterOptions travelFilterOptions = new TravelFilterOptions(
-                    startingPoint,
-                    endingPoint,
+                    startingPointCity,
+                    endingPointCity,
                     departureBefore,
                     departureAfter,
                     minFreeSeats,

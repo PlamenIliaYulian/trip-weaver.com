@@ -4,8 +4,8 @@ import java.util.Optional;
 
 public class TravelFilterOptions {
 
-    private Optional<String> startingPoint;
-    private Optional<String> endingPoint;
+    private Optional<String> startingPointCity;
+    private Optional<String> endingPointCity;
     private Optional<String> departureBefore;
     private Optional<String> departureAfter;
     private Optional<Integer> minFreeSeats;
@@ -17,8 +17,8 @@ public class TravelFilterOptions {
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
 
-    public TravelFilterOptions(String startingPoint,
-                               String endingPoint,
+    public TravelFilterOptions(String startingPointCity,
+                               String endingPointCity,
                                String departureBefore,
                                String departureAfter,
                                Integer minFreeSeats,
@@ -27,8 +27,8 @@ public class TravelFilterOptions {
                                Integer statusId,
                                String sortBy,
                                String sortOrder) {
-        this.startingPoint = Optional.ofNullable(startingPoint);
-        this.endingPoint = Optional.ofNullable(endingPoint);
+        this.startingPointCity = Optional.ofNullable(startingPointCity);
+        this.endingPointCity = Optional.ofNullable(endingPointCity);
         this.departureBefore = Optional.ofNullable(departureBefore);
         this.departureAfter = Optional.ofNullable(departureAfter);
         this.minFreeSeats = Optional.ofNullable(minFreeSeats);
@@ -39,12 +39,12 @@ public class TravelFilterOptions {
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
-    public Optional<String> getStartingPoint() {
-        return startingPoint;
+    public Optional<String> getStartingPointCity() {
+        return startingPointCity;
     }
 
-    public Optional<String> getEndingPoint() {
-        return endingPoint;
+    public Optional<String> getEndingPointCity() {
+        return endingPointCity;
     }
 
     public Optional<String> getDepartureBefore() {

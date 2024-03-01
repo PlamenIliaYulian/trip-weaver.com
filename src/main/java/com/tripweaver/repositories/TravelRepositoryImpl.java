@@ -21,6 +21,7 @@ import java.util.Map;
 public class TravelRepositoryImpl implements TravelRepository {
 
     private final SessionFactory sessionFactory;
+
     @Autowired
     public TravelRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -66,12 +67,12 @@ public class TravelRepositoryImpl implements TravelRepository {
             List<String> filters = new ArrayList<>();
             Map<String, Object> parameters = new HashMap<>();
 
-            travelFilterOptions.getStartingPoint().ifPresent(value -> {
-                filters.add(" travel.startingPoint like :startingPoint ");
+            travelFilterOptions.getStartingPointCity().ifPresent(value -> {
+                filters.add(" travel.startingPointCity like :startingPoint ");
                 parameters.put("startingPoint", String.format("%%%s%%", value));
             });
-            travelFilterOptions.getEndingPoint().ifPresent(value -> {
-                filters.add(" travel.endingPoint like :endingPoint ");
+            travelFilterOptions.getEndingPointCity().ifPresent(value -> {
+                filters.add(" travel.endingPointCity like :endingPoint ");
                 parameters.put("endingPoint", String.format("%%%s%%", value));
             });
             travelFilterOptions.getDepartureBefore().ifPresent(value -> {
@@ -103,20 +104,17 @@ public class TravelRepositoryImpl implements TravelRepository {
                 parameters.put("statusId", value);
             });
 
-            if (travelFilterOptions.getDriverId().isPresent() && travelFilterOptions.getDriverId().get() != 0) {
+            if (travelFilterOptions.getDriverId() != null && travelFilterOptions.getDriverId().get() != 0) {
                 travelFilterOptions.getDriverId().ifPresent(value -> {
-                    filters.add(" travel.userId = :userId ");
+                    filters.add(" travel.driver.userId = :userId ");
                     parameters.put("userId", value);
                 });
             }
+
+
             /* TODO Have to test it carefully.*/
             StringBuilder queryString;
-            if (!travelFilterOptions.getPassengerId().isPresent() || travelFilterOptions.getPassengerId().get() == 0) {
-                queryString = new StringBuilder("FROM Travel AS travel ");
-                queryString.append(" WHERE ")
-                        .append(String.join(" AND ", filters));
-
-            } else {
+            if (travelFilterOptions.getPassengerId() != null && travelFilterOptions.getPassengerId().get() != 0) {
                 travelFilterOptions.getPassengerId().ifPresent(value -> {
                     filters.add(" passengers.userId = :userId ");
                     parameters.put("userId", value);
@@ -125,7 +123,12 @@ public class TravelRepositoryImpl implements TravelRepository {
                 queryString = new StringBuilder("FROM Travel AS travel JOIN travel.usersApprovedForTheTravel passengers ");
                 queryString.append(" WHERE ")
                         .append(String.join(" AND ", filters));
+            } else {
+                queryString = new StringBuilder("FROM Travel AS travel ");
+                queryString.append(" WHERE ")
+                        .append(String.join(" AND ", filters));
             }
+
 
             queryString.append(generateOrderBy(travelFilterOptions));
             Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
@@ -136,7 +139,7 @@ public class TravelRepositoryImpl implements TravelRepository {
 
     @Override
     public Long getAllTravelsCount() {
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Long> query = session.createQuery("select count(*) from Travel travel " +
                     "JOIN travel.status status where status.statusName = :name ", Long.class);
             query.setParameter("name", "COMPLETED");
@@ -150,11 +153,11 @@ public class TravelRepositoryImpl implements TravelRepository {
         }
         String orderBy = "";
         switch (filterOptions.getSortBy().get()) {
-            case "startingPoint":
-                orderBy = "startingPoint";
+            case "startingPointCity":
+                orderBy = "startingPointCity";
                 break;
-            case "endingPoint":
-                orderBy = "endingPoint";
+            case "endingPointCity":
+                orderBy = "endingPointCity";
                 break;
             case "departureTime":
                 orderBy = "departureTime";
@@ -167,6 +170,12 @@ public class TravelRepositoryImpl implements TravelRepository {
                 break;
             case "driver":
                 orderBy = "driver.username";
+                break;
+            case "distance":
+                orderBy = "distanceInKm";
+                break;
+            case "duration":
+                orderBy = "rideDurationInMinutes";
                 break;
             default:
                 return "";

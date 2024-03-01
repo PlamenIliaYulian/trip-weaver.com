@@ -60,7 +60,8 @@ public class TravelRestController {
 
     /*Plamen*/
     @PutMapping("/{travelId}/status-cancelled")
-    public Travel cancelTravel(@PathVariable int travelId, @RequestHeader HttpHeaders httpHeaders) {
+    public Travel cancelTravel(@PathVariable int travelId,
+                               @RequestHeader HttpHeaders httpHeaders) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(httpHeaders);
             Travel travel = travelService.getTravelById(travelId);
@@ -106,8 +107,8 @@ public class TravelRestController {
     /*Plamen*/
     @GetMapping("/search")
     public List<Travel> getAllTravels(@RequestHeader HttpHeaders headers,
-                                      @RequestParam(required = false) String startingPoint,
-                                      @RequestParam(required = false) String endingPoint,
+                                      @RequestParam(required = false) String startingPointCity,
+                                      @RequestParam(required = false) String endingPointCity,
                                       @RequestParam(required = false) String departureBefore,
                                       @RequestParam(required = false) String departureAfter,
                                       @RequestParam(required = false) Integer minFreeSeats,
@@ -117,7 +118,7 @@ public class TravelRestController {
                                       @RequestParam(required = false) String sortOrder) {
         try {
             authenticationHelper.tryGetUserFromHeaders(headers);
-            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(startingPoint, endingPoint, departureBefore, departureAfter, minFreeSeats, driverUsername, commentContains, TRAVEL_STATUS_CREATED_ID, sortBy, sortOrder);
+            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(startingPointCity, endingPointCity, departureBefore, departureAfter, minFreeSeats, driverUsername, commentContains, TRAVEL_STATUS_CREATED_ID, sortBy, sortOrder);
             return travelService.getAllTravels(travelFilterOptions);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -163,7 +164,9 @@ public class TravelRestController {
 
     /*Plamen*/
     @DeleteMapping("/{travelId}/applications/{userId}")
-    public Travel declinePassenger(@PathVariable int travelId, @PathVariable int userId, @RequestHeader HttpHeaders headers) {
+    public Travel declinePassenger(@PathVariable int travelId,
+                                   @PathVariable int userId,
+                                   @RequestHeader HttpHeaders headers) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User userToBeDeclined = userService.getUserById(userId);

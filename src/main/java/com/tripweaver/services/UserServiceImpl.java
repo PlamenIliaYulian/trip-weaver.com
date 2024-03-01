@@ -164,6 +164,8 @@ public class UserServiceImpl implements UserService {
         feedbackForDriver.setTravel(travel);
         feedbackForDriver = feedbackService.createFeedback(feedbackForDriver);
         Set<Feedback> feedbackForDriverSet = driver.getFeedback();
+
+        /*TODO extract them in helper class*/
         if(!feedbackForDriverSet.stream()
                 .filter(feedback -> feedback.getAuthor().equals(loggedUser))
                 .filter(feedback -> feedback.getTravel().equals(travel))
@@ -199,6 +201,17 @@ public class UserServiceImpl implements UserService {
         feedbackForPassenger.setTravel(travel);
         feedbackForPassenger = feedbackService.createFeedback(feedbackForPassenger);
         Set<Feedback> feedbackForPassengerSet = passenger.getFeedback();
+
+        /*TODO extract them in helper class*/
+        if(!feedbackForPassengerSet.stream()
+                .filter(feedback -> feedback.getAuthor().equals(loggedUser))
+                .filter(feedback -> feedback.getTravel().equals(travel))
+                .filter(feedback -> feedback.getReceiver().equals(passenger))
+                .collect(Collectors.toList()).isEmpty()){
+            throw new InvalidOperationException(YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE);
+        }
+
+
         feedbackForPassengerSet.add(feedbackForPassenger);
 
         passenger.setAveragePassengerRating(feedbackForPassengerSet
@@ -215,6 +228,7 @@ public class UserServiceImpl implements UserService {
     public List<Feedback> getAllFeedbackForDriver(User user) {
         return user.getFeedback()
                 .stream()
+                .filter(feedback -> feedback.getFeedbackType().equals(FeedbackType.FOR_DRIVER))
                 .sorted(Comparator.comparing(Feedback::getCreated).reversed())
                 .collect(Collectors.toList());
     }
@@ -224,6 +238,7 @@ public class UserServiceImpl implements UserService {
     public List<Feedback> getAllFeedbackForPassenger(User user) {
         return user.getFeedback()
                 .stream()
+                .filter(feedback -> feedback.getFeedbackType().equals(FeedbackType.FOR_PASSENGER))
                 .sorted(Comparator.comparing(Feedback::getCreated).reversed())
                 .collect(Collectors.toList());
     }
