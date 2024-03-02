@@ -65,6 +65,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.createUser(user);
     }
 
+    /*TODO implement deleteUser method*/
+
     @Override
     public User updateUser(User user, User loggedUser) {
         permissionHelper.isSameUser(user, loggedUser, UNAUTHORIZED_OPERATION);

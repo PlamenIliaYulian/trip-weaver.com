@@ -148,6 +148,7 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.updateTravel(travelToApplyFor);
     }
 
+    /*TODo to validated if there are free seats for specific trip*/
     @Override
     public Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel) {
         permissionHelper.isUserBlocked(userToBeApproved, UNAUTHORIZED_OPERATION_BLOCKED);

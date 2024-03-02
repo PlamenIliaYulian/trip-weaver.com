@@ -1,5 +1,7 @@
 package com.tripweaver.services;
 
+import com.tripweaver.helpers.TestHelpers;
+import com.tripweaver.models.Feedback;
 import com.tripweaver.repositories.contracts.FeedbackRepository;
 import com.tripweaver.services.contracts.FeedbackService;
 import org.junit.jupiter.api.Test;
@@ -24,5 +26,16 @@ public class FeedbackServiceTests {
 
         Mockito.verify(feedbackRepository, Mockito.times(1))
                 .getFeedbackForPassengerById(Mockito.anyInt());
+    }
+
+
+    @Test
+    public void createFeedback_Should_CallRepository(){
+        Feedback feedback = TestHelpers.createFeedbackPlamen();
+
+        feedbackService.createFeedback(feedback);
+
+        Mockito.verify(feedbackRepository, Mockito.times(1))
+                .createFeedback(feedback);
     }
 }

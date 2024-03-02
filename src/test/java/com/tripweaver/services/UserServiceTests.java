@@ -9,6 +9,9 @@ import com.tripweaver.models.Role;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
+import com.tripweaver.exceptions.DuplicateEntityException;
+import com.tripweaver.helpers.TestHelpers;
+import com.tripweaver.models.User;
 import com.tripweaver.repositories.contracts.UserRepository;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.UserService;
@@ -32,6 +35,17 @@ public class UserServiceTests {
     FeedbackService feedbackService;
 
     @InjectMocks
+    UserServiceImpl userService;
+
+
+    @Test
+    public void createUser_Should_Throw_When_UsernameIsNotUnique(){
+        User createdUser = TestHelpers.createMockUserPlamen();
+        User userToBeCreated = TestHelpers.createMockUserPlamen();
+
+        Assertions.assertThrows(DuplicateEntityException.class,
+                ()-> userService.createUser(userToBeCreated));
+    }
     UserServiceImpl userService;
 
     /*Ilia*/

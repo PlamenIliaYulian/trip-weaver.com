@@ -11,6 +11,13 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.tripweaver.models.*;
+import com.tripweaver.models.enums.FeedbackType;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+
 public class TestHelpers {
 
     public static MultipartFile createMockMultipartFile$Ilia() {
@@ -194,5 +201,87 @@ public class TestHelpers {
                 "username",
                 "desc");
     }
+    public static Avatar createAvatarPlamen(){
+        Avatar avatar = new Avatar();
+        avatar.setAvatarId(1);
+        return avatar;
+    }
 
+    public static Feedback createFeedbackPlamen(){
+        Feedback feedback = new Feedback();
+        Travel travel = new Travel();
+        User receiver = new User();
+        User author = new User();
+
+        feedback.setFeedbackId(1);
+        feedback.setRating(2);
+        feedback.setFeedbackType(FeedbackType.FOR_DRIVER);
+        feedback.setTravel(travel);
+        feedback.setCreated(LocalDateTime.now());
+        feedback.setReceiver(receiver);
+        feedback.setAuthor(author);
+        return feedback;
+    }
+
+    public static Role createMockRoleMemberPlamen() {
+        Role mockRole = new Role();
+        mockRole.setRoleId(2);
+        mockRole.setRoleName("MEMBER");
+        return mockRole;
+    }
+
+    public static User createMockUserPlamen(){
+        User user = new User();
+        user.setUserId(1);
+        user.setAvatar(createAvatarPlamen());
+        user.setBlocked(false);
+        user.setDeleted(false);
+        user.setVerified(true);
+        user.setFirstName("Plamen");
+        user.setLastName("Ivanov");
+        user.setUsername("Fribble");
+        user.setAverageDriverRating(2);
+        user.setAveragePassengerRating(2);
+        user.setCreated(LocalDateTime.now());
+        user.setEmail("plamen@email.com");
+        user.setPhoneNumber("08888181818");
+        HashSet<Role> roles = new HashSet<>();
+        roles.add(createMockRoleMemberPlamen());
+        user.setRoles(roles);
+        return user;
+    }
+
+    public static TravelStatus createMockTravelStatusPlamen(){
+        TravelStatus travelStatus = new TravelStatus();
+        travelStatus.setTravelStatusId(1);
+        return travelStatus;
+    }
+
+    public static Travel createMockTravelPlamen(){
+        Travel travel = new Travel();
+        travel.setTravelId(1);
+        travel.setCreatedOn(LocalDateTime.now());
+        travel.setDepartureTime(LocalDateTime.now().plusMinutes(20));
+        travel.setEndingPoint("EndPoint");
+        travel.setStartingPoint("StartPoint");
+        travel.setStatus(createMockTravelStatusPlamen());
+        travel.setDriver(createMockUserPlamen());
+        return travel;
+    }
+
+    public static TravelFilterOptions createMockTravelFilterOptionsPlamen(){
+        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(
+                "staringPoint",
+                "endingPoint",
+                "2024-01-31 00:00:00",
+                "2024-03-31 00:00:00",
+                5,
+                "username",
+                "comment",
+                2,
+                null,
+                null
+        );
+        return travelFilterOptions;
+    }
 }

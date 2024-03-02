@@ -1,6 +1,8 @@
 package com.tripweaver.services;
 
 import com.tripweaver.helpers.TestHelpers;
+import com.tripweaver.models.Avatar;
+import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.repositories.contracts.AvatarRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +20,17 @@ public class AvatarServiceTests {
 
     @InjectMocks
     AvatarServiceImpl avatarService;
+
+
+    @Test
+    public void createAvatar_Should_CallRepository(){
+        Avatar avatar = TestHelpers.createAvatarPlamen();
+
+        avatarService.createAvatar(avatar);
+
+        Mockito.verify(avatarRepository, Mockito.times(1))
+                .createAvatar(avatar);
+    }
 
     /*Ilia*/
     @Test
