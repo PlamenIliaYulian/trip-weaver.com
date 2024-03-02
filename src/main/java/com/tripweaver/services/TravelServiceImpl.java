@@ -9,6 +9,7 @@ import com.tripweaver.services.contracts.BingMapService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.TravelStatusService;
 import com.tripweaver.services.helpers.PermissionHelper;
+import com.tripweaver.services.helpers.ValidationHelpersPlamen;
 import com.tripweaver.services.helpers.ValidationHelper$Ilia;
 import jakarta.validation.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +95,8 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel cancelTravel(Travel travel, User loggedUser) {
-        permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
+        ValidationHelpersPlamen.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelpersPlamen.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         TravelStatus cancelStatus = travelStatusService.getStatusById(TRAVEL_STATUS_CANCEL_ID);
         travel.setStatus(cancelStatus);
         return travelRepository.updateTravel(travel);
@@ -103,8 +104,8 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel completeTravel(Travel travel, User loggedUser) {
-        permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
+        ValidationHelpersPlamen.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelpersPlamen.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         TravelStatus completeStatus = travelStatusService.getStatusById(TRAVEL_STATUS_COMPLETE_ID);
         travel.setStatus(completeStatus);
         return travelRepository.updateTravel(travel);
@@ -121,7 +122,7 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public List<Travel> getTravelsByPassenger(User passenger, User loggedUser, TravelFilterOptions travelFilterOptions) {
-        permissionHelper.isSameUser(passenger, loggedUser, UNAUTHORIZED_OPERATION);
+        ValidationHelpersPlamen.isSameUser(passenger, loggedUser, UNAUTHORIZED_OPERATION);
         travelFilterOptions.setPassengerId(Optional.of(passenger.getUserId()));
         return travelRepository.getAllTravels(travelFilterOptions);
     }
@@ -139,11 +140,11 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel applyForATrip(User userToApply, Travel travelToApplyFor) {
-        permissionHelper.isUserVerified(userToApply, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
-        permissionHelper.isUserBlocked(userToApply, UNAUTHORIZED_OPERATION_BLOCKED);
-        permissionHelper.hasYetToApply(userToApply, travelToApplyFor, UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
-        permissionHelper.isTravelOpenForApplication(travelToApplyFor, TRAVEL_NOT_AVAILABLE);
-        permissionHelper.checkNotToBeDriver(travelToApplyFor, userToApply,INVALID_OPERATION_DRIVER);
+        ValidationHelpersPlamen.isUserVerified(userToApply, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
+        ValidationHelpersPlamen.isUserBlocked(userToApply, UNAUTHORIZED_OPERATION_BLOCKED);
+        ValidationHelpersPlamen.hasYetToApply(userToApply, travelToApplyFor, UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
+        ValidationHelpersPlamen.isTravelOpenForApplication(travelToApplyFor, TRAVEL_NOT_AVAILABLE);
+        ValidationHelpersPlamen.checkNotToBeDriver(travelToApplyFor, userToApply,INVALID_OPERATION_DRIVER);
         travelToApplyFor.getUsersAppliedForTheTravel().add(userToApply);
         return travelRepository.updateTravel(travelToApplyFor);
     }

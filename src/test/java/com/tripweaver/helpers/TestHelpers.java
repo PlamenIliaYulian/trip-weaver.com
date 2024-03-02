@@ -223,7 +223,7 @@ public class TestHelpers {
         return feedback;
     }
 
-    public static Role createMockRoleMemberPlamen() {
+    public static Role createMockRolePlamen() {
         Role mockRole = new Role();
         mockRole.setRoleId(2);
         mockRole.setRoleName("MEMBER");
@@ -246,7 +246,7 @@ public class TestHelpers {
         user.setEmail("plamen@email.com");
         user.setPhoneNumber("08888181818");
         HashSet<Role> roles = new HashSet<>();
-        roles.add(createMockRoleMemberPlamen());
+        roles.add(createMockRolePlamen());
         user.setRoles(roles);
         return user;
     }
@@ -266,6 +266,10 @@ public class TestHelpers {
         travel.setStartingPoint("StartPoint");
         travel.setStatus(createMockTravelStatusPlamen());
         travel.setDriver(createMockUserPlamen());
+        HashSet<User> usersApplied = new HashSet<>();
+        HashSet<User> usersApproved = new HashSet<>();
+        travel.setUsersAppliedForTheTravel(usersApplied);
+        travel.setUsersApprovedForTheTravel(usersApproved);
         return travel;
     }
 

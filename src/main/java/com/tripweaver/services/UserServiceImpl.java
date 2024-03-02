@@ -1,5 +1,7 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.DuplicateEntityException;
+import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.*;
 import com.tripweaver.models.enums.FeedbackType;
@@ -10,6 +12,7 @@ import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.UserService;
 import com.tripweaver.services.helpers.PermissionHelper;
+import com.tripweaver.services.helpers.ValidationHelpersPlamen;
 import com.tripweaver.services.helpers.ValidationHelper$Ilia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,9 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        permissionHelper.checkForUniqueUsername(user);
-        permissionHelper.checkForUniqueEmail(user);
-        permissionHelper.checkIfPhoneNumberUnique(user);
+        checkForUniqueUsername(user);
+        checkForUniqueEmail(user);
+        checkIfPhoneNumberUnique(user);
         user.setCreated(LocalDateTime.now());
         user.setAvatar(avatarService.getDefaultAvatar());
         HashSet<Role> roles = new HashSet<>();
@@ -100,7 +103,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User blockUser(User userToBeBlocked, User loggedUser) {
-        permissionHelper.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        ValidationHelpersPlamen.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         userToBeBlocked.setBlocked(true);
         return userRepository.updateUser(userToBeBlocked);
     }
@@ -138,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser) {
-        permissionHelper.isSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION_NOT_SAME_USER);
+        ValidationHelpersPlamen.isSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION_NOT_SAME_USER);
         Avatar avatarToAdd = new Avatar();
         avatarToAdd.setAvatarUrl(avatarUrl);
         avatarToAdd = avatarService.createAvatar(avatarToAdd);
@@ -200,9 +203,9 @@ public class UserServiceImpl implements UserService {
                                               Travel travel,
                                               User loggedUser,
                                               User passenger) {
-        permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
-        permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        permissionHelper.isTheUserInTheApprovedListOfTheTravel(passenger, travel, USER_NOT_IN_APPROVED_LIST);
+        ValidationHelpersPlamen.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
+        ValidationHelpersPlamen.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelpersPlamen.isTheUserInTheApprovedListOfTheTravel(passenger, travel, USER_NOT_IN_APPROVED_LIST);
 
         feedbackForPassenger.setReceiver(passenger);
         feedbackForPassenger.setAuthor(loggedUser);
@@ -264,5 +267,56 @@ public class UserServiceImpl implements UserService {
         userToBeDeleted.setDeleted(true);
         userRepository.updateUser(userToBeDeleted);
     }
+
+    private void checkForUniqueUsername(User user) {
+        boolean duplicateExists = true;
+
+        try {
+            userRepository.getUserByUsername(user.getUsername());
+
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new DuplicateEntityException("User", "username", user.getUsername());
+        }
+    }
+
+    private void checkForUniqueEmail(User user) {
+        boolean duplicateExists = true;
+
+        try {
+            User existingUser = userRepository.getUserByEmail(user.getEmail());
+            if (existingUser.getUserId() == user.getUserId()) {
+                duplicateExists = false;
+            }
+
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new DuplicateEntityException("User", "email", user.getEmail());
+        }
+    }
+
+    private void checkIfPhoneNumberUnique(User userToBeUpdated) {
+        boolean duplicateExists = true;
+
+        try {
+            User user = userRepository.getUserByPhoneNumber(userToBeUpdated.getPhoneNumber());
+            if (user.getUserId() == userToBeUpdated.getUserId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new DuplicateEntityException("User", "Phone number", userToBeUpdated.getPhoneNumber());
+        }
+    }
+
 
 }

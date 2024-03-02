@@ -1,5 +1,6 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.models.Travel;
@@ -15,6 +16,7 @@ import com.tripweaver.models.TravelStatus;
 import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.repositories.contracts.TravelRepository;
+import com.tripweaver.repositories.contracts.TravelStatusRepository;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.helpers.PermissionHelper;
 import org.junit.jupiter.api.Assertions;
@@ -35,11 +37,15 @@ import java.util.HashSet;
 
 import static com.tripweaver.services.helpers.ConstantHelper.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @ExtendWith(MockitoExtension.class)
 public class TravelServiceTests {
 
     @Mock
     TravelRepository travelRepository;
+
     @Mock
     TravelStatusService travelStatusService;
     @Mock
@@ -191,30 +197,33 @@ public class TravelServiceTests {
     }
 
 
+
     @Test
-    public void cancelTravel_Should_Throw_When_UserIsNotDriver(){
+    public void cancelTravel_Should_Throw_When_UserIsNotDriver() {
         User loggedUser = TestHelpers.createMockUserPlamen();
         Travel travel = TestHelpers.createMockTravelPlamen();
 
         loggedUser.setUserId(2);
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                ()-> travelService.cancelTravel(travel, loggedUser));
+                () -> travelService.cancelTravel(travel, loggedUser));
     }
 
     @Test
-    public void cancelTravel_Should_Throw_When_TravelIsCancelled(){
+    public void cancelTravel_Should_Throw_When_TravelIsCancelled() {
         User loggedUser = TestHelpers.createMockUserPlamen();
         Travel travel = TestHelpers.createMockTravelPlamen();
-        TravelStatus travelStatus = TestHelpers.createMockTravelStatusPlamen();
-        travelStatus.setTravelStatusId(3);
+        TravelStatus statusCancelled = TestHelpers.createMockTravelStatusPlamen();
+        statusCancelled.setTravelStatusId(3);
+        travel.setStatus(statusCancelled);
+
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                ()-> travelService.cancelTravel(travel, loggedUser));
+                () -> travelService.cancelTravel(travel, loggedUser));
     }
 
     @Test
-    public void cancelTravel_Should_Cancel_When_ArgumentsAreValid(){
+    public void cancelTravel_Should_Cancel_When_ArgumentsAreValid() {
         User loggedUser = TestHelpers.createMockUserPlamen();
         Travel travel = TestHelpers.createMockTravelPlamen();
         travel.setDriver(loggedUser);
@@ -222,13 +231,16 @@ public class TravelServiceTests {
         TravelStatus cancelledStatus = TestHelpers.createMockTravelStatusPlamen();
         cancelledStatus.setTravelStatusId(2);
 
+        Mockito.when(travelStatusService.getStatusById(2))
+                .thenReturn(cancelledStatus);
+
         travelService.cancelTravel(travel, loggedUser);
 
         Assertions.assertEquals(cancelledStatus, travel.getStatus());
     }
 
     @Test
-    public void getAllTravelsCount_Should_CallRepository(){
+    public void getAllTravelsCount_Should_CallRepository() {
         travelService.getAllTravelsCount();
 
         Mockito.verify(travelRepository, Mockito.times(1))
@@ -236,14 +248,96 @@ public class TravelServiceTests {
     }
 
     @Test
-    public void getTravelsByPassenger_Should_CallRepository_When_ArgumentsAreValid(){
+    public void getTravelsByPassenger_Should_CallRepository_When_ArgumentsAreValid() {
         User loggedUser = TestHelpers.createMockUserPlamen();
         User passenger = TestHelpers.createMockUserPlamen();
         TravelFilterOptions travelFilterOptions = TestHelpers.createMockTravelFilterOptionsPlamen();
 
-        travelService.getTravelsByPassenger(loggedUser, passenger,travelFilterOptions);
+        travelService.getTravelsByPassenger(loggedUser, passenger, travelFilterOptions);
 
         Mockito.verify(travelRepository, Mockito.times(1))
                 .getAllTravels(travelFilterOptions);
     }
+
+    @Test
+    public void getTravelsByPassenger_Should_Throw_When_NotSameUser() {
+        User loggedUser = TestHelpers.createMockUserPlamen();
+        User passenger = TestHelpers.createMockUserPlamen();
+        passenger.setUserId(2);
+        TravelFilterOptions travelFilterOptions = TestHelpers.createMockTravelFilterOptionsPlamen();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> travelService.getTravelsByPassenger(passenger, loggedUser, travelFilterOptions));
+    }
+
+    @Test
+    public void applyForTrip_Should_Throw_When_UserIsNotVerified(){
+        User loggedUser = TestHelpers.createMockUserPlamen();
+        Travel travel = TestHelpers.createMockTravelPlamen();
+        loggedUser.setVerified(false);
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                ()-> travelService.applyForATrip(loggedUser, travel));
+    }
+
+    @Test
+    public void applyForTrip_Should_Throw_When_UserIsBlocked(){
+        User loggedUser = TestHelpers.createMockUserPlamen();
+        Travel travel = TestHelpers.createMockTravelPlamen();
+        loggedUser.setBlocked(true);
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                ()-> travelService.applyForATrip(loggedUser, travel));
+    }
+
+    @Test
+    public void applyForTrip_Should_Throw_When_UserAlreadyApplied(){
+        User loggedUser = TestHelpers.createMockUserPlamen();
+        Travel travel = TestHelpers.createMockTravelPlamen();
+
+        Set<User> usersAppliedForTheTrip = new HashSet<>();
+        usersAppliedForTheTrip.add(loggedUser);
+
+        travel.setUsersAppliedForTheTravel(usersAppliedForTheTrip);
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                ()-> travelService.applyForATrip(loggedUser, travel));
+    }
+
+    @Test
+    public void applyForTrip_Should_Throw_When_TravelIsCancelled(){
+        User loggedUser = TestHelpers.createMockUserPlamen();
+        Travel travel = TestHelpers.createMockTravelPlamen();
+
+        TravelStatus statusCancel = TestHelpers.createMockTravelStatusPlamen();
+        statusCancel.setTravelStatusId(2);
+        travel.setStatus(statusCancel);
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                ()-> travelService.applyForATrip(loggedUser, travel));
+    }
+
+    @Test
+    public void applyForTrip_Should_Throw_When_UserIsDriver(){
+        User loggedUser = TestHelpers.createMockUserPlamen();
+        Travel travel = TestHelpers.createMockTravelPlamen();
+        travel.setDriver(loggedUser);
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                ()-> travelService.applyForATrip(loggedUser, travel));
+    }
+
+    @Test
+    public void applyForTrip_Should_CallRepository(){
+        User loggedUser = TestHelpers.createMockUserPlamen();
+        Travel travel = TestHelpers.createMockTravelPlamen();
+        loggedUser.setUserId(2);
+
+        travelService.applyForATrip(loggedUser, travel);
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .updateTravel(travel);
+    }
+
+
 }

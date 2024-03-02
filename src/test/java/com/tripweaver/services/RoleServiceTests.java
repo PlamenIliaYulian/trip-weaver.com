@@ -3,7 +3,6 @@ package com.tripweaver.services;
 import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.models.Role;
 import com.tripweaver.repositories.contracts.RoleRepository;
-import com.tripweaver.services.contracts.RoleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ public class RoleServiceTests {
     @Test
     public void getRoleByName_Should_ReturnRole_When_MethodCalled(){
         Mockito.when(roleRepository.getRoleByName(Mockito.anyString()))
-                .thenReturn(TestHelpers.createMockRoleMemberPlamen());
+                .thenReturn(TestHelpers.createMockRolePlamen());
 
         Role role = roleService.getRoleByName("ROLE_MEMBER");
 
