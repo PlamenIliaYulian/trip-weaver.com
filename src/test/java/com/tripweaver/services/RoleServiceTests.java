@@ -15,5 +15,5 @@ public class RoleServiceTests {
     RoleRepository roleRepository;
 
     @InjectMocks
-    RoleService roleService;
+    RoleServiceImpl roleService;
 }

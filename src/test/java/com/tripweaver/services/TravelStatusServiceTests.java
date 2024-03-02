@@ -14,5 +14,5 @@ public class TravelStatusServiceTests {
     TravelStatusRepository travelStatusRepository;
 
     @InjectMocks
-    TravelStatusService travelStatusService;
+    TravelStatusServiceImpl travelStatusService;
 }
