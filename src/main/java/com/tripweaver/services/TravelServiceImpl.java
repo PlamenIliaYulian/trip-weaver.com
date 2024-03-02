@@ -9,6 +9,8 @@ import com.tripweaver.services.contracts.BingMapService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.TravelStatusService;
 import com.tripweaver.services.helpers.PermissionHelper;
+import com.tripweaver.services.helpers.ValidationHelper$Ilia;
+import jakarta.validation.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,9 +56,10 @@ public class TravelServiceImpl implements TravelService {
         this.bingMapService = bingMapService;
     }
 
+    /*Ilia*/
     @Override
     public Travel createTravel(Travel travel, User creatorDriver) {
-        permissionHelper.isUserBlocked(creatorDriver, UNAUTHORIZED_OPERATION_BLOCKED);
+        ValidationHelper$Ilia.isUserBlocked(creatorDriver, UNAUTHORIZED_OPERATION_BLOCKED);
         permissionHelper.isUserVerified(creatorDriver, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
         permissionHelper.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
         travel.setDriver(creatorDriver);

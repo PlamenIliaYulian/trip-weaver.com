@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,7 +22,7 @@ public class AvatarServiceTests {
     /*Ilia*/
     @Test
     public void uploadPictureToCloudinary_Should_CallRepository() {
-        MultipartFile mockMultipartFile= TestHelpers.createMockMultipartFile();
+        MultipartFile mockMultipartFile= TestHelpers.createMockMultipartFile$Ilia();
 
         avatarService.uploadPictureToCloudinary(mockMultipartFile);
 

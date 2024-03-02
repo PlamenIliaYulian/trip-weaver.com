@@ -370,5 +370,5 @@ public class UserRestController {
         }
     }
 
-
+    /*ToDo Add deleteUser method in RestController, MvcController & UserService.*/
 }
