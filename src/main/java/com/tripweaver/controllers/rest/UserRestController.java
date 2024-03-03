@@ -49,6 +49,8 @@ public class UserRestController {
         this.avatarService = avatarService;
     }
 
+    /*ToDo Check for all response statuses if they are correct when the operation is successful.*/
+
     /*Yuli*/
     /*TODO we should send verification email*/
     @ResponseStatus(HttpStatus.CREATED)
@@ -370,5 +372,20 @@ public class UserRestController {
         }
     }
 
-    /*ToDo Add deleteUser method in RestController, MvcController & UserService.*/
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@RequestHeader HttpHeaders headers,
+                           @PathVariable int userId) {
+        try {
+            User userToBeDeleted = userService.getUserById(userId);
+            User userLogged = authenticationHelper.tryGetUserFromHeaders(headers);
+            userService.deleteUser(userToBeDeleted, userLogged);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
 }

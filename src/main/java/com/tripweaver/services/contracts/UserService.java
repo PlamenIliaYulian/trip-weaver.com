@@ -64,4 +64,7 @@ public interface UserService {
 
     /*Plamen*/
     User verifyEmail(User userToBeVerified);
+
+    /*Ilia*/
+    void deleteUser(User userToBeDeleted, User loggedUser);
 }

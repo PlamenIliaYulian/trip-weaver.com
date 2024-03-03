@@ -111,8 +111,6 @@ public class TravelRepositoryImpl implements TravelRepository {
                 });
             }
 
-
-            /* TODO Have to test it carefully.*/
             StringBuilder queryString;
             if (travelFilterOptions.getPassengerId() != null && travelFilterOptions.getPassengerId().get() != 0) {
                 travelFilterOptions.getPassengerId().ifPresent(value -> {

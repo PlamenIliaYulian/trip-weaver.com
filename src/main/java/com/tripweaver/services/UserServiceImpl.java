@@ -252,5 +252,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.updateUser(userToBeVerified);
     }
 
+    /*Ilia*/
+    @Override
+    public void deleteUser(User userToBeDeleted, User loggedUser) {
+        ValidationHelper$Ilia.isSameUser(userToBeDeleted, loggedUser, UNAUTHORIZED_OPERATION);
+        userToBeDeleted.setDeleted(true);
+        userRepository.updateUser(userToBeDeleted);
+    }
 
 }
