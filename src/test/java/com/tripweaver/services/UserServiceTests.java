@@ -173,7 +173,7 @@ public class UserServiceTests {
 
     /*Ilia*/
     @Test
-    public void getAllFeedbackForPassenger_Should_ReturnListOfFeedback_When_Called(){
+    public void getAllFeedbackForPassenger_Should_ReturnListOfFeedback_When_Called() {
         User mockLoggedUser = TestHelpers.createMockNonAdminUser1$Ilia();
         Feedback mockFeedbackForPassenger = TestHelpers.createMockFeedbackForUser1ForPassenger$Ilia();
         Set<Feedback> feedbackSet = mockLoggedUser.getFeedback();
@@ -181,5 +181,27 @@ public class UserServiceTests {
         List<Feedback> feedbackList = userService.getAllFeedbackForPassenger(mockLoggedUser);
 
         Assertions.assertEquals(feedbackSet.size(), feedbackList.size());
+    }
+
+    /*Ilia*/
+    @Test
+    public void deleteUser_Should_Throw_When_UserIsNotTheSameAsLoggedUser() {
+        User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1$Ilia();
+        User mockUserLogged = TestHelpers.createMockNonAdminUser2$Ilia();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> userService.deleteUser(mockUserToBeDeleted, mockUserLogged));
+    }
+
+    /*Ilia*/
+    @Test
+    public void deleteUser_Should_CallRepository_When_ValidArgumentsPassed() {
+        User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1$Ilia();
+
+        userService.deleteUser(mockUserToBeDeleted, mockUserToBeDeleted);
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .updateUser(mockUserToBeDeleted);
+
     }
 }
