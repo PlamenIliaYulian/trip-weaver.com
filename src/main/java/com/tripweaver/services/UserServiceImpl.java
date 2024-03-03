@@ -153,6 +153,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /*Ilia*/
+    /*ToDo We have mistaken here. isUserTheDriver do not have to throw UnauthorizedOperationException. We are
+    *  just checking if the user we are trying to leave feedback for is the driver of the travel we've been on.*/
+
     @Override
     public Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,
                                            Travel travel,

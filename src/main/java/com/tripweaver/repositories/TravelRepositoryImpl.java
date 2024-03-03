@@ -68,12 +68,12 @@ public class TravelRepositoryImpl implements TravelRepository {
             Map<String, Object> parameters = new HashMap<>();
 
             travelFilterOptions.getStartingPointCity().ifPresent(value -> {
-                filters.add(" travel.startingPointCity like :startingPoint ");
-                parameters.put("startingPoint", String.format("%%%s%%", value));
+                filters.add(" travel.startingPointCity like :startingPointCity ");
+                parameters.put("startingPointCity", String.format("%%%s%%", value));
             });
             travelFilterOptions.getEndingPointCity().ifPresent(value -> {
-                filters.add(" travel.endingPointCity like :endingPoint ");
-                parameters.put("endingPoint", String.format("%%%s%%", value));
+                filters.add(" travel.endingPointCity like :endingPointCity ");
+                parameters.put("endingPointCity", String.format("%%%s%%", value));
             });
             travelFilterOptions.getDepartureBefore().ifPresent(value -> {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

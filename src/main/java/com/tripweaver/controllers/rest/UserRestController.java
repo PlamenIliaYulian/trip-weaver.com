@@ -13,11 +13,19 @@ import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.MailSenderService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -71,6 +79,87 @@ public class UserRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "Updates the information of the user found by the numeric ID.",
+            description = "Used to update User's first name, last name, email, phone number or password.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Body consists of the password, confirmation password, first name, last name, phone number and the email of the user."),
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "ID must be numeric.",
+                            example = "/api/v1/users/3"
+                    ),
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success response.",
+                            content = @Content(
+                                    schema = @Schema(implementation = User.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to update a User information.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Logged user not the same", value = "Unauthorized operation.",
+                                                    description = "The logged user who is updating the info is not the same" +
+                                                            "as the one who will be updated.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Conflict.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Email", value = "Duplication exist. Email has to be unique.",
+                                                    description = "Provided email already exists in the database."),
+                                            @ExampleObject(name = "Phone number", value = "Duplication exist. Phone number has to be unique.",
+                                                    description = "Provided phone number already exists in the database.")
+
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Travel status not 'created'", value = "Invalid operation.",
+                                                    description = "The travel has a status different from 'CREATED'."),
+                                            @ExampleObject(name = "User not applied", value = "Invalid operation.",
+                                                    description = "User to be approved has not applied for the travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @PutMapping("/{userId}")
     User updateUser(@PathVariable int userId,
                     @Valid @RequestBody UserDtoUpdate userDtoUpdate,
@@ -87,10 +176,6 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (InvalidOperationException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    e.getMessage());
         }
     }
 
@@ -132,6 +217,59 @@ public class UserRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "Blocks a user found by the numeric ID.",
+            description = "Used to from admin of the system to block a certain user by his/her numeric ID.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "ID must be numeric.",
+                            example = "/api/v1/users/3/block"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success response.",
+                            content = @Content(
+                                    schema = @Schema(implementation = User.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to update a User information.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Not admin", value = "Unauthorized operation.",
+                                                    description = "You have to admin to block another user.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @PutMapping("/{userId}/block")
     public User blockUser(@PathVariable int userId,
                           @RequestHeader HttpHeaders headers) {
@@ -166,6 +304,15 @@ public class UserRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "Pulls from the database the count of all created users in the system.",
+            description = "Used to obtain the total amount of users registered in the system.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response"
+                    )
+            })
     @GetMapping("/count")
     public Long getAllUsersCount() {
         return userService.getAllUsersCount();
@@ -184,6 +331,71 @@ public class UserRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "Uploads an avatar / profile picture to user's profile.",
+            description = "Used to update user's profile by updating his/her avatar / profile picture.",
+            parameters = {
+                    @Parameter(name = "userId",
+                            description = "ID of the user whose profile will be updated.",
+                            example = "/api/v1/users/3/avatar"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success response.",
+                            content = @Content(
+                                    schema = @Schema(implementation = User.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Logged user not the same", value = "Unauthorized operation.",
+                                                    description = "The logged user who is adding the avatar is not the same" +
+                                                            "as the one who will be updated.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to update a User information.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Uploading picture", value = "Error during uploading the picture.",
+                                                    description = "The provided picture failed to be uploaded " +
+                                                            "because the size is too large.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @PutMapping("/{userId}/avatar")
     public User addAvatar(@PathVariable int userId,
                           @RequestParam("avatar") MultipartFile multipartFile,
@@ -222,6 +434,186 @@ public class UserRestController {
     }
 
     /*Yuli*/
+    /*ToDo Ilia - Sorry Yuli, I wrote the Swagger for this method without looking that it's intended for you. */
+    @Operation(
+            summary = "Leave a feedback to a passenger.",
+            description = "Driver of the travel leaves a feedback to one of his passengers of a certain travel. " +
+                    "Numeric ID of the passenger and numeric ID of the travel have to be provided in the endpoint.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Body consists of a rating [0-5] and a content (optional) of the feedback."),
+            parameters = {
+                    @Parameter(name = "id",
+                            description = "Specific id to search in the system",
+                            example = "/api/v1/users/3/travels/20/feedback-for-passenger"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Success response.",
+                            content = @Content(schema = @Schema(implementation = Feedback.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "User not the driver", value = "Unauthorized operation.",
+                                                    description = "User leaving feedback for passenger is not the driver" +
+                                                            "of the travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID."),
+                                            @ExampleObject(
+                                                    name = "Missing travel", value = "Travel with ID '200' not found.",
+                                                    description = "There is no such travel with the provided ID.")
+
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to update a User information.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Travel status not 'completed'", value = "Invalid operation.",
+                                                    description = "The travel has a status different from 'COMPLETED'."),
+                                            @ExampleObject(name = "User not approved", value = "Invalid operation.",
+                                                    description = "The user to be left feedback for is not on the " +
+                                                            "approved list for the travel."),
+                                            @ExampleObject(name = "Feedback left", value = "Invalid operation.",
+                                                    description = "Feedback for this passenger on this travel " +
+                                                            "has already been submitted.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{userId}/travels/{travelId}/feedback-for-passenger")
+    public Feedback leaveFeedbackForPassenger(@PathVariable int userId,
+                                              @PathVariable int travelId,
+                                              @RequestHeader HttpHeaders headers,
+                                              @RequestBody FeedbackDto feedbackDto) {
+        try {
+            User passenger = userService.getUserById(userId);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
+            Travel travel = travelService.getTravelById(travelId);
+            Feedback feedbackForPassenger = modelsMapper.feedbackForPassengerFromDto(feedbackDto);
+            return userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, loggedUser, passenger);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    /*Ilia*/
+    @Operation(
+            summary = "Leave a feedback to a driver.",
+            description = "A passenger of the travel leaves a feedback to the driver of a certain travel. " +
+                    "Numeric ID of the driver and numeric ID of the travel have to be provided in the endpoint.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Body consists of a rating [0-5] and a content (optional) of the feedback."),
+            parameters = {
+                    @Parameter(name = "id",
+                            description = "Specific id to search in the system",
+                            example = "/api/v1/users/3/travels/20/feedback-for-driver"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Success response.",
+                            content = @Content(schema = @Schema(implementation = Feedback.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "User not the driver", value = "Unauthorized operation.",
+                                                    description = "User we are leaving feedback for is not the driver" +
+                                                            "of the travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID."),
+                                            @ExampleObject(
+                                                    name = "Missing travel", value = "Travel with ID '200' not found.",
+                                                    description = "There is no such travel with the provided ID."),
+                                            @ExampleObject(name = "User not approved", value = "Invalid operation.",
+                                                    description = "The user to left feedback for the driver is not on the " +
+                                                            "approved list for the travel."),
+
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to update a User information.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Travel status not 'completed'", value = "Invalid operation.",
+                                                    description = "The travel has a status different from 'COMPLETED'."),
+                                            @ExampleObject(name = "User is the driver", value = "Invalid operation.",
+                                                    description = "User leaving feedback for the driver is the driver itself."),
+                                            @ExampleObject(name = "User not approved", value = "Invalid operation.",
+                                                    description = "The user to be left feedback for is not on the " +
+                                                            "approved list for the travel."),
+                                            @ExampleObject(name = "Feedback left", value = "Invalid operation.",
+                                                    description = "Feedback for the driver of this travel from this passenger " +
+                                                            "has already been submitted.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @PostMapping("/{userId}/travels/{travelId}/feedback-for-driver")
     public Feedback leaveFeedbackForDriver(@RequestHeader HttpHeaders headers,
                                            @PathVariable int userId,
@@ -249,29 +641,6 @@ public class UserRestController {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     e.getMessage());
-        }
-    }
-
-    /*Ilia*/
-    @PostMapping("/{userId}/travels/{travelId}/feedback-for-passenger")
-    public Feedback leaveFeedbackForPassenger(@PathVariable int userId,
-                                              @PathVariable int travelId,
-                                              @RequestHeader HttpHeaders headers,
-                                              @RequestBody FeedbackDto feedbackDto) {
-        try {
-            User passenger = userService.getUserById(userId);
-            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
-            Travel travel = travelService.getTravelById(travelId);
-            Feedback feedbackForPassenger = modelsMapper.feedbackForPassengerFromDto(feedbackDto);
-            return userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, loggedUser, passenger);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (UnauthorizedOperationException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        } catch (InvalidOperationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -306,6 +675,103 @@ public class UserRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "User viewing all his/her travels as driver of the travel.",
+            description = "Get a list of all his/her travels as driver of the travel no matter the status of the" +
+                    "travel. The user can view all his 'created', 'canceled' and 'completed' travels.",
+            parameters = {
+                    @Parameter(
+                            name = "startingPointCity",
+                            description = "Get travels' starting point city that consist the text provided " +
+                                    "in 'startingPointCity' parameter.",
+                            example = "Plovdiv"),
+                    @Parameter(
+                            name = "endingPointCity",
+                            description = "Get travels' ending point city that consist the text provided " +
+                                    "in 'startingPointCity' parameter.",
+                            example = "Sofia"),
+                    @Parameter(
+                            name = "departureBefore",
+                            description = "Get posts that departures before a certain date provided in the " +
+                                    "'departureBefore' parameter.",
+                            example = "2024-05-16 22:00:00"),
+                    @Parameter(
+                            name = "departureAfter",
+                            description = "Get posts that departures after a certain date provided in the " +
+                                    "'departureAfter' parameter.",
+                            example = "2024-04-16 12:00:00"),
+                    @Parameter(
+                            name = "minFreeSeats",
+                            description = "Get travels that have free seats equal or more than a certain integer number",
+                            example = "2"),
+                    @Parameter(
+                            name = "driverUsername",
+                            description = "If the travels' driver username consist the text provided in the " +
+                                    "'driverUsername' parameter.",
+                            example = "pesho"),
+                    @Parameter(
+                            name = "commentContains",
+                            description = "If the travels' comment consist the text provided in the 'commentContains' parameter.",
+                            example = "pet allowed"),
+                    @Parameter(
+                            name = "statusId",
+                            description = "Select the ID of te status of the travel to get all travels with  that status." +
+                                    "1 - for 'CREATED', 2 - for 'CANCELED', 3 - for 'COMPLETED'.",
+                            example = "2"),
+                    @Parameter(
+                            name = "sortBy",
+                            description = "You can choose to sort the travels list by 'startingPointCity', 'endingPointCity', " +
+                                    "'departureTime', 'freeSeats', 'createdOn',  'driver', 'distance' or 'duration'.",
+                            example = "desc"),
+                    @Parameter(
+                            name = "sortOrder",
+                            description = "You can choose to sort the travels list in descending order by typing 'desc'. " +
+                                    "The default is an ascending order.",
+                            example = "desc")
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to view the resource.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Logged user not the same", value = "Unauthorized operation.",
+                                                    description = "The logged-in user is attempting to view travels " +
+                                                            "belonging to a different user."
+                                            )
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @GetMapping("/{userId}/travels-for-driver")
     public List<Travel> getTravelsByDriver(@PathVariable int userId,
                                            @RequestHeader HttpHeaders headers,
@@ -374,6 +840,57 @@ public class UserRestController {
         }
     }
 
+    /*Ilia*/
+    @Operation(
+            summary = "Delete a single user by numeric ID.",
+            description = "Delete a user by providing numeric ID in the endpoint. You need to be logged as " +
+                    "the user itself.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "ID must be numeric.",
+                            example = "/api/v1/users/3"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Success response when the user has been deleted."
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Missing user", value = "User with ID '200' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to delete a User.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Not authorized", value = "Unauthorized operation.",
+                                                    description = "Only the user itself can delete his/her profile.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
     public void deleteUser(@RequestHeader HttpHeaders headers,

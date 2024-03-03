@@ -328,7 +328,7 @@ public class TravelRestController {
                                     mediaType = "Plain text")
                     )
             },
-            security = {@SecurityRequirement(name = "BearerJWT")}
+            security = {@SecurityRequirement(name = "Authorization")}
     )
     @PutMapping("/{travelId}/applications/user/{userId}")
     public Travel approvePassenger(@PathVariable int travelId,
