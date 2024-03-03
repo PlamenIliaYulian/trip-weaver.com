@@ -13,9 +13,19 @@ import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.services.contracts.BingMapService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,16 +34,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/travels")
+@Tag(name = "Travel")
 public class TravelRestController {
     public static final int TRAVEL_STATUS_CREATED_ID = 1;
     private final ModelsMapper modelsMapper;
     private final AuthenticationHelper authenticationHelper;
     private final TravelService travelService;
     private final UserService userService;
-
     private final BingMapService bingMapService;
 
-    public TravelRestController(ModelsMapper modelsMapper, AuthenticationHelper authenticationHelper, TravelService travelService, UserService userService, BingMapService bingMapService) {
+    public TravelRestController(ModelsMapper modelsMapper,
+                                AuthenticationHelper authenticationHelper,
+                                TravelService travelService,
+                                UserService userService,
+                                BingMapService bingMapService) {
         this.modelsMapper = modelsMapper;
         this.authenticationHelper = authenticationHelper;
         this.travelService = travelService;
@@ -42,9 +56,60 @@ public class TravelRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "Create new travel.",
+            description = "Create a new travel in the database. Authentication needed.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Body is consisted of startingPointCity, startingPointAddress, " +
+                            "endingPointCity, endingPointAddress (optional), departureTime, freeSeats" +
+                            "and comment (optional)."),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = @Content(
+                                    schema = @Schema(implementation = Travel.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to create a Travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "User is blocked", value = "Unauthorized operation.",
+                                                    description = "A blocked user is not able to create travels."),
+                                            @ExampleObject(name = "User is not verified", value = "Unauthorized operation.",
+                                                    description = "Before verifying their email, users cannot participate in rides.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Bad request.", value = "Invalid operation.",
+                                                    description = "Departure time cannot be before current moment.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Travel createTravel(@RequestBody @Valid TravelDto travelDto, @RequestHeader HttpHeaders headers) {
+    public Travel createTravel(@RequestBody @Valid TravelDto travelDto,
+                               @RequestHeader HttpHeaders headers) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             Travel travel = modelsMapper.travelFromDto(travelDto);
@@ -92,6 +157,47 @@ public class TravelRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "Get a single travel by numeric ID.",
+            description = "Get only one travel info by providing numeric ID in the endpoint.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "ID must be numeric.",
+                            example = "/api/v1/travels/3")
+
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response",
+                            content = @Content(
+                                    schema = @Schema(implementation = Travel.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Missing travel", value = "Travel with ID '200' not found.",
+                                                    description = "There is no such travel with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to get a travel by ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @GetMapping("/{travelId}")
     public Travel getTravelById(@PathVariable int travelId, @RequestHeader HttpHeaders headers) {
         try {
@@ -118,7 +224,9 @@ public class TravelRestController {
                                       @RequestParam(required = false) String sortOrder) {
         try {
             authenticationHelper.tryGetUserFromHeaders(headers);
-            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(startingPointCity, endingPointCity, departureBefore, departureAfter, minFreeSeats, driverUsername, commentContains, TRAVEL_STATUS_CREATED_ID, sortBy, sortOrder);
+            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(startingPointCity, endingPointCity,
+                    departureBefore, departureAfter, minFreeSeats, driverUsername, commentContains,
+                    TRAVEL_STATUS_CREATED_ID, sortBy, sortOrder);
             return travelService.getAllTravels(travelFilterOptions);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -144,8 +252,88 @@ public class TravelRestController {
     }
 
     /*Ilia*/
+    @Operation(
+            summary = "Driver approves applied passenger for a certain travel.",
+            description = "Approve a passenger that has applied to join a specific travel providing the travel numeric ID " +
+                    "in the endpoint as well as the applied passenger numeric ID.",
+            parameters = {
+                    @Parameter(
+                            name = "travelId",
+                            description = "Travel ID must be numeric.",
+                            example = "3"
+                    ),
+                    @Parameter(
+                            name = "userId",
+                            description = "User ID must be numeric.",
+                            example = "6"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response",
+                            content = @Content(
+                                    schema = @Schema(implementation = Travel.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing travel", value = "Travel with ID '200' not found.",
+                                                    description = "There is no such travel with the provided ID."),
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to view a User.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "User to be approved is blocked", value = "Unauthorized operation.",
+                                                    description = "A blocked user is not able to be approved in travels."),
+                                            @ExampleObject(name = "User to approve is blocked", value = "Unauthorized operation.",
+                                                    description = "A blocked user is not able to approve any passengers."),
+                                            @ExampleObject(name = "User to approve is not the driver", value = "Unauthorized operation.",
+                                                    description = "A user who is not the driver of the travel is not able to approve any passengers."),
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(name = "Travel status not 'created'", value = "Invalid operation.",
+                                                    description = "The travel has a status different from 'CREATED'."),
+                                            @ExampleObject(name = "User not applied", value = "Invalid operation.",
+                                                    description = "User to be approved has not applied for the travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "BearerJWT")}
+    )
     @PutMapping("/{travelId}/applications/user/{userId}")
-    public Travel approvePassenger(@PathVariable int travelId, @PathVariable int userId, @RequestHeader HttpHeaders headers) {
+    public Travel approvePassenger(@PathVariable int travelId,
+                                   @PathVariable int userId,
+                                   @RequestHeader HttpHeaders headers) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             User userToBeApproved = userService.getUserById(userId);
@@ -181,20 +369,31 @@ public class TravelRestController {
         }
     }
 
+    @Operation(
+            summary = "Pulls from the database the count of all completed travels in the system.",
+            description = "Used to obtain the total amount of travels created and then completed in the system.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response"
+                    )
+            })
     @GetMapping("/count")
     public Long getAllTravelsCount() {
         return travelService.getAllTravelsCount();
     }
 
 
+    /*ToDo Test endpoint.*/
     @GetMapping("/getLocation")
     public HashMap<String, String> getCoordinatesAndValidCityName(@RequestParam("q") String address) {
         return bingMapService.getCoordinatesAndValidCityName(address);
     }
 
+    /*ToDo Test endpoint.*/
     @GetMapping("/getDistanceAndDuration")
     public HashMap<String, Integer> calculateDistanceAndDuration(@RequestParam("startingPoint") String startingPoint,
-                                                           @RequestParam("endingPoint") String endingPoint) {
+                                                                 @RequestParam("endingPoint") String endingPoint) {
         return bingMapService.calculateDistanceAndDuration(startingPoint, endingPoint);
     }
 

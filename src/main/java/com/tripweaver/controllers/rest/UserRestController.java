@@ -13,6 +13,7 @@ import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.MailSenderService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@Tag(name = "User")
 public class UserRestController {
 
     private final UserService userService;
