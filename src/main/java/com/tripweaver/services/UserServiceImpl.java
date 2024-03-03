@@ -10,6 +10,7 @@ import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.UserService;
 import com.tripweaver.services.helpers.PermissionHelper;
+import com.tripweaver.services.helpers.ValidationHelper$Ilia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     /*Ilia*/
     @Override
     public List<User> getAllUsers(UserFilterOptions userFilterOptions, User loggedInUser) {
-        permissionHelper.isAdmin(loggedInUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        ValidationHelper$Ilia.isAdmin(loggedInUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         return userRepository.getAllUsers(userFilterOptions);
     }
 
@@ -110,6 +111,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /*Ilia*/
+    /*ToDo We make the validation in Helper Class calling directly the repository
+    *  so we do not need this method. It is not needed to be tested.*/
     @Override
     public User getUserByPhoneNumber(String phoneNumber) {
         return userRepository.getUserByPhoneNumber(phoneNumber);
@@ -155,10 +158,10 @@ public class UserServiceImpl implements UserService {
                                            Travel travel,
                                            User loggedUser,
                                            User driver) {
-        permissionHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
-        permissionHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
-        permissionHelper.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        permissionHelper.checkNotToBeDriver(travel, loggedUser, INVALID_OPERATION_DRIVER);
+        ValidationHelper$Ilia.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
+        ValidationHelper$Ilia.checkNotToBeDriver(travel, loggedUser, INVALID_OPERATION_DRIVER);
+        ValidationHelper$Ilia.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
+        ValidationHelper$Ilia.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
         feedbackForDriver.setReceiver(driver);
         feedbackForDriver.setAuthor(loggedUser);
         feedbackForDriver.setTravel(travel);

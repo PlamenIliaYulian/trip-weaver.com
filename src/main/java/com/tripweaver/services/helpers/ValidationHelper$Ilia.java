@@ -9,7 +9,7 @@ import com.tripweaver.models.User;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
+import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 public class ValidationHelper$Ilia {
 
@@ -62,6 +62,39 @@ public class ValidationHelper$Ilia {
         if (!usersAppliedForTheTravel.contains(userToBeDeclined) &&
                 !usersApprovedForTheTravel.contains(userToBeDeclined)) {
             throw new EntityNotFoundException(message);
+        }
+    }
+
+    public static void isAdmin(User loggedInUser, String message) {
+        if (loggedInUser.getRoles()
+                .stream()
+                .noneMatch(role -> role.getRoleId() == ADMIN_ID)) {
+            throw new UnauthorizedOperationException(message);
+
+        }
+    }
+
+    public static void isTravelCompleted(Travel travel, String message) {
+        if (travel.getStatus().getTravelStatusId() != COMPLETED_STATUS) {
+            throw new InvalidOperationException(message);
+        }
+    }
+
+    public static void isTheUserInTheApprovedListOfTheTravel(User userToBeChecked, Travel travel, String message) {
+        if (!travel.getUsersApprovedForTheTravel().contains(userToBeChecked)) {
+            throw new EntityNotFoundException(message);
+        }
+    }
+
+    public static void isUserTheDriver(Travel travel, User userToBeChecked, String message) {
+        if (!travel.getDriver().equals(userToBeChecked)) {
+            throw new UnauthorizedOperationException(message);
+        }
+    }
+
+    public static void checkNotToBeDriver(Travel travel, User loggedUser, String message) {
+        if (travel.getDriver().equals(loggedUser)) {
+            throw new InvalidOperationException(message);
         }
     }
 }

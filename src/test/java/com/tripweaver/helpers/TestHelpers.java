@@ -3,6 +3,7 @@ package com.tripweaver.helpers;
 import com.tripweaver.models.*;
 import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import com.tripweaver.models.filterOptions.UserFilterOptions;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,14 +14,16 @@ import java.util.Set;
 public class TestHelpers {
 
     public static MultipartFile createMockMultipartFile$Ilia() {
-        return new MockMultipartFile("String",new byte[10]);
+        return new MockMultipartFile("String", new byte[10]);
     }
+
     public static Avatar createMockAvatar$Ilia() {
         Avatar mockAvatar = new Avatar();
         mockAvatar.setAvatarId(1);
         mockAvatar.setAvatarUrl("URL");
         return mockAvatar;
     }
+
     public static Role createMockRoleAdmin$Ilia() {
         Role mockRole = new Role();
         mockRole.setRoleId(1);
@@ -34,18 +37,21 @@ public class TestHelpers {
         mockRole.setRoleName("MEMBER");
         return mockRole;
     }
+
     public static TravelStatus createMockTravelStatusCreated$Ilia() {
         TravelStatus mockTravelStatus = new TravelStatus();
         mockTravelStatus.setTravelStatusId(1);
         mockTravelStatus.setStatusName("CREATED");
         return mockTravelStatus;
     }
+
     public static TravelStatus createMockTravelStatusCanceled$Ilia() {
         TravelStatus mockTravelStatus = new TravelStatus();
         mockTravelStatus.setTravelStatusId(2);
         mockTravelStatus.setStatusName("CANCELED");
         return mockTravelStatus;
     }
+
     public static TravelStatus createMockTravelStatusCompleted$Ilia() {
         TravelStatus mockTravelStatus = new TravelStatus();
         mockTravelStatus.setTravelStatusId(3);
@@ -79,6 +85,7 @@ public class TestHelpers {
 
         return mockTravel;
     }
+
     public static Travel createMockTravel2$Ilia() {
         Travel mockTravel = createMockTravel1$Ilia();
         mockTravel.setTravelId(2);
@@ -91,6 +98,7 @@ public class TestHelpers {
 
         return mockTravel;
     }
+
     public static Feedback createMockFeedbackForUser1ForDriver$Ilia() {
         Feedback mockFeedback = new Feedback();
         mockFeedback.setFeedbackId(1);
@@ -103,19 +111,7 @@ public class TestHelpers {
         mockFeedback.setTravel(createMockTravel1$Ilia());
         return mockFeedback;
     }
-    public static Feedback createMockFeedbackForUser2ForDriver$Ilia() {
-        Feedback mockFeedback = new Feedback();
-        mockFeedback.setFeedbackId(2);
-        mockFeedback.setAuthor(createMockNonAdminUser1$Ilia());
-        mockFeedback.setReceiver(createMockNonAdminUser2$Ilia());
-        mockFeedback.setRating(3);
-        mockFeedback.setFeedbackType(FeedbackType.FOR_DRIVER);
-        mockFeedback.setCreated(LocalDateTime.now());
-        mockFeedback.setContent("MockContent");
-        mockFeedback.setTravel(createMockTravel2$Ilia());
-        return mockFeedback;
 
-    }
     public static Feedback createMockFeedbackForUser1ForPassenger$Ilia() {
         Feedback mockFeedback = new Feedback();
         mockFeedback.setFeedbackId(3);
@@ -128,18 +124,6 @@ public class TestHelpers {
         mockFeedback.setTravel(createMockTravel2$Ilia());
         return mockFeedback;
 
-    }
-    public static Feedback createMockFeedbackForUser2ForPassenger$Ilia() {
-        Feedback mockFeedback = new Feedback();
-        mockFeedback.setFeedbackId(4);
-        mockFeedback.setAuthor(createMockNonAdminUser1$Ilia());
-        mockFeedback.setReceiver(createMockNonAdminUser2$Ilia());
-        mockFeedback.setRating(3);
-        mockFeedback.setFeedbackType(FeedbackType.FOR_PASSENGER);
-        mockFeedback.setCreated(LocalDateTime.now());
-        mockFeedback.setContent("MockContent");
-        mockFeedback.setTravel(createMockTravel1$Ilia());
-        return mockFeedback;
     }
 
     public static User createMockNonAdminUser1$Ilia() {
@@ -164,6 +148,7 @@ public class TestHelpers {
         mockNonAdminUser.setFeedback(new HashSet<>());
         return mockNonAdminUser;
     }
+
     public static User createMockNonAdminUser2$Ilia() {
         User mockNonAdminUser = new User();
         mockNonAdminUser.setUserId(2);
@@ -186,6 +171,7 @@ public class TestHelpers {
         mockNonAdminUser.setFeedback(new HashSet<>());
         return mockNonAdminUser;
     }
+
     public static TravelFilterOptions createMockTravelFilterOptions$Ilia() {
         return new TravelFilterOptions(
                 "City",
@@ -197,6 +183,15 @@ public class TestHelpers {
                 "Comment",
                 1,
                 "driver",
+                "desc");
+    }
+
+    public static UserFilterOptions createMockUserFilterOptions$Ilia() {
+        return new UserFilterOptions(
+                "Username",
+                "Email",
+                "0888123456",
+                "username",
                 "desc");
     }
 
