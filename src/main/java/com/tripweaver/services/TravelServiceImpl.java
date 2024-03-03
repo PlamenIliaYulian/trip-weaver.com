@@ -60,8 +60,8 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public Travel createTravel(Travel travel, User creatorDriver) {
         ValidationHelper$Ilia.isUserBlocked(creatorDriver, UNAUTHORIZED_OPERATION_BLOCKED);
-        permissionHelper.isUserVerified(creatorDriver, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
-        permissionHelper.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
+        ValidationHelper$Ilia.isUserVerified(creatorDriver, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
+        ValidationHelper$Ilia.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
         travel.setDriver(creatorDriver);
         travel.setCreatedOn(LocalDateTime.now());
         travel.setStatus(travelStatusService.getStatusById(TRAVEL_STATUS_CREATED_ID));
