@@ -22,7 +22,7 @@ public class FeedbackServiceTests {
     public void getFeedbackForPassengerById_Should_CallRepository() {
         feedbackService.getFeedbackForPassengerById(Mockito.anyInt());
 
-        Mockito.verify(feedbackRepository,Mockito.times(1))
+        Mockito.verify(feedbackRepository, Mockito.times(1))
                 .getFeedbackForPassengerById(Mockito.anyInt());
     }
 }

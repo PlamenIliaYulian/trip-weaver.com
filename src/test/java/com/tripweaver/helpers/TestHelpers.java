@@ -2,6 +2,7 @@ package com.tripweaver.helpers;
 
 import com.tripweaver.models.*;
 import com.tripweaver.models.enums.FeedbackType;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -184,6 +185,19 @@ public class TestHelpers {
         mockNonAdminUser.setRoles(roleSet);
         mockNonAdminUser.setFeedback(new HashSet<>());
         return mockNonAdminUser;
+    }
+    public static TravelFilterOptions createMockTravelFilterOptions$Ilia() {
+        return new TravelFilterOptions(
+                "City",
+                "City",
+                String.valueOf(LocalDateTime.now().plusDays(2)),
+                String.valueOf(LocalDateTime.now()),
+                4,
+                "Driver",
+                "Comment",
+                1,
+                "driver",
+                "desc");
     }
 
 }

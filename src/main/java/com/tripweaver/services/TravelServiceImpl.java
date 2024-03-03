@@ -113,7 +113,7 @@ public class TravelServiceImpl implements TravelService {
     /*Ilia*/
     @Override
     public List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions) {
-        permissionHelper.isSameUser(driver, loggedUser, UNAUTHORIZED_OPERATION);
+        ValidationHelper$Ilia.isSameUser(driver, loggedUser, UNAUTHORIZED_OPERATION);
         travelFilterOptions.setDriverId(Optional.of(driver.getUserId()));
         return travelRepository.getAllTravels(travelFilterOptions);
     }
@@ -165,11 +165,11 @@ public class TravelServiceImpl implements TravelService {
     /*Ilia*/
     @Override
     public Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn) {
-        permissionHelper.isDriverOrSameUser(travel, userToBeDeclined, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
+        ValidationHelper$Ilia.isDriverOrSameUser(travel, userToBeDeclined, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper$Ilia.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
-        permissionHelper.hasUserAppliedOrBeingApprovedForTheTravel(
+        ValidationHelper$Ilia.hasUserAppliedOrBeingApprovedForTheTravel(
                 userToBeDeclined,
                 usersAppliedForTheTravel,
                 usersApprovedForTheTravel,

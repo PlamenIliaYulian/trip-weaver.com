@@ -1,16 +1,16 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.TravelStatus;
 import com.tripweaver.models.User;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.repositories.contracts.TravelRepository;
 import com.tripweaver.services.contracts.BingMapService;
-import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.TravelStatusService;
-import com.tripweaver.services.helpers.ConstantHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static com.tripweaver.services.helpers.ConstantHelper.*;
 
@@ -37,6 +38,7 @@ public class TravelServiceTests {
     @InjectMocks
     TravelServiceImpl travelService;
 
+    /*Ilia*/
     @Test
     public void createTravel_Should_Throw_When_CreatorUserIsBlocked() {
         Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
@@ -44,8 +46,10 @@ public class TravelServiceTests {
         mockCreator.setBlocked(true);
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                ()-> travelService.createTravel(mockTravel, mockCreator));
+                () -> travelService.createTravel(mockTravel, mockCreator));
     }
+
+    /*Ilia*/
     @Test
     public void createTravel_Should_Throw_When_CreatorUserIsNotVerified() {
         Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
@@ -53,8 +57,10 @@ public class TravelServiceTests {
         mockCreator.setVerified(false);
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                ()-> travelService.createTravel(mockTravel, mockCreator));
+                () -> travelService.createTravel(mockTravel, mockCreator));
     }
+
+    /*Ilia*/
     @Test
     public void createTravel_Should_Throw_When_TravelDepartureTimeBeforeCurrentMoment() {
         Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
@@ -62,10 +68,12 @@ public class TravelServiceTests {
         User mockCreator = TestHelpers.createMockNonAdminUser1$Ilia();
 
         Assertions.assertThrows(InvalidOperationException.class,
-                ()-> travelService.createTravel(mockTravel, mockCreator));
+                () -> travelService.createTravel(mockTravel, mockCreator));
     }
+
+    /*Ilia*/
     @Test
-    public void createTravel_Should_CallRepository_WhenValidArgumentsPassed(){
+    public void createTravel_Should_CallRepository_When_ValidArgumentsPassed() {
         Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
         User mockCreator = TestHelpers.createMockNonAdminUser1$Ilia();
         TravelStatus mockTravelStatus = TestHelpers.createMockTravelStatusCreated$Ilia();
@@ -78,7 +86,7 @@ public class TravelServiceTests {
         mockDistanceAndDuration.put(KEY_TRAVEL_DURATION, 30);
 
         Mockito.when(travelStatusService.getStatusById(Mockito.anyInt()))
-                        .thenReturn(mockTravelStatus);
+                .thenReturn(mockTravelStatus);
         Mockito.when(bingMapService.getCoordinatesAndValidCityName(Mockito.anyString()))
                 .thenReturn(mockCoordinates);
         Mockito.when(bingMapService.calculateDistanceAndDuration(Mockito.anyString(), Mockito.anyString()))
@@ -86,8 +94,91 @@ public class TravelServiceTests {
 
         travelService.createTravel(mockTravel, mockCreator);
 
-        Mockito.verify(travelRepository,Mockito.times(1))
+        Mockito.verify(travelRepository, Mockito.times(1))
                 .createTravel(mockTravel);
+    }
+
+    /*Ilia*/
+    @Test
+    public void getTravelsByDriver_Should_Throw_When_LoggedUserIsNotTheDriver() {
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1$Ilia();
+        User mockDriver = TestHelpers.createMockNonAdminUser2$Ilia();
+        TravelFilterOptions mockTravelFilterOptions = TestHelpers.createMockTravelFilterOptions$Ilia();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> travelService.getTravelsByDriver(mockDriver, mockLoggedUser, mockTravelFilterOptions));
+    }
+
+    /*Ilia*/
+    @Test
+    public void getTravelsByDriver_Should_CallRepository_When_WhenValidArgumentsPassed() {
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1$Ilia();
+        TravelFilterOptions mockTravelFilterOptions = TestHelpers.createMockTravelFilterOptions$Ilia();
+
+        travelService.getTravelsByDriver(mockLoggedUser, mockLoggedUser, mockTravelFilterOptions);
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .getAllTravels(mockTravelFilterOptions);
+
+    }
+
+    /*Ilia*/
+    @Test
+    public void getAllTravels_Should_CallRepository() {
+        TravelFilterOptions mockTravelFilterOptions = TestHelpers.createMockTravelFilterOptions$Ilia();
+
+        travelService.getAllTravels(mockTravelFilterOptions);
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .getAllTravels(mockTravelFilterOptions);
+
+    }
+
+    /*Ilia*/
+    @Test
+    public void declinePassenger_Should_Throw_When_UserToBeDeclinedIsNotDriverOrSameUser() {
+        Travel mockTravel = TestHelpers.createMockTravel2$Ilia();
+        User mockUserToBeDeclined = TestHelpers.createMockNonAdminUser1$Ilia();
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1$Ilia();
+        mockLoggedUser.setUserId(10);
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> travelService.declinePassenger(mockUserToBeDeclined, mockTravel, mockLoggedUser));
+    }
+
+    /*Ilia*/
+    @Test
+    public void declinePassenger_Should_Throw_When_TravelNotOpenForApplication() {
+        Travel mockTravel = TestHelpers.createMockTravel2$Ilia();
+        mockTravel.setStatus(TestHelpers.createMockTravelStatusCanceled$Ilia());
+        User mockUserToBeDeclined = TestHelpers.createMockNonAdminUser1$Ilia();
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> travelService.declinePassenger(mockUserToBeDeclined, mockTravel, mockUserToBeDeclined));
+    }
+
+    /*Ilia*/
+    @Test
+    public void declinePassenger_Should_Throw_When_UserToBeDeclinedNotInTravelLists() {
+        Travel mockTravel = TestHelpers.createMockTravel2$Ilia();
+        mockTravel.setUsersApprovedForTheTravel(new HashSet<>());
+        mockTravel.setUsersAppliedForTheTravel(new HashSet<>());
+        User mockUserToBeDeclined = TestHelpers.createMockNonAdminUser1$Ilia();
+
+        Assertions.assertThrows(EntityNotFoundException.class,
+                () -> travelService.declinePassenger(mockUserToBeDeclined, mockTravel, mockUserToBeDeclined));
+    }
+
+    /*Ilia*/
+    @Test
+    public void declinePassenger_Should_CallRepository_When_WhenValidArgumentsPassed() {
+        Travel mockTravel = TestHelpers.createMockTravel2$Ilia();
+        User mockUserToBeDeclined = TestHelpers.createMockNonAdminUser1$Ilia();
+
+        travelService.declinePassenger(mockUserToBeDeclined, mockTravel, mockTravel.getDriver());
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .updateTravel(mockTravel);
     }
 
 }

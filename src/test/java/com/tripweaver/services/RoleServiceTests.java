@@ -19,11 +19,12 @@ public class RoleServiceTests {
     @InjectMocks
     RoleServiceImpl roleService;
 
+    /*Ilia*/
     @Test
     public void getRoleById_Should_CallRepository() {
         roleService.getRoleById(Mockito.anyInt());
 
-        Mockito.verify(roleRepository,Mockito.times(1))
+        Mockito.verify(roleRepository, Mockito.times(1))
                 .getRoleById(Mockito.anyInt());
     }
 }

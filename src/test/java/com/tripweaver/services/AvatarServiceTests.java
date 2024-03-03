@@ -29,12 +29,13 @@ public class AvatarServiceTests {
         Mockito.verify(avatarRepository,Mockito.times(1))
                 .uploadPictureToCloudinary(mockMultipartFile);
     }
+
     /*Ilia*/
     @Test
     public void getAvatarById_Should_CallRepository() {
         avatarService.getAvatarById(Mockito.anyInt());
 
-        Mockito.verify(avatarRepository,Mockito.times(1))
+        Mockito.verify(avatarRepository, Mockito.times(1))
                 .getAvatarById(Mockito.anyInt());
     }
 
