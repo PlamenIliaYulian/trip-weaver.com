@@ -17,27 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 @Service
 public class TravelServiceImpl implements TravelService {
 
-    public static final String UNAUTHORIZED_OPERATION_BLOCKED = "Unauthorized operation. User blocked.";
-    public static final String UNAUTHORIZED_OPERATION_NOT_VERIFIED = "Unauthorized operation. User not verified.";
-    public static final String UNAUTHORIZED_OPERATION_NOT_DRIVER = "Unauthorized operation. User not driver of the travel.";
-    public static final String UNAUTHORIZED_OPERATION_ALREADY_APPLIED = "Unauthorized operation. User already in waiting list.";
-    public static final String USER_NOT_IN_TRAVEL_LISTS = "The user is neither in the waiting list nor in the approved list.";
-    public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
-    public static final int TRAVEL_STATUS_CANCEL_ID = 2;
-    public static final int TRAVEL_STATUS_COMPLETE_ID = 3;
-    public static final String TRAVEL_NOT_AVAILABLE = "Travel not available";
-    public static final String INVALID_OPERATION = "User has not applied for this travel";
-    public static final String INVALID_OPERATION_DRIVER = "User is the driver, so could not leaver Driver's feedback";
-    public static final String INVALID_DEPARTURE_TIME = "Departure time cannot be before current moment.";
-    public static final String KEY_COORDINATES = "coordinates";
-    public static final String KEY_CITY = "city";
-    public static final String KEY_TRAVEL_DISTANCE = "travelDistance";
-    public static final String KEY_TRAVEL_DURATION = "travelDuration";
-    public static final int TRAVEL_STATUS_CREATED_ID = 1;
     private final TravelRepository travelRepository;
     private final TravelStatusService travelStatusService;
     private final BingMapService bingMapService;

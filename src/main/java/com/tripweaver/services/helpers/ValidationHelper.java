@@ -12,10 +12,6 @@ import java.util.Set;
 import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 public class ValidationHelper {
-    public static final int TRAVEL_STATUS_CREATED_ID = 1;
-    public static final int COMPLETED_STATUS = 3;
-
-    public static final int ADMIN_ID = 1;
 
     public static void hasAlreadyApplied(User userToBeChecked, Travel travelToApplyFor, String message) {
         if (!travelToApplyFor.getUsersAppliedForTheTravel().contains(userToBeChecked)) {

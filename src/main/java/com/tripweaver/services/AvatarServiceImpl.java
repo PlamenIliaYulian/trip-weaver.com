@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
-
-
     private final AvatarRepository avatarRepository;
 
     @Autowired
@@ -33,6 +31,7 @@ public class AvatarServiceImpl implements AvatarService {
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
         return avatarRepository.uploadPictureToCloudinary(multipartFile);
     }
+
     /*Ilia*/
     @Override
     public Avatar getAvatarById(int id) {

@@ -17,8 +17,8 @@ import java.util.HashMap;
 @Service
 public class BingMapServiceImpl implements BingMapService {
 
-    private String locationEndpointUrl = "http://dev.virtualearth.net/REST/v1/Locations?q=";
-    private String calculateDistanceEndpointUrl = "https://dev.virtualearth.net/REST/v1/Routes/DistanceMatrix?origins=";
+    private final String locationEndpointUrl = "http://dev.virtualearth.net/REST/v1/Locations?q=";
+    private final String calculateDistanceEndpointUrl = "https://dev.virtualearth.net/REST/v1/Routes/DistanceMatrix?origins=";
 
     @Value("${bing.maps.key}")
     private String apiKey;

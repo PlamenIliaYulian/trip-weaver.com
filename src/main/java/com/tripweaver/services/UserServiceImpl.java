@@ -21,19 +21,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.tripweaver.services.TravelServiceImpl.INVALID_OPERATION_DRIVER;
+import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    public static final String UNAUTHORIZED_OPERATION_NOT_ADMIN = "Unauthorized operation. User not admin.";
-    public static final String UNAUTHORIZED_OPERATION_NOT_DRIVER = "Unauthorized operation. User not driver of the travel.";
-    public static final String UNAUTHORIZED_OPERATION_NOT_SAME_USER = "Unauthorized operation. Not same user.";
-    public static final String TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK = "Travel not completed and cannot leave feedback.";
-    public static final String USER_NOT_IN_APPROVED_LIST = "The user is not in the approved list.";
-    public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
-    public static final String YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE = "You have already left feedback for this ride.";
     private final UserRepository userRepository;
     private final AvatarService avatarService;
     private final RoleService roleService;
