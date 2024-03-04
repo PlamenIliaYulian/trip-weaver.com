@@ -232,7 +232,7 @@ public class UserServiceTests {
         Mockito.verify(userRepository, Mockito.times(1))
                 .updateUser(mockUserToBeDeleted);
 
-                () -> userService.createUser(userToBeCreated));
+
     }
 
     @Test

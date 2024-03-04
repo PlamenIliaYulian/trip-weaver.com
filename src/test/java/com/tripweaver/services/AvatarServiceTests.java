@@ -2,7 +2,6 @@ package com.tripweaver.services;
 
 import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.models.Avatar;
-import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.repositories.contracts.AvatarRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
