@@ -11,9 +11,7 @@ import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.UserService;
-import com.tripweaver.services.helpers.PermissionHelper;
-import com.tripweaver.services.helpers.ValidationHelpersPlamen;
-import com.tripweaver.services.helpers.ValidationHelper$Ilia;
+import com.tripweaver.services.helpers.ValidationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,19 +35,16 @@ public class UserServiceImpl implements UserService {
     public static final String UNAUTHORIZED_OPERATION = "Unauthorized operation.";
     public static final String YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE = "You have already left feedback for this ride.";
     private final UserRepository userRepository;
-    private final PermissionHelper permissionHelper;
     private final AvatarService avatarService;
     private final RoleService roleService;
     private final FeedbackService feedbackService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           PermissionHelper permissionHelper,
                            AvatarService avatarService,
                            RoleService roleService,
                            FeedbackService feedbackService) {
         this.userRepository = userRepository;
-        this.permissionHelper = permissionHelper;
         this.avatarService = avatarService;
         this.roleService = roleService;
         this.feedbackService = feedbackService;
@@ -72,16 +67,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user, User loggedUser) {
-        permissionHelper.isSameUser(user, loggedUser, UNAUTHORIZED_OPERATION);
-        permissionHelper.checkForUniqueEmail(user);
-        permissionHelper.checkIfPhoneNumberUnique(user);
+        ValidationHelper.isSameUser(user, loggedUser, UNAUTHORIZED_OPERATION);
+        checkForUniqueEmail(user);
+        checkIfPhoneNumberUnique(user);
         return userRepository.updateUser(user);
     }
 
     /*Ilia*/
     @Override
     public List<User> getAllUsers(UserFilterOptions userFilterOptions, User loggedInUser) {
-        ValidationHelper$Ilia.isAdmin(loggedInUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        ValidationHelper.isAdmin(loggedInUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         return userRepository.getAllUsers(userFilterOptions);
     }
 
@@ -103,14 +98,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User blockUser(User userToBeBlocked, User loggedUser) {
-        ValidationHelpersPlamen.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        ValidationHelper.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         userToBeBlocked.setBlocked(true);
         return userRepository.updateUser(userToBeBlocked);
     }
 
     @Override
     public User unBlockUser(User userToBeUnBlocked, User loggedUser) {
-        permissionHelper.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
+        ValidationHelper.isAdmin(loggedUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
         userToBeUnBlocked.setBlocked(false);
         return userRepository.updateUser(userToBeUnBlocked);
     }
@@ -141,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser) {
-        ValidationHelpersPlamen.isSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION_NOT_SAME_USER);
+        ValidationHelper.isSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION_NOT_SAME_USER);
         Avatar avatarToAdd = new Avatar();
         avatarToAdd.setAvatarUrl(avatarUrl);
         avatarToAdd = avatarService.createAvatar(avatarToAdd);
@@ -152,7 +147,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteAvatar(User userToBeUpdated, User loggedUser) {
-        permissionHelper.isAdminOrSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION);
+        ValidationHelper.isAdminOrSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION);
         userToBeUpdated.setAvatar(avatarService.getDefaultAvatar());
         return userRepository.updateUser(userToBeUpdated);
     }
@@ -166,10 +161,10 @@ public class UserServiceImpl implements UserService {
                                            Travel travel,
                                            User loggedUser,
                                            User driver) {
-        ValidationHelper$Ilia.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
-        ValidationHelper$Ilia.checkNotToBeDriver(travel, loggedUser, INVALID_OPERATION_DRIVER);
-        ValidationHelper$Ilia.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
-        ValidationHelper$Ilia.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
+        ValidationHelper.checkNotToBeDriver(travel, loggedUser, INVALID_OPERATION_DRIVER);
+        ValidationHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
+        ValidationHelper.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
         feedbackForDriver.setReceiver(driver);
         feedbackForDriver.setAuthor(loggedUser);
         feedbackForDriver.setTravel(travel);
@@ -203,9 +198,9 @@ public class UserServiceImpl implements UserService {
                                               Travel travel,
                                               User loggedUser,
                                               User passenger) {
-        ValidationHelpersPlamen.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
-        ValidationHelpersPlamen.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        ValidationHelpersPlamen.isTheUserInTheApprovedListOfTheTravel(passenger, travel, USER_NOT_IN_APPROVED_LIST);
+        ValidationHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
+        ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper.isTheUserInTheApprovedListOfTheTravel(passenger, travel, USER_NOT_IN_APPROVED_LIST);
 
         feedbackForPassenger.setReceiver(passenger);
         feedbackForPassenger.setAuthor(loggedUser);
@@ -263,7 +258,7 @@ public class UserServiceImpl implements UserService {
     /*Ilia*/
     @Override
     public void deleteUser(User userToBeDeleted, User loggedUser) {
-        ValidationHelper$Ilia.isSameUser(userToBeDeleted, loggedUser, UNAUTHORIZED_OPERATION);
+        ValidationHelper.isSameUser(userToBeDeleted, loggedUser, UNAUTHORIZED_OPERATION);
         userToBeDeleted.setDeleted(true);
         userRepository.updateUser(userToBeDeleted);
     }

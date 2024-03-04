@@ -204,7 +204,7 @@ public class TravelServiceTests {
         travel.setStatus(statusCancelled);
 
 
-        Assertions.assertThrows(UnauthorizedOperationException.class,
+        Assertions.assertThrows(InvalidOperationException.class,
                 () -> travelService.cancelTravel(travel, loggedUser));
     }
 
@@ -299,7 +299,7 @@ public class TravelServiceTests {
         statusCancel.setTravelStatusId(2);
         travel.setStatus(statusCancel);
 
-        Assertions.assertThrows(UnauthorizedOperationException.class,
+        Assertions.assertThrows(InvalidOperationException.class,
                 () -> travelService.applyForATrip(loggedUser, travel));
     }
 

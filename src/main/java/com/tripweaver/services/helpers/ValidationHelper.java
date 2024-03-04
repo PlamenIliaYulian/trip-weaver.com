@@ -11,11 +11,36 @@ import java.util.Set;
 
 import static com.tripweaver.services.helpers.ConstantHelper.*;
 
-public class ValidationHelper$Ilia {
+public class ValidationHelper {
+    public static final int TRAVEL_STATUS_CREATED_ID = 1;
+    public static final int COMPLETED_STATUS = 3;
+
+    public static final int ADMIN_ID = 1;
+
+    public static void hasAlreadyApplied(User userToBeChecked, Travel travelToApplyFor, String message) {
+        if (!travelToApplyFor.getUsersAppliedForTheTravel().contains(userToBeChecked)) {
+            throw new InvalidOperationException(message);
+        }
+    }
+
+    public static void isAdminOrSameUser(User userToBeUpdated,
+                                  User loggedUser,
+                                  String message) {
+        if (loggedUser.getRoles().stream().noneMatch(role -> role.getRoleId() == ADMIN_ID) &&
+                !loggedUser.equals(userToBeUpdated)) {
+            throw new UnauthorizedOperationException(message);
+        }
+    }
 
     public static void isUserBlocked(User userToBeChecked, String message) {
         if (userToBeChecked.isBlocked()) {
             throw new UnauthorizedOperationException(message);
+        }
+    }
+
+    public static void hasYetToApply(User userToBeChecked, Travel travelToApplyFor, String message) {
+        if (travelToApplyFor.getUsersAppliedForTheTravel().contains(userToBeChecked)) {
+            throw new InvalidOperationException(message);
         }
     }
 

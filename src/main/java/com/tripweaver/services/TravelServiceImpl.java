@@ -8,10 +8,7 @@ import com.tripweaver.repositories.contracts.TravelRepository;
 import com.tripweaver.services.contracts.BingMapService;
 import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.TravelStatusService;
-import com.tripweaver.services.helpers.PermissionHelper;
-import com.tripweaver.services.helpers.ValidationHelpersPlamen;
-import com.tripweaver.services.helpers.ValidationHelper$Ilia;
-import jakarta.validation.Validation;
+import com.tripweaver.services.helpers.ValidationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,26 +40,23 @@ public class TravelServiceImpl implements TravelService {
     public static final int TRAVEL_STATUS_CREATED_ID = 1;
     private final TravelRepository travelRepository;
     private final TravelStatusService travelStatusService;
-    private final PermissionHelper permissionHelper;
     private final BingMapService bingMapService;
 
     @Autowired
     public TravelServiceImpl(TravelStatusService travelStatusService,
                              TravelRepository travelRepository,
-                             PermissionHelper permissionHelper,
                              BingMapService bingMapService) {
         this.travelStatusService = travelStatusService;
         this.travelRepository = travelRepository;
-        this.permissionHelper = permissionHelper;
         this.bingMapService = bingMapService;
     }
 
     /*Ilia*/
     @Override
     public Travel createTravel(Travel travel, User creatorDriver) {
-        ValidationHelper$Ilia.isUserBlocked(creatorDriver, UNAUTHORIZED_OPERATION_BLOCKED);
-        ValidationHelper$Ilia.isUserVerified(creatorDriver, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
-        ValidationHelper$Ilia.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
+        ValidationHelper.isUserBlocked(creatorDriver, UNAUTHORIZED_OPERATION_BLOCKED);
+        ValidationHelper.isUserVerified(creatorDriver, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
+        ValidationHelper.isDepartureTimeBeforeCurrentMoment(travel, INVALID_DEPARTURE_TIME);
         travel.setDriver(creatorDriver);
         travel.setCreatedOn(LocalDateTime.now());
         travel.setStatus(travelStatusService.getStatusById(TRAVEL_STATUS_CREATED_ID));
@@ -95,8 +89,8 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel cancelTravel(Travel travel, User loggedUser) {
-        ValidationHelpersPlamen.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        ValidationHelpersPlamen.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
+        ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         TravelStatus cancelStatus = travelStatusService.getStatusById(TRAVEL_STATUS_CANCEL_ID);
         travel.setStatus(cancelStatus);
         return travelRepository.updateTravel(travel);
@@ -104,8 +98,8 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel completeTravel(Travel travel, User loggedUser) {
-        ValidationHelpersPlamen.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        ValidationHelpersPlamen.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
+        ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         TravelStatus completeStatus = travelStatusService.getStatusById(TRAVEL_STATUS_COMPLETE_ID);
         travel.setStatus(completeStatus);
         return travelRepository.updateTravel(travel);
@@ -114,7 +108,7 @@ public class TravelServiceImpl implements TravelService {
     /*Ilia*/
     @Override
     public List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions) {
-        ValidationHelper$Ilia.isSameUser(driver, loggedUser, UNAUTHORIZED_OPERATION);
+        ValidationHelper.isSameUser(driver, loggedUser, UNAUTHORIZED_OPERATION);
         travelFilterOptions.setDriverId(Optional.of(driver.getUserId()));
         return travelRepository.getAllTravels(travelFilterOptions);
     }
@@ -122,7 +116,7 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public List<Travel> getTravelsByPassenger(User passenger, User loggedUser, TravelFilterOptions travelFilterOptions) {
-        ValidationHelpersPlamen.isSameUser(passenger, loggedUser, UNAUTHORIZED_OPERATION);
+        ValidationHelper.isSameUser(passenger, loggedUser, UNAUTHORIZED_OPERATION);
         travelFilterOptions.setPassengerId(Optional.of(passenger.getUserId()));
         return travelRepository.getAllTravels(travelFilterOptions);
     }
@@ -140,11 +134,11 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public Travel applyForATrip(User userToApply, Travel travelToApplyFor) {
-        ValidationHelpersPlamen.isUserVerified(userToApply, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
-        ValidationHelpersPlamen.isUserBlocked(userToApply, UNAUTHORIZED_OPERATION_BLOCKED);
-        ValidationHelpersPlamen.hasYetToApply(userToApply, travelToApplyFor, UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
-        ValidationHelpersPlamen.isTravelOpenForApplication(travelToApplyFor, TRAVEL_NOT_AVAILABLE);
-        ValidationHelpersPlamen.checkNotToBeDriver(travelToApplyFor, userToApply,INVALID_OPERATION_DRIVER);
+        ValidationHelper.isUserVerified(userToApply, UNAUTHORIZED_OPERATION_NOT_VERIFIED);
+        ValidationHelper.isUserBlocked(userToApply, UNAUTHORIZED_OPERATION_BLOCKED);
+        ValidationHelper.hasYetToApply(userToApply, travelToApplyFor, UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
+        ValidationHelper.isTravelOpenForApplication(travelToApplyFor, TRAVEL_NOT_AVAILABLE);
+        ValidationHelper.checkNotToBeDriver(travelToApplyFor, userToApply,INVALID_OPERATION_DRIVER);
         travelToApplyFor.getUsersAppliedForTheTravel().add(userToApply);
         return travelRepository.updateTravel(travelToApplyFor);
     }
@@ -152,12 +146,12 @@ public class TravelServiceImpl implements TravelService {
     /*TODo to validated if there are free seats for specific trip*/
     @Override
     public Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel) {
-        permissionHelper.isUserBlocked(userToBeApproved, UNAUTHORIZED_OPERATION_BLOCKED);
-        permissionHelper.isUserBlocked(loggedUser, UNAUTHORIZED_OPERATION_BLOCKED);
-        permissionHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        permissionHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
+        ValidationHelper.isUserBlocked(userToBeApproved, UNAUTHORIZED_OPERATION_BLOCKED);
+        ValidationHelper.isUserBlocked(loggedUser, UNAUTHORIZED_OPERATION_BLOCKED);
+        ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
-        permissionHelper.hasAlreadyApplied(userToBeApproved, travel, INVALID_OPERATION);
+        ValidationHelper.hasAlreadyApplied(userToBeApproved, travel, INVALID_OPERATION);
         usersAppliedForTheTravel.remove(userToBeApproved);
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
         usersApprovedForTheTravel.add(userToBeApproved);
@@ -167,11 +161,11 @@ public class TravelServiceImpl implements TravelService {
     /*Ilia*/
     @Override
     public Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn) {
-        ValidationHelper$Ilia.isDriverOrSameUser(travel, userToBeDeclined, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
-        ValidationHelper$Ilia.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
+        ValidationHelper.isDriverOrSameUser(travel, userToBeDeclined, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
-        ValidationHelper$Ilia.hasUserAppliedOrBeingApprovedForTheTravel(
+        ValidationHelper.hasUserAppliedOrBeingApprovedForTheTravel(
                 userToBeDeclined,
                 usersAppliedForTheTravel,
                 usersApprovedForTheTravel,
