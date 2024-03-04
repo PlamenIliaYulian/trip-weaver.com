@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 @Service
@@ -53,8 +54,6 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
         return userRepository.createUser(user);
     }
-
-    /*TODO implement deleteUser method*/
 
     @Override
     public User updateUser(User user, User loggedUser) {
@@ -102,13 +101,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /*Ilia*/
-    /*ToDo We make the validation in Helper Class calling directly the repository
-    *  so we do not need this method. It is not needed to be tested.*/
-    @Override
-    public User getUserByPhoneNumber(String phoneNumber) {
-        return userRepository.getUserByPhoneNumber(phoneNumber);
-    }
-
     @Override
     public long getAllUsersCount() {
         return userRepository.getAllUsersCount();
@@ -144,9 +136,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /*Ilia*/
-    /*ToDo We have mistaken here. isUserTheDriver do not have to throw UnauthorizedOperationException. We are
-    *  just checking if the user we are trying to leave feedback for is the driver of the travel we've been on.*/
-
     @Override
     public Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,
                                            Travel travel,
@@ -155,24 +144,16 @@ public class UserServiceImpl implements UserService {
         ValidationHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         ValidationHelper.checkNotToBeDriver(travel, loggedUser, INVALID_OPERATION_DRIVER);
         ValidationHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
-        ValidationHelper.isUserTheDriver(travel, driver, UNAUTHORIZED_OPERATION_NOT_DRIVER);
+        ValidationHelper.isUserTheDriver(travel, driver, INVALID_OPERATION_NOT_DRIVER);
         feedbackForDriver.setReceiver(driver);
         feedbackForDriver.setAuthor(loggedUser);
         feedbackForDriver.setTravel(travel);
         feedbackForDriver = feedbackService.createFeedback(feedbackForDriver);
         Set<Feedback> feedbackForDriverSet = driver.getFeedback();
 
-        /*TODO extract them in helper class*/
-        if(!feedbackForDriverSet.stream()
-                .filter(feedback -> feedback.getAuthor().equals(loggedUser))
-                .filter(feedback -> feedback.getTravel().equals(travel))
-                .filter(feedback -> feedback.getReceiver().equals(driver))
-                .collect(Collectors.toList()).isEmpty()){
-            throw new InvalidOperationException(YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE);
-        }
+        ValidationHelper.hasUserAlreadyLeftFeedbackForThisTravel(travel, loggedUser, driver, feedbackForDriverSet);
 
         feedbackForDriverSet.add(feedbackForDriver);
-
         driver.setAverageDriverRating(feedbackForDriverSet
                 .stream()
                 .filter(feedback -> feedback.getFeedbackType().equals(FeedbackType.FOR_DRIVER))
@@ -192,25 +173,15 @@ public class UserServiceImpl implements UserService {
         ValidationHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
         ValidationHelper.isTheUserInTheApprovedListOfTheTravel(passenger, travel, USER_NOT_IN_APPROVED_LIST);
-
         feedbackForPassenger.setReceiver(passenger);
         feedbackForPassenger.setAuthor(loggedUser);
         feedbackForPassenger.setTravel(travel);
         feedbackForPassenger = feedbackService.createFeedback(feedbackForPassenger);
         Set<Feedback> feedbackForPassengerSet = passenger.getFeedback();
 
-        /*TODO extract them in helper class*/
-        if(!feedbackForPassengerSet.stream()
-                .filter(feedback -> feedback.getAuthor().equals(loggedUser))
-                .filter(feedback -> feedback.getTravel().equals(travel))
-                .filter(feedback -> feedback.getReceiver().equals(passenger))
-                .collect(Collectors.toList()).isEmpty()){
-            throw new InvalidOperationException(YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE);
-        }
-
+        ValidationHelper.hasUserAlreadyLeftFeedbackForThisTravel(travel, loggedUser, passenger, feedbackForPassengerSet);
 
         feedbackForPassengerSet.add(feedbackForPassenger);
-
         passenger.setAveragePassengerRating(feedbackForPassengerSet
                 .stream()
                 .filter(feedback -> feedback.getFeedbackType().equals(FeedbackType.FOR_PASSENGER))

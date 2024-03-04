@@ -151,7 +151,7 @@ public class UserServiceTests {
         User mockDriver = TestHelpers.createMockNonAdminUser2();
         mockDriver.setUserId(10);
 
-        Assertions.assertThrows(UnauthorizedOperationException.class,
+        Assertions.assertThrows(InvalidOperationException.class,
                 () -> userService.leaveFeedbackForDriver(mockFeedbackForDriver,
                         mockTravel, mockLoggedUser, mockDriver));
     }
@@ -360,7 +360,7 @@ public class UserServiceTests {
         travel.setStatus(completedStatus);
         travel.getUsersApprovedForTheTravel().add(passenger);
 
-        Assertions.assertThrows(UnauthorizedOperationException.class,
+        Assertions.assertThrows(InvalidOperationException.class,
                 () -> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
     }
 
@@ -416,5 +416,15 @@ public class UserServiceTests {
 
         Mockito.verify(userRepository, Mockito.times(1))
                 .updateUser(passenger);
+    }
+
+    @Test
+    public void verifyEmail_Should_CallRepository(){
+        User userToBeVerified = TestHelpers.createMockNonAdminUser1();
+
+        userService.verifyEmail(userToBeVerified);
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .updateUser(userToBeVerified);
     }
 }

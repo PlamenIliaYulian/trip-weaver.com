@@ -191,7 +191,7 @@ public class TravelServiceTests {
 
         loggedUser.setUserId(2);
 
-        Assertions.assertThrows(UnauthorizedOperationException.class,
+        Assertions.assertThrows(InvalidOperationException.class,
                 () -> travelService.cancelTravel(travel, loggedUser));
     }
 

@@ -32,9 +32,6 @@ public interface UserService {
     /*Yuli - DONE*/
     User unBlockUser(User userToBeUnBlocked, User loggedUser);
 
-    /*Ilia*/
-    User getUserByPhoneNumber(String phoneNumber);
-
     /*Plamen*/
     long getAllUsersCount();
 

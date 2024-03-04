@@ -1,5 +1,6 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.TravelStatus;
 import com.tripweaver.models.User;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 @Service
@@ -122,12 +124,11 @@ public class TravelServiceImpl implements TravelService {
         ValidationHelper.isUserBlocked(userToApply, UNAUTHORIZED_OPERATION_BLOCKED);
         ValidationHelper.hasYetToApply(userToApply, travelToApplyFor, UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
         ValidationHelper.isTravelOpenForApplication(travelToApplyFor, TRAVEL_NOT_AVAILABLE);
-        ValidationHelper.checkNotToBeDriver(travelToApplyFor, userToApply,INVALID_OPERATION_DRIVER);
+        ValidationHelper.checkNotToBeDriver(travelToApplyFor, userToApply, INVALID_OPERATION_DRIVER);
         travelToApplyFor.getUsersAppliedForTheTravel().add(userToApply);
         return travelRepository.updateTravel(travelToApplyFor);
     }
 
-    /*TODo to validated if there are free seats for specific trip*/
     @Override
     public Travel approvePassenger(User userToBeApproved, User loggedUser, Travel travel) {
         ValidationHelper.isUserBlocked(userToBeApproved, UNAUTHORIZED_OPERATION_BLOCKED);
@@ -135,12 +136,15 @@ public class TravelServiceImpl implements TravelService {
         ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
         ValidationHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
+
         ValidationHelper.hasAlreadyApplied(userToBeApproved, travel, INVALID_OPERATION);
         usersAppliedForTheTravel.remove(userToBeApproved);
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
+        ValidationHelper.isThereAnyFreeSeatsInTravel(travel, usersApprovedForTheTravel);
         usersApprovedForTheTravel.add(userToBeApproved);
         return travelRepository.updateTravel(travel);
     }
+
 
     /*Ilia*/
     @Override

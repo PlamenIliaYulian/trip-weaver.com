@@ -59,10 +59,7 @@ public class UserRestController {
         this.avatarService = avatarService;
     }
 
-    /*ToDo Check for all response statuses if they are correct when the operation is successful.*/
-
     /*Yuli*/
-    /*TODO we should send verification email*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public User createUser(@RequestBody @Valid UserDtoCreate userDtoCreate) {
@@ -417,6 +414,7 @@ public class UserRestController {
     }
 
     /*Plamen*/
+
     @DeleteMapping("/{userId}/avatar")
     public User deleteAvatar(@PathVariable int userId,
                              @RequestHeader HttpHeaders headers) {
@@ -434,7 +432,6 @@ public class UserRestController {
     }
 
     /*Yuli*/
-    /*ToDo Ilia - Sorry Yuli, I wrote the Swagger for this method without looking that it's intended for you. */
     @Operation(
             summary = "Leave a feedback to a passenger.",
             description = "Driver of the travel leaves a feedback to one of his passengers of a certain travel. " +
@@ -614,6 +611,7 @@ public class UserRestController {
             },
             security = {@SecurityRequirement(name = "Authorization")}
     )
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{userId}/travels/{travelId}/feedback-for-driver")
     public Feedback leaveFeedbackForDriver(@RequestHeader HttpHeaders headers,
                                            @PathVariable int userId,

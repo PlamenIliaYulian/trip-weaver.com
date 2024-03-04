@@ -234,7 +234,7 @@ public class TravelRestController {
     }
 
     /*Yuli*/
-    @PostMapping("/{travelId}/applications")
+    @PutMapping("/{travelId}/applications")
     public Travel applyForATrip(@RequestHeader HttpHeaders headers, @PathVariable int travelId) {
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromHeaders(headers);
