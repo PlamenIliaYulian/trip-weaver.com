@@ -31,7 +31,7 @@ public class FeedbackServiceTests {
 
     @Test
     public void createFeedback_Should_CallRepository(){
-        Feedback feedback = TestHelpers.createFeedbackPlamen();
+        Feedback feedback = TestHelpers.createMockFeedbackForUser1ForDriver();
 
         feedbackService.createFeedback(feedback);
 

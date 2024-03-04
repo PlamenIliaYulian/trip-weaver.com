@@ -10,16 +10,10 @@ import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.exceptions.DuplicateEntityException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.InvalidOperationException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
-import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.models.*;
 import com.tripweaver.repositories.contracts.UserRepository;
 import com.tripweaver.services.contracts.FeedbackService;
-import com.tripweaver.services.contracts.UserService;
 import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 import java.util.HashSet;
-import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
@@ -55,19 +48,19 @@ public class UserServiceTests {
 
     @Test
     public void createUser_Should_Throw_When_UsernameIsNotUnique() {
-        User createdUser = TestHelpers.createMockUserPlamen();
-        User userToBeCreated = TestHelpers.createMockUserPlamen();
+        User createdUser = TestHelpers.createMockNonAdminUser1();
+        User userToBeCreated = TestHelpers.createMockNonAdminUser1();
 
         Assertions.assertThrows(DuplicateEntityException.class,
-                ()-> userService.createUser(userToBeCreated));
+                () -> userService.createUser(userToBeCreated));
     }
 
 
     /*Ilia*/
     @Test
     public void getAllUsers_Should_Throw_When_LoggedUserIsNotAdmin() {
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser1$Ilia();
-        UserFilterOptions mockUserFilterOptions = TestHelpers.createMockUserFilterOptions$Ilia();
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
+        UserFilterOptions mockUserFilterOptions = TestHelpers.createMockUserFilterOptions();
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
                 () -> userService.getAllUsers(mockUserFilterOptions, mockLoggedUser));
@@ -77,11 +70,11 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void getAllUsers_Should_CallRepository_When_ValidArgumentsPassed() {
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser1$Ilia();
-        Role mockRoleAdmin = TestHelpers.createMockRoleAdmin$Ilia();
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
+        Role mockRoleAdmin = TestHelpers.createMockRoleAdmin();
         Set<Role> roleSet = mockLoggedUser.getRoles();
         roleSet.add(mockRoleAdmin);
-        UserFilterOptions mockUserFilterOptions = TestHelpers.createMockUserFilterOptions$Ilia();
+        UserFilterOptions mockUserFilterOptions = TestHelpers.createMockUserFilterOptions();
 
         userService.getAllUsers(mockUserFilterOptions, mockLoggedUser);
 
@@ -110,9 +103,9 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_WhenTravelNotCompleted() {
-        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver$Ilia();
-        Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser2$Ilia();
+        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
+        Travel mockTravel = TestHelpers.createMockTravel1();
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser2();
         User mockDriver = mockTravel.getDriver();
 
         Assertions.assertThrows(InvalidOperationException.class,
@@ -123,9 +116,9 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_LoggedUserIsTheDriver() {
-        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver$Ilia();
-        Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
-        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted$Ilia());
+        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
+        Travel mockTravel = TestHelpers.createMockTravel1();
+        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted());
         User mockTravelDriver = mockTravel.getDriver();
 
         Assertions.assertThrows(InvalidOperationException.class,
@@ -136,10 +129,10 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_UserIsNotInTheApprovedList() {
-        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver$Ilia();
-        Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
-        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted$Ilia());
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser2$Ilia();
+        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
+        Travel mockTravel = TestHelpers.createMockTravel1();
+        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted());
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser2();
         mockLoggedUser.setUserId(10);
         User mockDriver = mockTravel.getDriver();
 
@@ -151,11 +144,11 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_UserIsTheDriver() {
-        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver$Ilia();
-        Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
-        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted$Ilia());
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser2$Ilia();
-        User mockDriver = TestHelpers.createMockNonAdminUser2$Ilia();
+        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
+        Travel mockTravel = TestHelpers.createMockTravel1();
+        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted());
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser2();
+        User mockDriver = TestHelpers.createMockNonAdminUser2();
         mockDriver.setUserId(10);
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
@@ -166,10 +159,10 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_FeedbackAlreadyLeft() {
-        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver$Ilia();
-        Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
-        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted$Ilia());
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser2$Ilia();
+        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
+        Travel mockTravel = TestHelpers.createMockTravel1();
+        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted());
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser2();
         User mockDriver = mockTravel.getDriver();
         Set<Feedback> feedbackSet = mockDriver.getFeedback();
         feedbackSet.add(mockFeedbackForDriver);
@@ -185,10 +178,10 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_CallRepository_When_ValidArgumentsPassed() {
-        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver$Ilia();
-        Travel mockTravel = TestHelpers.createMockTravel1$Ilia();
-        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted$Ilia());
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser2$Ilia();
+        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
+        Travel mockTravel = TestHelpers.createMockTravel1();
+        mockTravel.setStatus(TestHelpers.createMockTravelStatusCompleted());
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser2();
         User mockDriver = mockTravel.getDriver();
 
         Mockito.when(feedbackService.createFeedback(Mockito.any()))
@@ -203,8 +196,8 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void getAllFeedbackForPassenger_Should_ReturnListOfFeedback_When_Called() {
-        User mockLoggedUser = TestHelpers.createMockNonAdminUser1$Ilia();
-        Feedback mockFeedbackForPassenger = TestHelpers.createMockFeedbackForUser1ForPassenger$Ilia();
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
+        Feedback mockFeedbackForPassenger = TestHelpers.createMockFeedbackForUser1ForPassenger();
         Set<Feedback> feedbackSet = mockLoggedUser.getFeedback();
         feedbackSet.add(mockFeedbackForPassenger);
         List<Feedback> feedbackList = userService.getAllFeedbackForPassenger(mockLoggedUser);
@@ -215,8 +208,8 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void deleteUser_Should_Throw_When_UserIsNotTheSameAsLoggedUser() {
-        User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1$Ilia();
-        User mockUserLogged = TestHelpers.createMockNonAdminUser2$Ilia();
+        User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1();
+        User mockUserLogged = TestHelpers.createMockNonAdminUser2();
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
                 () -> userService.deleteUser(mockUserToBeDeleted, mockUserLogged));
@@ -225,7 +218,7 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void deleteUser_Should_CallRepository_When_ValidArgumentsPassed() {
-        User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1$Ilia();
+        User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1();
 
         userService.deleteUser(mockUserToBeDeleted, mockUserToBeDeleted);
 
@@ -237,8 +230,8 @@ public class UserServiceTests {
 
     @Test
     public void createUser_Should_Throw_When_EmailIsNotUnique() {
-        User createdUser = TestHelpers.createMockUserPlamen();
-        User userToBeCreated = TestHelpers.createMockUserPlamen();
+        User createdUser = TestHelpers.createMockNonAdminUser1();
+        User userToBeCreated = TestHelpers.createMockNonAdminUser1();
 
         Assertions.assertThrows(DuplicateEntityException.class,
                 () -> userService.createUser(userToBeCreated));
@@ -246,8 +239,8 @@ public class UserServiceTests {
 
     @Test
     public void createUser_Should_Throw_When_PhoneNumberIsNotUnique() {
-        User createdUser = TestHelpers.createMockUserPlamen();
-        User userToBeCreated = TestHelpers.createMockUserPlamen();
+        User createdUser = TestHelpers.createMockNonAdminUser1();
+        User userToBeCreated = TestHelpers.createMockNonAdminUser1();
 
         Assertions.assertThrows(DuplicateEntityException.class,
                 () -> userService.createUser(userToBeCreated));
@@ -255,8 +248,8 @@ public class UserServiceTests {
 
     @Test
     public void createUser_Should_CallRepository() {
-        User userToBeCreated = TestHelpers.createMockUserPlamen();
-        Role role = TestHelpers.createMockRolePlamen();
+        User userToBeCreated = TestHelpers.createMockNonAdminUser1();
+        Role role = TestHelpers.createMockRoleMember();
 
 
         Mockito.when(userRepository.getUserByUsername(userToBeCreated.getUsername()))
@@ -282,7 +275,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void getUserByUsername_Should_CallRepository(){
+    public void getUserByUsername_Should_CallRepository() {
         userService.getUserByUsername("username");
 
         Mockito.verify(userRepository, Mockito.times(1))
@@ -290,20 +283,20 @@ public class UserServiceTests {
     }
 
     @Test
-    public void blockUser_Should_Throw_When_UserIsNotAdmin(){
-        User userNotAdmin = TestHelpers.createMockUserPlamen();
-        User userToBeBlocked = TestHelpers.createMockUserPlamen();
+    public void blockUser_Should_Throw_When_UserIsNotAdmin() {
+        User userNotAdmin = TestHelpers.createMockNonAdminUser1();
+        User userToBeBlocked = TestHelpers.createMockNonAdminUser1();
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                ()-> userService.blockUser(userToBeBlocked, userNotAdmin));
+                () -> userService.blockUser(userToBeBlocked, userNotAdmin));
 
     }
 
     @Test
-    public void blockUser_Should_CallRepository_When_ArgumentsAreValid(){
-        User userAdmin = TestHelpers.createMockUserPlamen();
-        User userToBeBlocked = TestHelpers.createMockUserPlamen();
-        Role adminRole = TestHelpers.createMockRolePlamen();
+    public void blockUser_Should_CallRepository_When_ArgumentsAreValid() {
+        User userAdmin = TestHelpers.createMockNonAdminUser1();
+        User userToBeBlocked = TestHelpers.createMockNonAdminUser1();
+        Role adminRole = TestHelpers.createMockRoleMember();
         adminRole.setRoleId(1);
         userAdmin.getRoles().add(adminRole);
 
@@ -316,7 +309,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void getAllUsersCount_Should_CallRepository(){
+    public void getAllUsersCount_Should_CallRepository() {
         userService.getAllUsersCount();
 
         Mockito.verify(userRepository, Mockito.times(1))
@@ -324,85 +317,100 @@ public class UserServiceTests {
     }
 
     @Test
-    public void addAvatar_Should_Throw_When_UserIsSameUser(){
-        User userToBeUpdated = TestHelpers.createMockUserPlamen();
-        User userToDoChanges = TestHelpers.createMockUserPlamen();
+    public void addAvatar_Should_Throw_When_UserIsSameUser() {
+        User userToBeUpdated = TestHelpers.createMockNonAdminUser1();
+        User userToDoChanges = TestHelpers.createMockNonAdminUser1();
         userToDoChanges.setUserId(2);
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                ()-> userService.addAvatar(userToBeUpdated,"avatarUrl", userToDoChanges));
+                () -> userService.addAvatar(userToBeUpdated, "avatarUrl", userToDoChanges));
     }
 
     @Test
-    public void addAvatar_Should_CallRepository(){
-        User userToBeUpdated = TestHelpers.createMockUserPlamen();
-        User userToDoChanges = TestHelpers.createMockUserPlamen();
+    public void addAvatar_Should_CallRepository() {
+        User userToBeUpdated = TestHelpers.createMockNonAdminUser1();
+        User userToDoChanges = TestHelpers.createMockNonAdminUser1();
 
-        userService.addAvatar(userToBeUpdated,"avatarUrl",userToDoChanges);
+        userService.addAvatar(userToBeUpdated, "avatarUrl", userToDoChanges);
 
         Mockito.verify(userRepository, Mockito.times(1))
                 .updateUser(userToBeUpdated);
     }
 
     @Test
-    public void leaveFeedbackForPassenger_Should_Throw_When_TravelIsNotCompleted(){
-        Travel travel = TestHelpers.createMockTravelPlamen();
-        User loggedUser = TestHelpers.createMockUserPlamen();
-        User passenger = TestHelpers.createMockUserPlamen();
-        Feedback feedback = TestHelpers.createFeedbackPlamen();
+    public void leaveFeedbackForPassenger_Should_Throw_When_TravelIsNotCompleted() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User loggedUser = TestHelpers.createMockNonAdminUser1();
+        User passenger = TestHelpers.createMockNonAdminUser1();
+        Feedback feedback = TestHelpers.createMockFeedbackForUser1ForDriver();
 
         Assertions.assertThrows(InvalidOperationException.class,
-                ()-> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
+                () -> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
     }
 
     @Test
-    public void leaveFeedbackForPassenger_Should_Throw_When_UserIsNotDriver(){
-        Travel travel = TestHelpers.createMockTravelPlamen();
-        User loggedUser = TestHelpers.createMockUserPlamen();
-        User passenger = TestHelpers.createMockUserPlamen();
-        Feedback feedback = TestHelpers.createFeedbackPlamen();
+    public void leaveFeedbackForPassenger_Should_Throw_When_UserIsNotDriver() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User loggedUser = TestHelpers.createMockNonAdminUser1();
+        User passenger = TestHelpers.createMockNonAdminUser1();
+        Feedback feedback = TestHelpers.createMockFeedbackForUser1ForDriver();
         loggedUser.setUserId(2);
-        TravelStatus completedStatus = TestHelpers.createMockTravelStatusPlamen();
+        TravelStatus completedStatus = TestHelpers.createMockTravelStatusCreated();
         completedStatus.setTravelStatusId(3);
         travel.setStatus(completedStatus);
         travel.getUsersApprovedForTheTravel().add(passenger);
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                ()-> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
+                () -> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
     }
 
     @Test
-    public void leaveFeedbackForPassenger_Should_Throw_When_PassengerNotInTheApprovedList(){
-        Travel travel = TestHelpers.createMockTravelPlamen();
-        User loggedUser = TestHelpers.createMockUserPlamen();
-        User passenger = TestHelpers.createMockUserPlamen();
-        Feedback feedback = TestHelpers.createFeedbackPlamen();
-        TravelStatus completedStatus = TestHelpers.createMockTravelStatusPlamen();
+    public void leaveFeedbackForPassenger_Should_Throw_When_PassengerNotInTheApprovedList() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User loggedUser = TestHelpers.createMockNonAdminUser1();
+        User passenger = TestHelpers.createMockNonAdminUser1();
+        Feedback feedback = TestHelpers.createMockFeedbackForUser1ForDriver();
+        TravelStatus completedStatus = TestHelpers.createMockTravelStatusCreated();
         completedStatus.setTravelStatusId(3);
         travel.setStatus(completedStatus);
 
         Assertions.assertThrows(EntityNotFoundException.class,
-                ()-> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
+                () -> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
     }
 
     @Test
-    public void leaveFeedbackForPassenger_Should_CallRepository(){
-        Travel travel = TestHelpers.createMockTravelPlamen();
-        User loggedUser = TestHelpers.createMockUserPlamen();
-        User passenger = TestHelpers.createMockUserPlamen();
-        Feedback feedback = TestHelpers.createFeedbackPlamen();
-        Feedback feedback2 = TestHelpers.createFeedbackPlamen();
-        feedback2.setFeedbackId(2);
-        Set<Feedback> feedbackSet = new HashSet<>();
-        feedbackSet.add(feedback2);
-        passenger.setFeedback(feedbackSet);
-        TravelStatus completedStatus = TestHelpers.createMockTravelStatusPlamen();
+    public void leaveFeedbackForPassenger_Should_Throw_When_FeedbackForThisPassengerAlreadyLeft() {
+        Travel travel = TestHelpers.createMockTravel1();
+        TravelStatus completedStatus = TestHelpers.createMockTravelStatusCreated();
         completedStatus.setTravelStatusId(3);
         travel.setStatus(completedStatus);
+        User loggedUser = TestHelpers.createMockNonAdminUser1();
+        User passenger = TestHelpers.createMockNonAdminUser1();
         travel.getUsersApprovedForTheTravel().add(passenger);
+        Feedback feedback = TestHelpers.createMockFeedbackForUser1ForPassenger();
+        Set<Feedback> feedbackSet = passenger.getFeedback();
+        feedbackSet.add(feedback);
 
         Mockito.when(feedbackService.createFeedback(feedback))
-                        .thenReturn(feedback);
+                .thenReturn(feedback);
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger));
+    }
+
+    @Test
+    public void leaveFeedbackForPassenger_Should_CallRepositoryWhenALlArgumentsAreValid() {
+        Travel travel = TestHelpers.createMockTravel1();
+        TravelStatus completedStatus = TestHelpers.createMockTravelStatusCreated();
+        completedStatus.setTravelStatusId(3);
+        travel.setStatus(completedStatus);
+        User loggedUser = TestHelpers.createMockNonAdminUser1();
+        User passenger = TestHelpers.createMockNonAdminUser1();
+        travel.getUsersApprovedForTheTravel().add(passenger);
+        Feedback feedback = TestHelpers.createMockFeedbackForUser1ForPassenger();
+
+        Mockito.when(feedbackService.createFeedback(feedback))
+                .thenReturn(feedback);
 
         userService.leaveFeedbackForPassenger(feedback, travel, loggedUser, passenger);
 

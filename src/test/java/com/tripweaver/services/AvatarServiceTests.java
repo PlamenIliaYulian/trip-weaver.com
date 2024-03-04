@@ -23,7 +23,7 @@ public class AvatarServiceTests {
 
     @Test
     public void createAvatar_Should_CallRepository(){
-        Avatar avatar = TestHelpers.createAvatarPlamen();
+        Avatar avatar = TestHelpers.createMockAvatar();
 
         avatarService.createAvatar(avatar);
 
@@ -34,7 +34,7 @@ public class AvatarServiceTests {
     /*Ilia*/
     @Test
     public void uploadPictureToCloudinary_Should_CallRepository() {
-        MultipartFile mockMultipartFile= TestHelpers.createMockMultipartFile$Ilia();
+        MultipartFile mockMultipartFile= TestHelpers.createMockMultipartFile();
 
         avatarService.uploadPictureToCloudinary(mockMultipartFile);
 
