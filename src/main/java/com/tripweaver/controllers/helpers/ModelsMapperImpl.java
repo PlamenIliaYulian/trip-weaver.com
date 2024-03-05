@@ -2,18 +2,12 @@ package com.tripweaver.controllers.helpers;
 
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.InvalidOperationException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.*;
-import com.tripweaver.models.dtos.FeedbackDto;
-import com.tripweaver.models.dtos.TravelDto;
-import com.tripweaver.models.dtos.UserDtoCreate;
-import com.tripweaver.models.dtos.UserDtoUpdate;
+import com.tripweaver.models.dtos.*;
 import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 public class ModelsMapperImpl implements ModelsMapper {
@@ -45,16 +39,16 @@ public class ModelsMapperImpl implements ModelsMapper {
     }
 
     @Override
-    public User userFromDtoUpdate(UserDtoUpdate userDtoUpdate, int userId) {
+    public User userFromDto(UserDto userDto, int userId) {
         User user = userService.getUserById(userId);
-        if(!userDtoUpdate.getConfirmPassword().equals(userDtoUpdate.getPassword())){
+        if(!userDto.getConfirmPassword().equals(userDto.getPassword())){
             throw new InvalidOperationException(CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD);
         }
-        user.setPassword(userDtoUpdate.getPassword());
-        user.setFirstName(userDtoUpdate.getFirstName());
-        user.setLastName(userDtoUpdate.getLastName());
-        user.setEmail(userDtoUpdate.getEmail());
-        user.setPhoneNumber(userDtoUpdate.getPhoneNumber());
+        user.setPassword(userDto.getPassword());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
         return user;
     }
 

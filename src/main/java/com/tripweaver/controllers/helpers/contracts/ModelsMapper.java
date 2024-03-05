@@ -10,7 +10,7 @@ public interface ModelsMapper {
 
     Travel travelFromDto(TravelDto travelDto);
 
-    User userFromDtoUpdate(UserDtoUpdate userDtoUpdate, int userId);
+    User userFromDto(UserDto userDto, int userId);
 
     Feedback feedbackForPassengerFromDto(FeedbackDto feedbackDto);
 }

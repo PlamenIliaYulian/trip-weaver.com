@@ -3,10 +3,12 @@ package com.tripweaver.controllers.rest;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.*;
-import com.tripweaver.models.*;
+import com.tripweaver.models.Feedback;
+import com.tripweaver.models.Travel;
+import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.FeedbackDto;
+import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
-import com.tripweaver.models.dtos.UserDtoUpdate;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.AvatarService;
@@ -59,6 +61,7 @@ public class UserRestController {
         this.avatarService = avatarService;
     }
 
+    /*TODO to check whether password and passwordConfirm matches*/
     /*Yuli*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -157,12 +160,13 @@ public class UserRestController {
             },
             security = {@SecurityRequirement(name = "Authorization")}
     )
+    /*TODO to check whether password and passwordConfirm matches*/
     @PutMapping("/{userId}")
     User updateUser(@PathVariable int userId,
-                    @Valid @RequestBody UserDtoUpdate userDtoUpdate,
+                    @Valid @RequestBody UserDto userDto,
                     @RequestHeader HttpHeaders headers) {
         try {
-            User userToBeUpdated = modelsMapper.userFromDtoUpdate(userDtoUpdate, userId);
+            User userToBeUpdated = modelsMapper.userFromDto(userDto, userId);
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             return userService.updateUser(userToBeUpdated, loggedUser);
         } catch (EntityNotFoundException e) {

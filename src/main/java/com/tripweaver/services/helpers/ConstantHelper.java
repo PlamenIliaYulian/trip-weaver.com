@@ -28,4 +28,9 @@ public class ConstantHelper {
     public static final String YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE = "You have already left feedback for this ride.";
 
     public static final String NO_FREE_SEATS_ARE_AVAILABLE_MESSAGE ="No free seats are available.";
+
+    public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+    public static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
+    public static final String LOGGED_USER_ERROR = "No user logged in.";
+
 }

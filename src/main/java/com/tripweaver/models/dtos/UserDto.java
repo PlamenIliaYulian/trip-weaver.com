@@ -13,6 +13,11 @@ public class UserDto {
             message = "Password must contain at least one uppercase letter, one lowercase letter, " +
                     "one number and one special character")
     private String password;
+
+    @NotNull
+    @Size(min = 8, max = 25, message = "Password must be between 8 and 25 symbols.")
+    private String confirmPassword;
+
     @NotNull
     @Size(min = 2, max = 20, message = "First name must be between 2 and 20 symbols.")
     private String firstName;
@@ -30,7 +35,6 @@ public class UserDto {
     @Size(min = 10, max = 10, message = "Phone number must be 10 digits starting with 08.")
     @Pattern(regexp = "^08\\d{8}$", message = "Phone number must be 10 digits starting with 08.")
     private String phoneNumber;
-
     public UserDto() {
     }
 
@@ -40,6 +44,14 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     public String getFirstName() {
