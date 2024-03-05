@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 @Controller
 @RequestMapping("/")
 public class HomeMvcController {
@@ -72,6 +75,7 @@ public class HomeMvcController {
 
     @GetMapping
     public String showHomePage(Model model) {
+
         model.addAttribute("totalUsersCount", userService.getAllUsersCount());
         model.addAttribute("totalTravelsCount", travelService.getAllTravelsCount());
         model.addAttribute("topTenTravelOrganizers", userService.getTopTenTravelOrganizersByRating());
