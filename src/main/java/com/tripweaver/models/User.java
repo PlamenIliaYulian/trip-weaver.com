@@ -2,6 +2,7 @@ package com.tripweaver.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class User implements Comparable<User> {
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
+
     @Column(name = "created")
     private LocalDateTime created;
     @Column(name = "is_deleted")
