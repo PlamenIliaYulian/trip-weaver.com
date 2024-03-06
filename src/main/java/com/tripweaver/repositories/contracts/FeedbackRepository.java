@@ -7,4 +7,5 @@ public interface FeedbackRepository {
     Feedback getFeedbackForDriverById (int id);
     Feedback getFeedbackForPassengerById (int id);
     Feedback createFeedback(Feedback feedback);
+    long getAllFiveStarReviewsCount();
 }

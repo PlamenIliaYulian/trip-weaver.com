@@ -36,4 +36,9 @@ public class FeedbackServiceImpl implements FeedbackService {
     public Feedback getFeedbackForPassengerById(int id) {
         return feedbackRepository.getFeedbackForPassengerById(id);
     }
+
+    @Override
+    public long getAllFiveStarReviewsCount() {
+        return feedbackRepository.getAllFiveStarReviewsCount();
+    }
 }

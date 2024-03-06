@@ -60,4 +60,14 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
         }
         return feedback;
     }
+
+    @Override
+    public long getAllFiveStarReviewsCount() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery("select count(*) from Feedback f " +
+                    "where rating = :rating ", Long.class);
+            query.setParameter("rating", "5");
+            return query.list().get(0);
+        }
+    }
 }

@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="../static/assets/css/all.min.css" th:href="@{/assets/css/all.min.css}">
     <link rel="stylesheet" href="../static/assets/css/datepicker.min.css" th:href="@{/assets/css/datepicker.min.css}">
     <link rel="stylesheet" href="../static/assets/css/main.css" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 </head>
 
 <body class="page-home">
@@ -38,26 +40,30 @@
                     <div class="page-header__menu">
                         <nav class="page-nav" data-uk-navbar="">
                             <ul class="uk-navbar-nav">
-                                <li><a href="03_blog-1.html"> <img src="../static/assets/img/person-18.svg"
-                                                                   th:src="@{/assets/img/person-18.svg}" data-uk-svg
+                                <li><a href="03_blog-1.html"> <img src="../static/assets/img/person-244.svg"
+                                                                   th:src="@{/assets/img/person-244.svg}" data-uk-svg
                                                                    alt="person">Access</a>
                                     <div class="uk-navbar-dropdown">
-                                        <ul class="uk-nav uk-navbar-dropdown-nav">
-                                            <li><a href="03_blog-1.html">Register</a></li>
-                                            <li><a href="04_blog-2.html">Login</a></li>
+                                        <ul th:unless="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                            <li><a href="#" th:href="@{/auth/register}">Register</a></li>
+                                            <li><a href="#" th:href="@{/auth/login}">Login</a></li>
+                                        </ul>
+                                        <ul th:if="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                            <li><a href="#" >Profile</a></li>
+                                            <li><a href="#" th:href="@{/auth/logout}">Logout</a></li>
                                         </ul>
                                     </div>
                                 </li>
                                 <li><a href="02-search-1.html"> <img src="../static/assets/img/search.svg"
                                                                      th:src="@{/assets/img/search.svg}" data-uk-svg
                                                                      alt="search">Find Trip</a>
-                                    <div class="uk-navbar-dropdown">
+                             <!--       <div class="uk-navbar-dropdown">
                                         <ul class="uk-nav uk-navbar-dropdown-nav">
                                             <li><a href="02-search-1.html">Find a Ride</a></li>
                                             <li><a href="02-search-2.html">Find a Ride Map</a></li>
                                             <li><a href="02-search-3.html">Find a Ride Result</a></li>
                                         </ul>
-                                    </div>
+                                    </div>-->
                                 </li>
                                 <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
                                                                        th:src="@{/assets/img/car.svg}" data-uk-svg
@@ -68,11 +74,21 @@
                             </ul>
                         </nav>
                     </div>
-                    <div class="page-header__phone"><a class="uk-button uk-button-danger" href="tel:3457008800"> <img
-                            src="../static/assets/img/call.svg" th:src="@{/assets/img/call.svg}" alt="call" data-uk-svg><span>+345 700 8800</span></a>
+                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" > <img
+                            src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}" alt="call" data-uk-svg>
+                        <span th:text="${loggedUser.getUsername()}"></span></a>
+                    </div>
+                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/logout}"> <img
+                            src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
+                        <span>Logout</span></a>
+                    </div>
+                    <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/login}"> <img
+                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call" data-uk-svg>
+                        <span>Login</span></a>
                     </div>
                     <div class="page-header__btn"><a class="uk-button uk-button-danger" href="#offcanvas" data-uk-toggle
-                                                     data-uk-icon="menu"></a></div>
+                                                     data-uk-icon="menu"></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,8 +108,8 @@
                         <div class="section-banner__title"><span>Find a ride today! Try Trip-Weaver</span>
                             <h1 class="decor-top">Need to Travel? Get a lift<br> or Find a free seat</h1>
                         </div>
-                        <div class="section-banner__btn"><a class="uk-button uk-button-default" href="#!">Get
-                            Started</a></div>
+                        <div class="section-banner__btn"><a class="uk-button uk-button-default"
+                                                            href="#" th:href="@{/auth/register}">Register</a></div>
                     </div>
                 </div>
             </div>
@@ -177,6 +193,8 @@
                 </div>
             </div>
         </div>
+
+        <!--Top 10 Drivers-->
         <div class="section-best-drivers">
             <div class="uk-background-muted">
                 <div class="uk-section uk-container">
@@ -200,130 +218,96 @@
                                                  th:text="${#temporals.format(driver.getCreated(), 'yyyy-MMM-dd')}">Wed,
                                                 8 January<br> at 2:00 PM
                                             </div>
-                                            <div class="driver-card__price">Avg. driver rating <b
+                                            <div class="driver-card__price">Avg. Driver Rating: <b
                                                     th:text="${driver.getAverageDriverRating()}"></b></div>
                                         </div>
                                         <div class="driver-card__services">
                                             <ul>
-                                                <li><img src="../static/assets/img/driver-service-1.png"
-                                                         th:src="@{/assets/img/driver-service-1.png}"
-                                                         alt="driver-service"><span th:text="${driver.getFirstName()}">First name</span>
+                                                <li><img src="../static/assets/img/mode_of_travel.svg"
+                                                         th:src="@{/assets/img/mode_of_travel.svg}"
+                                                         alt="driver-service"><span th:text="'Total Distance: ' +
+                                                         ${driverTotalDistance.get(driver.getUsername())} + ' km'">100 km</span>
                                                 </li>
-                                                <li><img src="../static/assets/img/driver-service-2.png"
-                                                         th:src="@{/assets/img/driver-service-1.png}"
-                                                         alt="driver-service"><span th:text="${driver.getLastName()}">Last name</span>
-                                                </li>
-                                                <li><img src="../static/assets/img/driver-service-3.png"
-                                                         th:src="@{/assets/img/driver-service-1.png}" alt="driver-service"><span
+                                                <li><img src="../static/assets/img/directions_car.svg"
+                                                         th:src="@{/assets/img/directions_car.svg}"
+                                                         alt="driver-service"><span th:text="'Total Travels: ' +
+                                                         ${driverTotalTravels.get(driver.getUsername())}">10</span></li>
+                                                <li><img src="../static/assets/img/mail.svg"
+                                                         th:src="@{/assets/img/mail.svg}" alt="driver-service"><span
                                                         th:text="${driver.getEmail()}">Email</span></li>
-                                                <li><img src="../static/assets/img/driver-service-3.png"
-                                                         th:src="@{/assets/img/driver-service-1.png}" alt="driver-service"><span
+                                                <li><img src="../static/assets/img/phone.svg"
+                                                         th:src="@{/assets/img/phone.svg}" alt="driver-service"><span
                                                         th:text="${driver.getPhoneNumber()}">Phone number</span></li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!--<div>
-                              <div class="driver-card">
-                                <div class="driver-card__media"><img src="../static/assets/img/car-2.jpg" alt="car"></div>
-                                <div class="driver-card__body">
-                                  <div class="driver-card__user"> <img src="../static/assets/img/driver-2.png" alt="driver-pic"><span>Shane Michael</span></div>
-                                  <div class="driver-card__info">
-                                    <div class="driver-card__date">Wed, 8 January<br> at 2:00 PM</div>
-                                    <div class="driver-card__price">For 1 Passenger <b>$19.50</b></div>
-                                  </div>
-                                  <div class="driver-card__services">
-                                    <ul>
-                                      <li><img src="../static/assets/img/driver-service-1.png" alt="driver-service"><span>Max. 2 passengers in back seats</span></li>
-                                      <li><img src="../static/assets/img/driver-service-2.png" alt="driver-service"><span>Pets are not allowed in the Car</span></li>
-                                      <li><img src="../static/assets/img/driver-service-3.png" alt="driver-service"><span>Smoking is not allowed</span></li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>-->
-                            <!--<div>
-                              <div class="driver-card">
-                                <div class="driver-card__media"><img src="../static/assets/img/car-3.jpg" alt="car"></div>
-                                <div class="driver-card__body">
-                                  <div class="driver-card__user"> <img src="../static/assets/img/driver-3.png" alt="driver-pic"><span>John Matthew</span></div>
-                                  <div class="driver-card__info">
-                                    <div class="driver-card__date">Wed, 8 January<br> at 2:00 PM</div>
-                                    <div class="driver-card__price">For 1 Passenger <b>$19.50</b></div>
-                                  </div>
-                                  <div class="driver-card__services">
-                                    <ul>
-                                      <li><img src="../static/assets/img/driver-service-1.png" alt="driver-service"><span>Max. 2 passengers in back seats</span></li>
-                                      <li><img src="../static/assets/img/driver-service-2.png" alt="driver-service"><span>Pets are not allowed in the Car</span></li>
-                                      <li><img src="../static/assets/img/driver-service-3.png" alt="driver-service"><span>Smoking is not allowed</span></li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>-->
-                            <!--<div>
-                              <div class="driver-card">
-                                <div class="driver-card__media"><img src="../static/assets/img/car-4.jpg" alt="car"></div>
-                                <div class="driver-card__body">
-                                  <div class="driver-card__user"> <img src="../static/assets/img/driver-1.png" alt="driver-pic"><span>Ben Strokes</span></div>
-                                  <div class="driver-card__info">
-                                    <div class="driver-card__date">Wed, 8 January<br> at 2:00 PM</div>
-                                    <div class="driver-card__price">For 1 Passenger <b>$19.50</b></div>
-                                  </div>
-                                  <div class="driver-card__services">
-                                    <ul>
-                                      <li><img src="../static/assets/img/driver-service-1.png" alt="driver-service"><span>Max. 2 passengers in back seats</span></li>
-                                      <li><img src="../static/assets/img/driver-service-2.png" alt="driver-service"><span>Pets are not allowed in the Car</span></li>
-                                      <li><img src="../static/assets/img/driver-service-3.png" alt="driver-service"><span>Smoking is not allowed</span></li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>-->
-                            <!--<div>
-                              <div class="driver-card">
-                                <div class="driver-card__media"><img src="../static/assets/img/car-5.jpg" alt="car"></div>
-                                <div class="driver-card__body">
-                                  <div class="driver-card__user"> <img src="../static/assets/img/driver-2.png" alt="driver-pic"><span>Shane Michael</span></div>
-                                  <div class="driver-card__info">
-                                    <div class="driver-card__date">Wed, 8 January<br> at 2:00 PM</div>
-                                    <div class="driver-card__price">For 1 Passenger <b>$19.50</b></div>
-                                  </div>
-                                  <div class="driver-card__services">
-                                    <ul>
-                                      <li><img src="../static/assets/img/driver-service-1.png" alt="driver-service"><span>Max. 2 passengers in back seats</span></li>
-                                      <li><img src="../static/assets/img/driver-service-2.png" alt="driver-service"><span>Pets are not allowed in the Car</span></li>
-                                      <li><img src="../static/assets/img/driver-service-3.png" alt="driver-service"><span>Smoking is not allowed</span></li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>-->
-                            <!-- <div>
-                               <div class="driver-card">
-                                 <div class="driver-card__media"><img src="../static/assets/img/car-6.jpg" alt="car"></div>
-                                 <div class="driver-card__body">
-                                   <div class="driver-card__user"> <img src="../static/assets/img/driver-3.png" alt="driver-pic"><span>John Matthew</span></div>
-                                   <div class="driver-card__info">
-                                     <div class="driver-card__date">Wed, 8 January<br> at 2:00 PM</div>
-                                     <div class="driver-card__price">For 1 Passenger <b>$19.50</b></div>
-                                   </div>
-                                   <div class="driver-card__services">
-                                     <ul>
-                                       <li><img src="../static/assets/img/driver-service-1.png" alt="driver-service"><span>Max. 2 passengers in back seats</span></li>
-                                       <li><img src="../static/assets/img/driver-service-2.png" alt="driver-service"><span>Pets are not allowed in the Car</span></li>
-                                       <li><img src="../static/assets/img/driver-service-3.png" alt="driver-service"><span>Smoking is not allowed</span></li>
-                                     </ul>
-                                   </div>
-                                 </div>
-                               </div>
-                             </div>-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!--Top 10 Passengers-->
+        <div class="section-best-drivers">
+            <div class="uk-background-muted">
+                <div class="uk-section uk-container">
+                    <div class="section-title uk-text-center">
+                        <div class="uk-h2">Highest Rated Passengers</div>
+                        <p>Check out our top ten passengers</p>
+                    </div>
+                    <div class="section-content">
+                        <div class="uk-grid uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m" data-uk-grid>
+                            <div th:each="passenger : ${topTenPassengers}">
+                                <div class="driver-card">
+                                    <div class="driver-card__media"><img src="../static/assets/img/blog-thumb-2.jpg"
+                                                                         th:src="@{/assets/img/blog-thumb-2.jpg}"
+                                                                         alt="car">
+                                    </div>
+                                    <div class="driver-card__body">
+                                        <div class="driver-card__user"><img
+                                                th:src="${passenger.getAvatar().getAvatarUrl()}" alt="driver-pic"><span
+                                                th:text="${passenger.getUsername()}">Username</span></div>
+                                        <div class="driver-card__info">
+                                            <div class="driver-card__date"
+                                                 th:text="${#temporals.format(passenger.getCreated(), 'yyyy-MMM-dd')}">
+                                                Wed,
+                                                8 January<br> at 2:00 PM
+                                            </div>
+                                            <div class="driver-card__price">Avg. Passenger Rating: <b
+                                                    th:text="${passenger.getAveragePassengerRating()}"></b></div>
+                                        </div>
+                                        <div class="driver-card__services">
+                                            <ul>
+                                                <li><img src="../static/assets/img/mode_of_travel.svg"
+                                                         th:src="@{/assets/img/mode_of_travel.svg}"
+                                                         alt="driver-service"><span th:text="'Total Distance: ' +
+                                                         ${passengerTotalDistance.get(passenger.getUsername())} + ' km'">100 km</span>
+                                                </li>
+                                                <li><img src="../static/assets/img/directions_car.svg"
+                                                         th:src="@{/assets/img/directions_car.svg}"
+                                                         alt="driver-service"><span th:text="'Total Travels: ' +
+                                                         ${passengerTotalTravels.get(passenger.getUsername())}">10</span>
+                                                </li>
+                                                <li><img src="../static/assets/img/mail.svg"
+                                                         th:src="@{/assets/img/mail.svg}" alt="driver-service"><span
+                                                        th:text="${passenger.getEmail()}">Email</span></li>
+                                                <li><img src="../static/assets/img/phone.svg"
+                                                         th:src="@{/assets/img/phone.svg}" alt="driver-service"><span
+                                                        th:text="${passenger.getPhoneNumber()}">Phone number</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--About-->
         <div class="section-about">
             <div class="section-about__img"><img src="../static/assets/img/img-car.png"
                                                  th:src="@{/assets/img/img-car.png}" alt=""></div>
@@ -331,7 +315,7 @@
                 <div class="uk-grid uk-child-width-1-2@m" data-uk-grid>
                     <div>
                         <div class="section-title">
-                            <div class="uk-h2">About GetRider</div>
+                            <div class="uk-h2">About Trip-Weaver</div>
                         </div>
                         <div class="section-content">
                             <ul class="about-list">
@@ -341,10 +325,10 @@
                                                                                 th:src="@{/assets/img/about-1.svg}"
                                                                                 alt="ico-about" data-uk-svg></div>
                                         <div class="about-list-item__desc">
-                                            <div class="about-list-item__title">Millions Of Journeys</div>
-                                            <div class="about-list-item__desc">Incididunt ut laboret dolore magna aliqua
-                                                laboris nisialiquip ex lorem ipsum dolor eiusmod tempory incididunt sed
-                                                ipsum loea ...
+                                            <div class="about-list-item__title">Efficient Travel Sharing</div>
+                                            <div class="about-list-item__desc">Our web application, Trip-Weaver,
+                                                facilitates seamless sharing of travel plans between users, allowing
+                                                individuals to organize shared trips or join existing ones effortlessly.
                                             </div>
                                         </div>
                                     </div>
@@ -355,10 +339,12 @@
                                                                                 th:src="@{/assets/img/about-2.svg}"
                                                                                 alt="ico-about" data-uk-svg></div>
                                         <div class="about-list-item__desc">
-                                            <div class="about-list-item__title">Largest Car Rider Service</div>
-                                            <div class="about-list-item__desc">Incididunt ut laboret dolore magna aliqua
-                                                laboris nisialiquip ex lorem ipsum dolor eiusmod tempory incididunt sed
-                                                ipsum loea ...
+                                            <div class="about-list-item__title">User-Friendly Interface</div>
+                                            <div class="about-list-item__desc">With intuitive features for both
+                                                anonymous
+                                                and authenticated users, Trip-Weaver offers a user-friendly experience,
+                                                enabling easy registration, trip creation, and browsing of available
+                                                rides.
                                             </div>
                                         </div>
                                     </div>
@@ -369,10 +355,11 @@
                                                                                 th:src="@{/assets/img/about-3.svg}"
                                                                                 alt="ico-about" data-uk-svg></div>
                                         <div class="about-list-item__desc">
-                                            <div class="about-list-item__title">Simple & Smart Riding</div>
-                                            <div class="about-list-item__desc">Incididunt ut laboret dolore magna aliqua
-                                                laboris nisialiquip ex lorem ipsum dolor eiusmod tempory incididunt sed
-                                                ipsum loea ...
+                                            <div class="about-list-item__title">Robust Feedback System</div>
+                                            <div class="about-list-item__desc">Trip-Weaver ensures transparency and
+                                                accountability through its feedback system, allowing passengers to rate
+                                                and leave comments for drivers, and vice versa, fostering a
+                                                community-driven approach to travel sharing.
                                             </div>
                                         </div>
                                     </div>
@@ -384,17 +371,24 @@
                 </div>
             </div>
         </div>
+
+        <!--Total Travels, Total Users, Total 5-Star Reviews-->
         <div class="section-location">
             <div class="uk-section uk-container">
                 <div class="location">
                     <div class="uk-grid uk-grid-small uk-child-width-1-2@m" data-uk-grid>
                         <div>
-                            <div class="location__title">We Have Now <b>2000</b> Locations</div>
-                            <div class="location__text">Labore dolore magna aliqua ipsum veniam quis nostrud
-                                exercitation voluptate eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat.
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed eiusmod.
+                            <div class="location__title">We Have Now <b th:text="${totalTravelsCount}"></b> Completed
+                                Travels
                             </div>
-                            <div class="uk-grid uk-child-width-1-2" data-uk-grid>
+                            <div class="location__text">At Trip-Weaver, our mission is to revolutionize the way people
+                                commute by providing a platform that promotes sustainable and cost-effective travel
+                                solutions. Whether you're looking to reduce your carbon footprint, save money on
+                                transportation, or simply enjoy the company of fellow travelers, Trip-Weaver offers a
+                                convenient and reliable solution. Join our growing community today and embark on a
+                                journey towards a more connected and eco-friendly future!"
+                            </div>
+                            <!--<div class="uk-grid uk-child-width-1-2" data-uk-grid>
                                 <div>
                                     <div class="location-contact-item">
                                         <div class="location-contact-item__icon"><i class="fas fa-phone-alt"></i></div>
@@ -417,7 +411,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         <div>
                             <div class="location__map"><img class="location__img"
@@ -425,9 +419,10 @@
                                                             th:src="@{/assets/img/img-location-map.png}"
                                                             alt="img-location-map">
                                 <ul class="location__numbers">
-                                    <li><span>1470</span><span>Rental Cars Fleet</span></li>
-                                    <li><span>265</span><span>5 Star Reviews</span></li>
-                                    <li><span>308</span><span>Rental Awards</span></li>
+                                    <li><span th:text="${totalUsersCount}"></span><span>Total Users</span></li>
+                                    <li><span
+                                            th:text="${fiveStarRatingFeedbackCount}"></span><span>5 Star Reviews</span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -435,6 +430,8 @@
                 </div>
             </div>
         </div>
+
+        <!--Customer Reviews-->
         <div class="section-reviews">
             <div class="uk-section uk-container">
                 <div class="section-title uk-text-center">
@@ -461,29 +458,35 @@
                                     <ul class="uk-slideshow-items">
                                         <li>
                                             <div class="reviews-slider-item">
-                                                <div class="reviews-slider-item__text">Norem ipsum dolor sit amet
-                                                    consectetur adipisicing elit quis nostrud exercita duis irure dolor
-                                                    rehenderit incidiun labore et dolore magna aliqua exercitation.
+                                                <div class="reviews-slider-item__text">Carpooling turned my daily
+                                                    commute
+                                                    from a grueling solo expedition into a road trip with new buddies!
+                                                    Plus, now I have someone to blame for all those traffic jams -
+                                                    thanks, fellow passengers!
                                                 </div>
-                                                <div class="reviews-slider-item__user">Donald James</div>
+                                                <div class="reviews-slider-item__user">Happy Commuter</div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="reviews-slider-item">
-                                                <div class="reviews-slider-item__text">Norem ipsum dolor sit amet
-                                                    consectetur adipisicing elit quis nostrud exercita duis irure dolor
-                                                    rehenderit incidiun labore et dolore magna aliqua exercitation.
+                                                <div class="reviews-slider-item__text">As someone who's always been a
+                                                    bit skeptical of sharing a confined space with strangers, Carpooling
+                                                    pleasantly surprised me! Turns out, the only thing we shared was
+                                                    laughter and some top-notch playlists. Five stars for making my
+                                                    rides more memorable!
                                                 </div>
-                                                <div class="reviews-slider-item__user">Donald James</div>
+                                                <div class="reviews-slider-item__user">Joyful Passenger</div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="reviews-slider-item">
-                                                <div class="reviews-slider-item__text">Norem ipsum dolor sit amet
-                                                    consectetur adipisicing elit quis nostrud exercita duis irure dolor
-                                                    rehenderit incidiun labore et dolore magna aliqua exercitation.
+                                                <div class="reviews-slider-item__text">Finally, a solution for my 'long
+                                                    drives are just long periods of staring at the road' problem!
+                                                    Carpooling not only saved me some serious cash on gas but also
+                                                    introduced me to some interesting characters. 5/5 would share
+                                                    snacks again!
                                                 </div>
-                                                <div class="reviews-slider-item__user">Donald James</div>
+                                                <div class="reviews-slider-item__user">Snack Enthusiast</div>
                                             </div>
                                         </li>
                                     </ul>
@@ -497,7 +500,9 @@
                 </div>
             </div>
         </div>
-        <div class="section-blog">
+
+        <!--Blog-->
+        <!--<div class="section-blog">
             <div class="uk-background-muted">
                 <div class="uk-section uk-container">
                     <div class="section-title uk-text-center">
@@ -644,8 +649,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </main>
+
+    <!--Footer-->
     <footer class="page-footer">
         <div class="uk-container">
             <div class="page-footer__inner">
@@ -656,12 +663,13 @@
                                                                           alt="Trip-Weaver"></a></div>
                 </div>
                 <div class="page-footer__text">
-                    <p>Eorem ipsum dolor sit amet consectetur adipisicing elit edolore magna<br> aliqua ut enim ad minim
-                        veniam quis aliquip consequat</p>
+                    <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
                 </div>
                 <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
             </div>
-        </div><!-- Additional blocks-->
+
+            <!-- Additional blocks-->
+        </div>
         <div id="offcanvas" data-uk-offcanvas="overlay: true">
             <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
                 <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
@@ -677,46 +685,43 @@
                             <li class="uk-parent"><a href="#"> <img src="../static/assets/img/search.svg"
                                                                     th:src="@{/assets/img/search.svg}" data-uk-svg
                                                                     alt="search">Find a Ride</a>
-                                <ul class="uk-nav-sub">
-                                    <li><a href="02-search-1.html">Find a Ride</a></li>
-                                    <li><a href="02-search-2.html">Find a Ride Map</a></li>
-                                    <li><a href="02-search-3.html">Find a Ride Result</a></li>
-                                </ul>
                             </li>
                             <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
                                                                    th:src="@{/assets/img/car.svg}" data-uk-svg
-                                                                   alt="car">Offer a Ride</a></li>
-                            <li><a href="#"> <img src="../static/assets/img/news-paper.svg"
-                                                  th:src="@{/assets/img/news-paper.svg}" data-uk-svg alt="news-paper">News</a>
-                            </li>
-                            <li class="uk-parent"><a href="#!"> <img src="../static/assets/img/help2.svg"
-                                                                     th:src="@{/assets/img/help2.svg}" data-uk-svg
-                                                                     alt="help2">Help </a>
-                                <ul class="uk-nav-sub">
-                                    <li><a href="03_blog-1.html">Blog list</a></li>
-                                    <li><a href="04_blog-2.html">Blog grid</a></li>
-                                    <li><a href="05_blog-post.html">Blog post</a></li>
-                                </ul>
+                                                                   alt="car">Create Trip</a></li>
+                            <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
+                                                                th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                                                alt="help2">About</a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="uk-margin"><a class="uk-button uk-button-danger uk-width-1-1" href="tel:3457008800"> <img
-                        src="../static/assets/img/call.svg" th:src="@{/assets/img/call.svg}" alt="call"
-                        data-uk-svg><span>+345 700 8800</span></a></div>
+
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" > <img
+                        src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}" alt="call" data-uk-svg>
+                    <span th:text="${loggedUser.getUsername()}"></span></a>
+                </div>
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/logout}"> <img
+                        src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
+                    <span>Logout</span></a>
+                </div>
+                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/login}"> <img
+                        src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call" data-uk-svg>
+                    <span>Login</span></a>
+                </div>
             </div>
         </div>
+
         <div class="uk-flex-top" id="callback" data-uk-modal="">
             <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
                 <button class="uk-modal-close-default" type="button" data-uk-close=""></button>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
             </div>
-        </div><!-- End Additional blocks-->
+        </div>
+        <!-- End Additional blocks-->
+
     </footer>
+
 </div>
 <script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
 <script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
