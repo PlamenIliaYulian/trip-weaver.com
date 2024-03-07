@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="utf-8">
+    <title th:text="${title}" >Home page</title>
+    <meta content="Chernyh Mihail" name="author">
+    <meta content="GetRider" name="description">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="format-detection" content="telephone=no">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="../static/assets/css/uikit.min.css" th:href="@{/assets/css/uikit.min.css}">
+    <link rel="stylesheet" href="../static/assets/css/all.min.css" th:href="@{/assets/css/all.min.css}">
+    <link rel="stylesheet" href="../static/assets/css/datepicker.min.css" th:href="@{/assets/css/datepicker.min.css}">
+    <link rel="stylesheet" href="../static/assets/css/main.css" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+</head>
+<body>
+    <header th:fragment="page-header" class="page-header">
+    <div class="page-header__scroll" data-uk-sticky>
+        <div class="uk-container">
+            <div class="page-header__inner">
+                <div class="page-header__logo">
+                    <div class="logo"><a class="logo__link" href="non-usable-index.html"><img class="logo__img"
+                                                                                              src="../static/assets/img/logo.png"
+                                                                                              th:src="@{/assets/img/logo.png}"
+                                                                                              alt="GetRider"></a>
+                    </div>
+                </div>
+                <div class="page-header__menu">
+                    <nav class="page-nav" data-uk-navbar="">
+                        <ul class="uk-navbar-nav">
+                            <li><a href="03_blog-1.html"> <img src="../static/assets/img/person-244.svg"
+                                                               th:src="@{/assets/img/person-244.svg}" data-uk-svg
+                                                               alt="person">Access</a>
+                                <div class="uk-navbar-dropdown">
+                                    <ul th:unless="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                        <li><a href="#" th:href="@{/auth/register}">Register</a></li>
+                                        <li><a href="#" th:href="@{/auth/login}">Login</a></li>
+                                    </ul>
+                                    <ul th:if="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                        <li><a href="#">Profile</a></li>
+                                        <li><a href="#" th:href="@{/auth/logout}">Logout</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a href="02-search-1.html"> <img src="../static/assets/img/search.svg"
+                                                                 th:src="@{/assets/img/search.svg}" data-uk-svg
+                                                                 alt="search">Find Trip</a>
+                                <!--       <div class="uk-navbar-dropdown">
+                                           <ul class="uk-nav uk-navbar-dropdown-nav">
+                                               <li><a href="02-search-1.html">Find a Ride</a></li>
+                                               <li><a href="02-search-2.html">Find a Ride Map</a></li>
+                                               <li><a href="02-search-3.html">Find a Ride Result</a></li>
+                                           </ul>
+                                       </div>-->
+                            </li>
+                            <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
+                                                                   th:src="@{/assets/img/car.svg}" data-uk-svg
+                                                                   alt="car">Create Trip</a></li>
+                            <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
+                                                                th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                                                alt="help2">About</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger">
+                    <img
+                            src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                            alt="call" data-uk-svg>
+                    <span th:text="${loggedUser.getUsername()}"></span></a>
+                </div>
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                              href="#" th:href="@{/auth/logout}">
+                    <img
+                            src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call"
+                            data-uk-svg>
+                    <span>Logout</span></a>
+                </div>
+                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                  href="#" th:href="@{/auth/login}">
+                    <img
+                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                            data-uk-svg>
+                    <span>Login</span></a>
+                </div>
+                <div class="page-header__btn"><a class="uk-button uk-button-danger" href="#offcanvas" data-uk-toggle
+                                                 data-uk-icon="menu"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+    <footer th:fragment="footer" class="page-footer">
+        <div class="uk-container">
+            <div class="page-footer__inner">
+                <div class="page-footer__logo">
+                    <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
+                                                                          src="../static/assets/img/logo-white.png"
+                                                                          th:src="@{/assets/img/logo-white.png}"
+                                                                          alt="Trip-Weaver"></a></div>
+                </div>
+                <div class="page-footer__text">
+                    <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
+                </div>
+                <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
+            </div>
+
+            <!-- Additional blocks-->
+        </div>
+        <div id="offcanvas" data-uk-offcanvas="overlay: true">
+            <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
+                <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
+                <div class="uk-margin">
+                    <div class="uk-margin-bottom">
+                        <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
+                                                                              src="../static/assets/img/logo-white.png"
+                                                                              th:src="@{/assets/img/logo-white.png}"
+                                                                              alt="GetRider"></a></div>
+                    </div>
+                    <div class="uk-margin">
+                        <ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
+                            <li class="uk-parent"><a href="#"> <img src="../static/assets/img/search.svg"
+                                                                    th:src="@{/assets/img/search.svg}" data-uk-svg
+                                                                    alt="search">Find a Ride</a>
+                            </li>
+                            <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
+                                                                   th:src="@{/assets/img/car.svg}" data-uk-svg
+                                                                   alt="car">Create Trip</a></li>
+                            <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
+                                                                th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                                                alt="help2">About</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"> <img
+                        src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                        alt="call" data-uk-svg>
+                    <span th:text="${loggedUser.getUsername()}"></span></a>
+                </div>
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                              href="#" th:href="@{/auth/logout}"> <img
+                        src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
+                    <span>Logout</span></a>
+                </div>
+                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                  href="#" th:href="@{/auth/login}">
+                    <img
+                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                            data-uk-svg>
+                    <span>Login</span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="uk-flex-top" id="callback" data-uk-modal="">
+            <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+                <button class="uk-modal-close-default" type="button" data-uk-close=""></button>
+                <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
+            </div>
+        </div>
+        <!-- End Additional blocks-->
+
+    </footer>
+</body>
+</html>

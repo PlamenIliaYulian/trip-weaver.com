@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Register')}"></head>
+<body class="page-contacts">
+
+<!-- Loader-->
+<div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
+<!-- Loader end-->
+
+
+<div class="page-wrapper">
+    <!--<header class="page-header">
+        <div class="page-header__scroll" data-uk-sticky>
+            <div class="uk-container">
+                <div class="page-header__inner">
+                    <div class="page-header__logo">
+                        <div class="logo"><a class="logo__link" href="non-usable-index.html"><img class="logo__img"
+                                                                                                  src="../static/assets/img/logo.png"
+                                                                                                  th:src="@{/assets/img/logo.png}"
+                                                                                                  alt="GetRider"></a>
+                        </div>
+                    </div>
+                    <div class="page-header__menu">
+                        <nav class="page-nav" data-uk-navbar="">
+                            <ul class="uk-navbar-nav">
+                                <li><a href="03_blog-1.html"> <img src="../static/assets/img/person-244.svg"
+                                                                   th:src="@{/assets/img/person-244.svg}" data-uk-svg
+                                                                   alt="person">Access</a>
+                                    <div class="uk-navbar-dropdown">
+                                        <ul th:unless="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                            <li><a href="#" th:href="@{/auth/register}">Register</a></li>
+                                            <li><a href="#" th:href="@{/auth/login}">Login</a></li>
+                                        </ul>
+                                        <ul th:if="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                            <li><a href="#">Profile</a></li>
+                                            <li><a href="#" th:href="@{/auth/logout}">Logout</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><a href="02-search-1.html"> <img src="../static/assets/img/search.svg"
+                                                                     th:src="@{/assets/img/search.svg}" data-uk-svg
+                                                                     alt="search">Find Trip</a>
+                                    &lt;!&ndash;       <div class="uk-navbar-dropdown">
+                                               <ul class="uk-nav uk-navbar-dropdown-nav">
+                                                   <li><a href="02-search-1.html">Find a Ride</a></li>
+                                                   <li><a href="02-search-2.html">Find a Ride Map</a></li>
+                                                   <li><a href="02-search-3.html">Find a Ride Result</a></li>
+                                               </ul>
+                                           </div>&ndash;&gt;
+                                </li>
+                                <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
+                                                                       th:src="@{/assets/img/car.svg}" data-uk-svg
+                                                                       alt="car">Create Trip</a></li>
+                                <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
+                                                                    th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                                                    alt="help2">About</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger">
+                        <img
+                                src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                                alt="call" data-uk-svg>
+                        <span th:text="${loggedUser.getUsername()}"></span></a>
+                    </div>
+                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                  href="#" th:href="@{/auth/logout}">
+                        <img
+                                src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call"
+                                data-uk-svg>
+                        <span>Logout</span></a>
+                    </div>
+                    <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                      href="#" th:href="@{/auth/login}">
+                        <img
+                                src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                                data-uk-svg>
+                        <span>Login</span></a>
+                    </div>
+                    <div class="page-header__btn"><a class="uk-button uk-button-danger" href="#offcanvas" data-uk-toggle
+                                                     data-uk-icon="menu"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>-->
+    <header th:replace="~{Fragments.html :: page-header}"></header>
+    <main class="page-main">
+        <div class="section-banner">
+            <div class="section-banner__bg">
+                <div class="uk-cover-container"><img src="../static/assets/img/img-banner-contacts.jpg"
+                                                     th:src="@{/assets/img/img-banner-contacts.jpg}" alt="img-banner"
+                                                     data-uk-cover>
+                    <canvas></canvas>
+                </div>
+            </div>
+            <div class="section-banner__content">
+                <div class="uk-overlay uk-position-center-left uk-width-1-1">
+                    <div class="uk-container uk-width-1-1">
+                        <div class="section-banner__title">
+                            <h1>Start using our platform</h1>
+                        </div>
+                        <div class="section-banner__text decor-bottom">Welcome to our community! We're thrilled to have
+                            you on board. Let's embark on this journey together!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contacts-info">
+            <!--        <div class="uk-section uk-container">-->
+            <!--          <div class="uk-grid uk-grid-collapse" data-uk-grid>-->
+            <!--            <div class="uk-width-3-5@m">-->
+            <!--              <div class="contacts-info-img"><img src="../static/assets/img/img-contacts.jpg" alt="img-contacts"></div>-->
+            <!--            </div>-->
+            <!--            <div class="uk-width-2-5@m">-->
+            <!--              <div class="contacts-info-box">-->
+            <!--                <h3 class="contacts-info-box__title">Have a question or<br> Need more information?</h3>-->
+            <!--                <p class="contacts-info-box__text">Give us a call and our experienced and<br> friendly staff would be happy to assist you.</p>-->
+            <!--                <ul class="contacts-info-box__list">-->
+            <!--                  <li><a href="tel:17002310025"><img src="../static/assets/img/ico-phone.png" alt="icon"><span>1-700-231-0025</span></a></li>-->
+            <!--                  <li><a href="mailto:support@getride.com"><img src="../static/assets/img/ico-email.png" alt="icon"><span>support@getride.com</span></a></li>-->
+            <!--                </ul>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--          </div>-->
+            <!--          <div class="uk-grid uk-child-width-1-3@m uk-margin-large-top" data-uk-grid>-->
+            <!--            <div>-->
+            <!--              <div class="contacts-info-item">-->
+            <!--                <div class="contacts-info-item__title">Corporate Office</div>-->
+            <!--                <div class="contacts-info-item__content">-->
+            <!--                  <p>68 Kings Street, Town Hall<br> North Avenue, California<br> 33089 USA</p>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            <div>-->
+            <!--              <div class="contacts-info-item">-->
+            <!--                <div class="contacts-info-item__title">Get In Touch</div>-->
+            <!--                <div class="contacts-info-item__content">-->
+            <!--                  <ul class="uk-list uk-list-collapse">-->
+            <!--                    <li><a class="phone-numb" href="tel:17002310025">1-700-231-0025 </a></li>-->
+            <!--                    <li><a href="mailto:support@getride.com">support@getride.com</a></li>-->
+            <!--                    <li><a href="mailto:info@domain.com ">info@domain.com </a></li>-->
+            <!--                  </ul>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            <div>-->
+            <!--              <div class="contacts-info-item">-->
+            <!--                <div class="contacts-info-item__title">Customer Support</div>-->
+            <!--                <div class="contacts-info-item__content">-->
+            <!--                  <ul class="uk-list uk-list-collapse">-->
+            <!--                    <li><b>Mon to Sat:</b> 09:00am - 08:00pm</li>-->
+            <!--                    <li><b>Sunday:</b> 10:00am - 06:00pm</li>-->
+            <!--                  </ul>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--          </div>-->
+            <!--        </div>-->
+        </div>
+        <div class="contacts-info-map-and-form">
+            <div class="uk-grid uk-child-width-1-2@m uk-grid-collapse" data-uk-grid>
+                <div>
+                    <div class="contacts-info-form">
+                        <div class="contacts-info-form__title">Register</div>
+                        <div class="contacts-info-form__text">Fill in your details below:</div>
+                        <form action="#" th:object="${register}" method="post" th:action="@{/auth/register}" >
+                            <!-- Hidden Required Fields -->
+                            <!--<input type="hidden" name="project_name" value="getrider">
+                            <input type="hidden" name="admin_email" value="admin_email@gmail.com">
+                            <input type="hidden" name="form_subject" value="Contacts page">-->
+                            <!-- END Hidden Required Fields -->
+                            <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
+
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="Username"
+                                            placeholder="Username"
+                                            th:field="*{username}"
+                                            pattern="^.{2,20}$"
+                                            title="Username must be between 2 and 20 symbols.">
+                                </div>
+                                <div><input class="uk-input" type="text" name="Password" placeholder="Password"
+                                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
+                                            title="Password must be between 8 and 25 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character."
+                                            th:field="*{password}">
+                                </div>
+                                <div>
+                                    <input class="uk-input"
+                                           type="text"
+                                           name="Confirm password"
+                                           placeholder="Confirm password"
+                                           th:field="*{confirmPassword}">
+                                </div>
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="First_Name"
+                                            placeholder="First Name"
+                                            th:field="*{firstName}"
+                                            pattern="^.{2,20}$"
+                                            title="First name must be between 2 and 20 symbols.">
+                                </div>
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="Last_Name"
+                                            placeholder="Last Name"
+                                            th:field="*{lastName}"
+                                            pattern="^.{2,20}$"
+                                            title="Last name must be between 2 and 20 symbols."></div>
+                                <div>
+                                    <input class="uk-input"
+                                           type="text"
+                                           name="Your_Email"
+                                           placeholder="Your Email"
+                                           th:field="*{email}"
+                                           pattern="^(?!.*[?:{}])[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+                                           title="Email must be a valid email. It cannot contain '?', ':', '!', '}', '{'.">
+                                </div>
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="Phone_No"
+                                            placeholder="Phone No."
+                                            th:field="*{phoneNumber}"
+                                            pattern="^08\\d{8}$"
+                                            title="Phone number must be 10 digits starting with '08'."></div>
+                                <div ><label class="error uk-input" th:errors="*{confirmPassword}"> User error placeholder. </label></div>
+                                <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
+                                            value="Send"></div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="uk-flex-first@m">
+                    <div class="contacts-info-map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60528.56969257363!2d23.321867055435926!3d42.69770860399648!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa857dc1e8fbc5%3A0x303b05a62e4af4aa!2sSofia%2C%20Bulgaria!5e0!3m2!1sen!2sbg"
+                                loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!--<footer class="page-footer">
+        <div class="uk-container">
+            <div class="page-footer__inner">
+                <div class="page-footer__logo">
+                    <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
+                                                                          src="../static/assets/img/logo-white.png"
+                                                                          th:src="@{/assets/img/logo-white.png}"
+                                                                          alt="GetRider"></a></div>
+                </div>
+                <div class="page-footer__text">
+                    <p>Eorem ipsum dolor sit amet consectetur adipisicing elit edolore magna<br> aliqua ut enim ad minim
+                        veniam quis aliquip consequat</p>
+                </div>
+                <div class="page-footer__social">
+                    <ul class="social">
+                        <li><a href="#!"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#!"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#!"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="#!"><i class="fab fa-youtube"></i></a></li>
+                        <li><a href="#!"><i class="fas fa-rss"></i></a></li>
+                    </ul>
+                </div>
+                <div class="page-footer__copy"><span>(c) 2021 All rights reserved.</span></div>
+            </div>
+        </div>&lt;!&ndash; Additional blocks&ndash;&gt;
+        <div id="offcanvas" data-uk-offcanvas="overlay: true">
+            <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
+                <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
+                <div class="uk-margin">
+                    <div class="uk-margin-bottom">
+                        <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
+                                                                              src="../static/assets/img/logo-white.png"
+                                                                              th:src="@{/assets/img/logo-white.png}"
+                                                                              alt="GetRider"></a></div>
+                    </div>
+                    <div class="uk-margin">
+                        <ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
+                            <li class="uk-parent"><a href="#"> <img src="../static/assets/img/search.svg"
+                                                                    th:src="@{/assets/img/search.svg}" data-uk-svg
+                                                                    alt="search">Find a Ride</a>
+                                <ul class="uk-nav-sub">
+                                    <li><a href="02-search-1.html">Find a Ride</a></li>
+                                    <li><a href="02-search-2.html">Find a Ride Map</a></li>
+                                    <li><a href="02-search-3.html">Find a Ride Result</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
+                                                                   th:src="@{/assets/img/car.svg}" data-uk-svg
+                                                                   alt="car">Offer a Ride</a></li>
+                            <li><a href="#"> <img src="../static/assets/img/news-paper.svg" data-uk-svg
+                                                  alt="news-paper">News</a></li>
+                            <li class="uk-parent"><a href="#!"> <img src="../static/assets/img/help2.svg"
+                                                                     th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                                                     alt="help2">Help </a>
+                                <ul class="uk-nav-sub">
+                                    <li><a href="03_blog-1.html">Blog list</a></li>
+                                    <li><a href="04_blog-2.html">Blog grid</a></li>
+                                    <li><a href="05_blog-post.html">Blog post</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="uk-margin"><a class="uk-button uk-button-danger uk-width-1-1" href="tel:3457008800"> <img
+                        src="../static/assets/img/call.svg" th:src="@{/assets/img/call.svg}" alt="call"
+                        data-uk-svg><span>+345 700 8800</span></a></div>
+            </div>
+        </div>
+        <div class="uk-flex-top" id="callback" data-uk-modal="">
+            <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+                <button class="uk-modal-close-default" type="button" data-uk-close=""></button>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>&lt;!&ndash; End Additional blocks&ndash;&gt;
+    </footer>-->
+    <footer class="page-footer">
+        <div class="uk-container">
+            <div class="page-footer__inner">
+                <div class="page-footer__logo">
+                    <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
+                                                                          src="../static/assets/img/logo-white.png"
+                                                                          th:src="@{/assets/img/logo-white.png}"
+                                                                          alt="Trip-Weaver"></a></div>
+                </div>
+                <div class="page-footer__text">
+                    <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
+                </div>
+                <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
+            </div>
+
+            <!-- Additional blocks-->
+        </div>
+        <div id="offcanvas" data-uk-offcanvas="overlay: true">
+            <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
+                <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
+                <div class="uk-margin">
+                    <div class="uk-margin-bottom">
+                        <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
+                                                                              src="../static/assets/img/logo-white.png"
+                                                                              th:src="@{/assets/img/logo-white.png}"
+                                                                              alt="GetRider"></a></div>
+                    </div>
+                    <div class="uk-margin">
+                        <ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
+                            <li class="uk-parent"><a href="#"> <img src="../static/assets/img/search.svg"
+                                                                    th:src="@{/assets/img/search.svg}" data-uk-svg
+                                                                    alt="search">Find a Ride</a>
+                            </li>
+                            <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
+                                                                   th:src="@{/assets/img/car.svg}" data-uk-svg
+                                                                   alt="car">Create Trip</a></li>
+                            <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
+                                                                th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                                                alt="help2">About</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"> <img
+                        src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                        alt="call" data-uk-svg>
+                    <span th:text="${loggedUser.getUsername()}"></span></a>
+                </div>
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                              href="#" th:href="@{/auth/logout}"> <img
+                        src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
+                    <span>Logout</span></a>
+                </div>
+                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                  href="#" th:href="@{/auth/login}">
+                    <img
+                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                            data-uk-svg>
+                    <span>Login</span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="uk-flex-top" id="callback" data-uk-modal="">
+            <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+                <button class="uk-modal-close-default" type="button" data-uk-close=""></button>
+                <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
+            </div>
+        </div>
+        <!-- End Additional blocks-->
+
+    </footer>
+</div>
+<script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
+<script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
+<script src="../static/assets/js/uikit-icons.min.js" th:src="@{/assets/js/uikit-icons.min.js}"></script>
+<script src="../static/assets/js/datepicker.min.js" th:src="@{/assets/js/datepicker.min.js}"></script>
+<script src="../static/assets/js/i18n/datepicker.en.js" th:src="@{/assets/js/datepicker.en.js}"></script>
+<script src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
+</body>
+
+</html>

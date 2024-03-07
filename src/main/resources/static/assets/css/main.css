@@ -786,7 +786,8 @@ textarea {
     left: 0;
     width: 100%;
     height: 12px;
-    background-image: url(../img/decor.jpg);
+    background-color: white;
+    /*background-image: url(../img/decor.jpg);*/
     content: '';
 }
 
@@ -1379,7 +1380,8 @@ textarea {
     left: 0;
     width: 100%;
     height: 12px;
-    background-image: url(../img/decor-grey.jpg);
+    background-color: white;
+    /*background-image: url(../img/decor-grey.jpg);*/
     content: '';
 }
 
@@ -1680,7 +1682,6 @@ textarea {
     position: relative;
     text-align: center;
 }
-
 
 
 .step-item__icon {
@@ -3032,8 +3033,7 @@ textarea {
     background-color: #ff9b22;
     color: #ffffff;
     text-decoration: none;
-    border-color: #ff9b22;
-    ;
+    border-color: #ff9b22;;
 }
 
 .widjet-download {
@@ -5231,3 +5231,12 @@ body.page-search--result .page-header__phone .uk-button {
         display: none;
     }
 }
+
+
+/*Custom CSS START:*/
+.error {
+    color: orangered;
+    font-weight: bold;
+}
+
+/*Custom CSS END*/

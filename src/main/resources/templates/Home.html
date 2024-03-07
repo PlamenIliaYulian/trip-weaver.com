@@ -49,7 +49,7 @@
                                             <li><a href="#" th:href="@{/auth/login}">Login</a></li>
                                         </ul>
                                         <ul th:if="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
-                                            <li><a href="#" >Profile</a></li>
+                                            <li><a href="#">Profile</a></li>
                                             <li><a href="#" th:href="@{/auth/logout}">Logout</a></li>
                                         </ul>
                                     </div>
@@ -57,13 +57,13 @@
                                 <li><a href="02-search-1.html"> <img src="../static/assets/img/search.svg"
                                                                      th:src="@{/assets/img/search.svg}" data-uk-svg
                                                                      alt="search">Find Trip</a>
-                             <!--       <div class="uk-navbar-dropdown">
-                                        <ul class="uk-nav uk-navbar-dropdown-nav">
-                                            <li><a href="02-search-1.html">Find a Ride</a></li>
-                                            <li><a href="02-search-2.html">Find a Ride Map</a></li>
-                                            <li><a href="02-search-3.html">Find a Ride Result</a></li>
-                                        </ul>
-                                    </div>-->
+                                    <!--       <div class="uk-navbar-dropdown">
+                                               <ul class="uk-nav uk-navbar-dropdown-nav">
+                                                   <li><a href="02-search-1.html">Find a Ride</a></li>
+                                                   <li><a href="02-search-2.html">Find a Ride Map</a></li>
+                                                   <li><a href="02-search-3.html">Find a Ride Result</a></li>
+                                               </ul>
+                                           </div>-->
                                 </li>
                                 <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
                                                                        th:src="@{/assets/img/car.svg}" data-uk-svg
@@ -74,16 +74,24 @@
                             </ul>
                         </nav>
                     </div>
-                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" > <img
-                            src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}" alt="call" data-uk-svg>
+                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger">
+                        <img
+                                src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                                alt="call" data-uk-svg>
                         <span th:text="${loggedUser.getUsername()}"></span></a>
                     </div>
-                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/logout}"> <img
-                            src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
+                    <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                  href="#" th:href="@{/auth/logout}">
+                        <img
+                                src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call"
+                                data-uk-svg>
                         <span>Logout</span></a>
                     </div>
-                    <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/login}"> <img
-                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call" data-uk-svg>
+                    <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                      href="#" th:href="@{/auth/login}">
+                        <img
+                                src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                                data-uk-svg>
                         <span>Login</span></a>
                     </div>
                     <div class="page-header__btn"><a class="uk-button uk-button-danger" href="#offcanvas" data-uk-toggle
@@ -309,8 +317,10 @@
 
         <!--About-->
         <div class="section-about">
-            <div class="section-about__img"><img src="../static/assets/img/img-car.png"
-                                                 th:src="@{/assets/img/img-car.png}" alt=""></div>
+            <div class="section-about__img"><img
+                    src="https://images.unsplash.com/photo-1624880056139-d1212d7ff347?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+
+                    alt=""></div>
             <div class="uk-section uk-container">
                 <div class="uk-grid uk-child-width-1-2@m" data-uk-grid>
                     <div>
@@ -697,16 +707,21 @@
                     </div>
                 </div>
 
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" > <img
-                        src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}" alt="call" data-uk-svg>
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"> <img
+                        src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                        alt="call" data-uk-svg>
                     <span th:text="${loggedUser.getUsername()}"></span></a>
                 </div>
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/logout}"> <img
+                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                              href="#" th:href="@{/auth/logout}"> <img
                         src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
                     <span>Logout</span></a>
                 </div>
-                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger" href="#" th:href="@{/auth/login}"> <img
-                        src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call" data-uk-svg>
+                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                                  href="#" th:href="@{/auth/login}">
+                    <img
+                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                            data-uk-svg>
                     <span>Login</span></a>
                 </div>
             </div>
