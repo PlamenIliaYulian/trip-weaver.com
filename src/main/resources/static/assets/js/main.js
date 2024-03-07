@@ -10,7 +10,7 @@ jQuery(document).ready(function ($) {
     $spinner.fadeOut();
     $preloader.delay(50).fadeOut('slow');
 
-  $("form").submit(function () {
+  /*$("form").submit(function () {
     //Change
     var th = $(this);
     $.ajax({
@@ -31,5 +31,5 @@ jQuery(document).ready(function ($) {
       }, 1000);
     });
     return false;
-  });
+  });*/
 });
