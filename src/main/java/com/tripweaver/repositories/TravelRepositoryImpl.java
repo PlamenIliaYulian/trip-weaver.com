@@ -97,7 +97,6 @@ public class TravelRepositoryImpl implements TravelRepository {
             });
             travelFilterOptions.getCommentContains().ifPresent(value -> {
                 if (value.length() != 0) {
-                    System.out.println(value.length());
                     filters.add(" travel.comment like :commentContains ");
                     parameters.put("commentContains", String.format("%%%s%%", value));
                 }
