@@ -106,10 +106,10 @@
             </div>
             <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
         </div>
+    </div >
 
-        <!-- Additional blocks-->
-    </div>
-    <div id="offcanvas" data-uk-offcanvas="overlay: true">
+    <!-- Additional blocks-->
+    <div th:fragment="additional-blocks" id="offcanvas" data-uk-offcanvas="overlay: true">
         <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
             <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
             <div class="uk-margin">
@@ -133,25 +133,24 @@
                                                             alt="help2">About</a>
                         </li>
                     </ul>
+                    <div th:if="${isAuthenticated}" ><a class="uk-button uk-button-danger"> <img
+                            src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                            alt="call" data-uk-svg>
+                        <span th:text="${loggedUser.getUsername()}"></span></a>
+                    </div>
+                    <div th:if="${isAuthenticated}"><a class="uk-button uk-button-danger"
+                                                      href="#" th:href="@{/auth/logout}"> <img
+                            src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
+                        <span>Logout</span></a>
+                    </div>
+                    <div th:unless="${isAuthenticated}" ><a class="uk-button uk-button-danger"
+                                                           href="#" th:href="@{/auth/login}">
+                        <img
+                                src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                                data-uk-svg>
+                        <span>Login</span></a>
+                    </div>
                 </div>
-            </div>
-
-            <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"> <img
-                    src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
-                    alt="call" data-uk-svg>
-                <span th:text="${loggedUser.getUsername()}"></span></a>
-            </div>
-            <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                          href="#" th:href="@{/auth/logout}"> <img
-                    src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
-                <span>Logout</span></a>
-            </div>
-            <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                              href="#" th:href="@{/auth/login}">
-                <img
-                        src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
-                        data-uk-svg>
-                <span>Login</span></a>
             </div>
         </div>
     </div>

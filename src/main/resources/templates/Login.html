@@ -54,16 +54,14 @@
                                             name="Username"
                                             placeholder="Username"
                                             th:field="*{username}"></div>
-                                <div></div>
+                                <div><label class="error uk-input" th:errors="*{username}"> User error placeholder. </label></div>
                                 <div><input class="uk-input" type="password" name="Password" placeholder="Password"
                                             th:field="*{password}">
                                 </div>
-                                <div></div>
+                                <div><label class="error uk-input" th:errors="*{password}"> User error placeholder. </label></div>
                                 </br></br>
                                 <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
                                     value="Login" th:value="Login"></div>
-                                <div><label class="error uk-input" th:errors="*{username}"> User error placeholder. </label></div>
-                                <div><label class="error uk-input" th:errors="*{password}"> User error placeholder. </label></div>
                             </div>
                         </form>
                     </div>
@@ -78,6 +76,10 @@
             </div>
         </div>
     </main>
+
+    <!-- Additional blocks-->
+    <div th:replace="~{Fragments.html :: additional-blocks}"></div>
+    <!--Footer-->
     <footer th:replace="~{Fragments.html :: footer}"></footer>
 </div>
 <div th:replace="~{Fragments.html::script}"></div>
