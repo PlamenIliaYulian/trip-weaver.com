@@ -5239,6 +5239,7 @@ body.page-search--result .page-header__phone .uk-button {
 .error {
     color: orangered;
     font-weight: bold;
+    padding-left: 10px;
 }
 
 #login-page-background{

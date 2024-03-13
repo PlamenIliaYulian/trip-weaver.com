@@ -1,25 +1,31 @@
 package com.tripweaver.models.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.*;
+import org.springframework.data.jpa.repository.Temporal;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 public class TravelDto {
 
-    @NotNull(message = "Starting point city cannot be empty.")
+    @NotEmpty(message = "Starting point city cannot be empty.")
     private String startingPointCity;
-    @NotNull(message = "Starting point address cannot be empty.")
+    @NotEmpty(message = "Starting point address cannot be empty.")
     private String startingPointAddress;
-    @NotNull(message = "Ending point city cannot be empty.")
+    @NotEmpty(message = "Ending point city cannot be empty.")
     private String endingPointCity;
 
+    @NotEmpty(message = "Ending point address cannot be empty.")
     private String endingPointAddress;
-    @NotNull(message = "Departure time cannot be empty.")
+
+    @NotNull(message = "Please, select a departure date.")
+    @Future (message =  "Must be a future date.")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDateTime departureTime;
 
-    @NotNull(message = "Free seats cannot be empty.")
+    @Min(value = 1, message = "Free seats cannot be empty.")
+    @Max(value = 50, message = "Free seats cannot be empty.")
     /*@Size(min = 1, max = 50, message = "Free seats must be between 1 and 50")*/
     private int freeSeats;
 
