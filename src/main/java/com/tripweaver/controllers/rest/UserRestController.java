@@ -320,15 +320,15 @@ public class UserRestController {
     }
 
     /*Plamen*/
-    @GetMapping("/top-10-travel-organizers")
-    public List<User> getTopTenTravelOrganizersByRating() {
-        return userService.getTopTenTravelOrganizersByRating();
+    @GetMapping("/top-12-travel-organizers")
+    public List<User> getTopTwelveTravelOrganizersByRating() {
+        return userService.getTopTwelveTravelOrganizersByRating();
     }
 
     /*Yuli*/
-    @GetMapping("/top-10-passengers")
-    public List<User> getTopTenTravelPassengersByRating() {
-        return userService.getTopTenTravelPassengersByRating();
+    @GetMapping("/top-12-passengers")
+    public List<User> getTopTwelveTravelPassengersByRating() {
+        return userService.getTopTwelveTravelPassengersByRating();
     }
 
     /*Ilia*/

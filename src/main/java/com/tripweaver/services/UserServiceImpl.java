@@ -2,7 +2,6 @@ package com.tripweaver.services;
 
 import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.*;
 import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
@@ -107,14 +106,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getTopTenTravelOrganizersByRating() {
-        return userRepository.getTopTenTravelOrganizersByRating();
+    public List<User> getTopTwelveTravelOrganizersByRating() {
+        return userRepository.getTopTwelveTravelOrganizersByRating();
     }
 
     /*Ilia*/
     @Override
-    public List<User> getTopTenTravelPassengersByRating() {
-        return userRepository.getTopTenTravelPassengersByRating();
+    public List<User> getTopTwelveTravelPassengersByRating() {
+        return userRepository.getTopTwelveTravelPassengersByRating();
     }
 
     @Override

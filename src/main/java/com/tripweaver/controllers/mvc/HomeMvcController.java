@@ -4,7 +4,6 @@ import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
-import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.TravelService;
@@ -17,10 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.sql.Driver;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -86,8 +82,8 @@ public class HomeMvcController {
     public String showHomePage(Model model) {
         model.addAttribute("totalUsersCount", userService.getAllUsersCount());
         model.addAttribute("totalTravelsCount", travelService.getAllTravelsCount());
-        model.addAttribute("topTenTravelOrganizers", userService.getTopTenTravelOrganizersByRating());
-        model.addAttribute("topTenPassengers", userService.getTopTenTravelPassengersByRating());
+        model.addAttribute("topTenTravelOrganizers", userService.getTopTwelveTravelOrganizersByRating());
+        model.addAttribute("topTenPassengers", userService.getTopTwelveTravelPassengersByRating());
         model.addAttribute("fiveStarRatingFeedbackCount", feedbackService.getAllFiveStarReviewsCount());
 
         HashMap<String, Integer> totalTravelsAsDriverHashMap = new HashMap<>();
@@ -95,7 +91,7 @@ public class HomeMvcController {
         TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
                 null, null, null, null, null, null,
                 null);
-        for (User driver : userService.getTopTenTravelOrganizersByRating()) {
+        for (User driver : userService.getTopTwelveTravelOrganizersByRating()) {
             int totalDistance = travelService.getTravelsByDriver(driver, driver, travelFilterOptions)
                     .stream()
                     .map(Travel::getDistanceInKm)
@@ -110,7 +106,7 @@ public class HomeMvcController {
 
         HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
         HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
-        for (User passenger : userService.getTopTenTravelPassengersByRating()) {
+        for (User passenger : userService.getTopTwelveTravelPassengersByRating()) {
             int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions)
                     .stream()
                     .map(Travel::getDistanceInKm)

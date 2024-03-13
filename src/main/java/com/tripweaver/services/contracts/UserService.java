@@ -36,10 +36,10 @@ public interface UserService {
     long getAllUsersCount();
 
     /*Yuli - DONE*/
-    List<User> getTopTenTravelOrganizersByRating();
+    List<User> getTopTwelveTravelOrganizersByRating();
 
     /*Ilia*/
-    List<User> getTopTenTravelPassengersByRating();
+    List<User> getTopTwelveTravelPassengersByRating();
 
     /*Plamen*/
     User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser);

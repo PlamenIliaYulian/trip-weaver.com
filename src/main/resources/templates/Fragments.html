@@ -56,7 +56,7 @@
                                            </ul>
                                        </div>-->
                             </li>
-                            <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
+                            <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
                                                                    th:src="@{/assets/img/car.svg}" data-uk-svg
                                                                    alt="car">Create Trip</a></li>
                             <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
@@ -125,7 +125,7 @@
                                                                     th:src="@{/assets/img/search.svg}" data-uk-svg
                                                                     alt="search">Find a Ride</a>
                             </li>
-                            <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
+                            <li><a  th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
                                                                    th:src="@{/assets/img/car.svg}" data-uk-svg
                                                                    alt="car">Create Trip</a></li>
                             <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
@@ -165,5 +165,14 @@
         <!-- End Additional blocks-->
 
     </footer>
+    <div th:fragment="script">
+        <script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
+        <script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
+        <script src="../static/assets/js/uikit-icons.min.js" th:src="@{/assets/js/uikit-icons.min.js}"></script>
+        <script src="../static/assets/js/datepicker.min.js" th:src="@{/assets/js/datepicker.min.js}"></script>
+        <script src="../static/assets/js/i18n/datepicker.en.js" th:src="@{/assets/js/datepicker.en.js}"></script>
+        <script src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
+        <script src="../static/assets/js/main.js" th:src="@{/assets/js/create.travel.custom.js}"></script>
+    </div>
 </body>
 </html>

@@ -26,8 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Set;
 
-import java.util.HashSet;
-
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
 
@@ -94,10 +92,10 @@ public class UserServiceTests {
     /*Ilia*/
     @Test
     public void getTopTenTravelPassengersByRating_Should_CallRepository() {
-        userService.getTopTenTravelPassengersByRating();
+        userService.getTopTwelveTravelPassengersByRating();
 
         Mockito.verify(userRepository, Mockito.times(1))
-                .getTopTenTravelPassengersByRating();
+                .getTopTwelveTravelPassengersByRating();
     }
 
     /*Ilia*/

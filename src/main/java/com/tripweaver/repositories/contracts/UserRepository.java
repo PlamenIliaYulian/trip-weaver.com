@@ -15,6 +15,6 @@ public interface UserRepository {
     User getUserById(int id);
     User getUserByPhoneNumber(String phoneNumber);
     long getAllUsersCount();
-    List<User> getTopTenTravelOrganizersByRating();
-    List<User> getTopTenTravelPassengersByRating();
+    List<User> getTopTwelveTravelOrganizersByRating();
+    List<User> getTopTwelveTravelPassengersByRating();
 }

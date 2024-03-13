@@ -107,14 +107,14 @@
                                             pattern="^.{2,20}$"
                                             title="Username must be between 2 and 20 symbols.">
                                 </div>
-                                <div><input class="uk-input" type="text" name="Password" placeholder="Password"
+                                <div><input class="uk-input" type="password" name="Password" placeholder="Password"
                                             pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
                                             title="Password must be between 8 and 25 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character."
                                             th:field="*{password}">
                                 </div>
                                 <div>
                                     <input class="uk-input"
-                                           type="text"
+                                           type="password"
                                            name="Confirm password"
                                            placeholder="Confirm password"
                                            th:field="*{confirmPassword}">
@@ -159,9 +159,10 @@
                     </div>
                 </div>
                 <div class="uk-flex-first@m">
-                    <div class="contacts-info-map">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60528.56969257363!2d23.321867055435926!3d42.69770860399648!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa857dc1e8fbc5%3A0x303b05a62e4af4aa!2sSofia%2C%20Bulgaria!5e0!3m2!1sen!2sbg"
-                                loading="lazy"></iframe>
+                    <div class="contacts-info-map" id="register-page-background">
+                        <img src="https://images.unsplash.com/photo-1505744386214-51dba16a26fc?q=80&w=2012&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Register logo">
+                        <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60528.56969257363!2d23.321867055435926!3d42.69770860399648!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa857dc1e8fbc5%3A0x303b05a62e4af4aa!2sSofia%2C%20Bulgaria!5e0!3m2!1sen!2sbg"
+                                loading="lazy"></iframe>-->
                     </div>
                 </div>
             </div>
@@ -169,12 +170,7 @@
     </main>
     <footer th:replace="~{Fragments.html :: footer}"></footer>
 </div>
-<script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
-<script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
-<script src="../static/assets/js/uikit-icons.min.js" th:src="@{/assets/js/uikit-icons.min.js}"></script>
-<script src="../static/assets/js/datepicker.min.js" th:src="@{/assets/js/datepicker.min.js}"></script>
-<script src="../static/assets/js/i18n/datepicker.en.js" th:src="@{/assets/js/datepicker.en.js}"></script>
-<script src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
+<div th:replace="~{Fragments.html::script}"></div>
 </body>
 
 </html>

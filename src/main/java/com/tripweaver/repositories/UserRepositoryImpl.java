@@ -164,20 +164,20 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> getTopTenTravelOrganizersByRating() {
+    public List<User> getTopTwelveTravelOrganizersByRating() {
         try (Session session = sessionFactory.openSession()) {
             Query<User> query = session.createQuery(
                     "FROM User WHERE isDeleted = false " +
-                            "ORDER BY averageDriverRating DESC LIMIT 10", User.class);
+                            "ORDER BY averageDriverRating DESC LIMIT 12", User.class);
             return query.list();
         }
     }
 
     @Override
-    public List<User> getTopTenTravelPassengersByRating() {
+    public List<User> getTopTwelveTravelPassengersByRating() {
         try (Session session = sessionFactory.openSession()) {
             Query<User> query = session.createQuery("FROM User WHERE isDeleted = false " +
-                    "ORDER BY averagePassengerRating DESC LIMIT 10", User.class);
+                    "ORDER BY averagePassengerRating DESC LIMIT 12", User.class);
             return query.list();
         }
     }

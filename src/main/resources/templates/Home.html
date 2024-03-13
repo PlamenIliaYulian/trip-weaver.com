@@ -1,22 +1,7 @@
 <!DOCTYPE html>
 <html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8">
-    <title>Home page</title>
-    <meta content="Chernyh Mihail" name="author">
-    <meta content="GetRider" name="description">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="HandheldFriendly" content="true">
-    <meta name="format-detection" content="telephone=no">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <link rel="stylesheet" href="../static/assets/css/uikit.min.css" th:href="@{/assets/css/uikit.min.css}">
-    <link rel="stylesheet" href="../static/assets/css/all.min.css" th:href="@{/assets/css/all.min.css}">
-    <link rel="stylesheet" href="../static/assets/css/datepicker.min.css" th:href="@{/assets/css/datepicker.min.css}">
-    <link rel="stylesheet" href="../static/assets/css/main.css" th:href="@{/assets/css/main.css}">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
-</head>
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Home')}"></head>
 
 <body class="page-home">
 
@@ -48,29 +33,7 @@
                 </div>
             </div>
         </div>
-        <!--<div class="section-popular-places">
-          <div class="uk-container">
-            <div class="popular-places">
-              <div class="popular-places__head">
-                <div class="popular-places__title">Where do you want a ride today?</div>
-                <div class="popular-places__more"> <a href="02-search-3.html">More Popular Places </a></div>
-              </div>
-              <div class="popular-places__body">
-                <div class="uk-grid uk-child-width-1-3@m" data-uk-grid>
-                  <div>
-                    <div class="popular-places-item"><a class="popular-places-item__link" href="02-search-1.html"><span class="popular-places-item__title">London <small>to</small> Manchester</span><span class="popular-places-item__price">$5</span><span data-uk-icon="chevron-right"></span></a></div>
-                  </div>
-                  <div>
-                    <div class="popular-places-item"><a class="popular-places-item__link" href="02-search-2.html"><span class="popular-places-item__title">Belarus <small>to</small> Russia</span><span class="popular-places-item__price">$10</span><span data-uk-icon="chevron-right"></span></a></div>
-                  </div>
-                  <div>
-                    <div class="popular-places-item"><a class="popular-places-item__link" href="02-search-3.html"><span class="popular-places-item__title">Florida  <small>to</small>  Newyork</span><span class="popular-places-item__price">$8</span><span data-uk-icon="chevron-right"></span></a></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>-->
+
         <div class="section-steps">
             <div class="uk-section uk-container">
                 <div class="section-title uk-text-center">
@@ -324,30 +287,7 @@
                                 convenient and reliable solution. Join our growing community today and embark on a
                                 journey towards a more connected and eco-friendly future!"
                             </div>
-                            <!--<div class="uk-grid uk-child-width-1-2" data-uk-grid>
-                                <div>
-                                    <div class="location-contact-item">
-                                        <div class="location-contact-item__icon"><i class="fas fa-phone-alt"></i></div>
-                                        <div class="location-contact-item__desc">
-                                            <div class="location-contact-item__title">For Booking Rides</div>
-                                            <div class="location-contact-item__phone"><a href="tel:5804037961">(580) 403
-                                                7961</a></div>
-                                            <div class="location-contact-item__time">We are available 24/7</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="location-contact-item">
-                                        <div class="location-contact-item__icon"><i class="fas fa-phone-alt"></i></div>
-                                        <div class="location-contact-item__desc">
-                                            <div class="location-contact-item__title">Got any questions?</div>
-                                            <div class="location-contact-item__phone"><a href="tel:4315292093">(431) 529
-                                                2093</a></div>
-                                            <div class="location-contact-item__time">We are available 24/7</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
+
                         </div>
                         <div>
                             <div class="location__map"><img class="location__img"
@@ -436,240 +376,13 @@
                 </div>
             </div>
         </div>
-
-        <!--Blog-->
-        <!--<div class="section-blog">
-            <div class="uk-background-muted">
-                <div class="uk-section uk-container">
-                    <div class="section-title uk-text-center">
-                        <div class="uk-h2">Latest From Blog</div>
-                        <p>Eorem ipsum dolor sit amet consectetur adipisicing elit edolore magna<br> aliqua ut enim ad
-                            minim veniam quis aliquip consequat</p>
-                    </div>
-                    <div class="section-content">
-                        <div data-uk-slider>
-                            <div class="uk-position-relative" tabindex="-1">
-                                <ul class="uk-slider-items uk-grid uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m">
-                                    <li>
-                                        <div class="blog-card">
-                                            <div class="blog-card__box">
-                                                <div class="blog-card__media"><a href="05_blog-post.html"><img
-                                                        src="../static/assets/img/blog-thumb-1.jpg"
-                                                        th:src="@{/assets/img/blog-thumb-1.jpg}"
-                                                        alt="Making car rentals easy for customers"/></a>
-                                                    <div class="blog-card__date"><span>Jan</span><span>17</span></div>
-                                                </div>
-                                                <div class="blog-card__body">
-                                                    <div class="blog-card__info">
-                                                        <div class="blog-card__author"><i class="fas fa-user"></i>Stephen
-                                                            Moya
-                                                        </div>
-                                                        <div class="blog-card__category"><i
-                                                                class="fas fa-folder-open"></i>Car Hire
-                                                        </div>
-                                                    </div>
-                                                    <div class="blog-card__title"><a href="05_blog-post.html">Making car
-                                                        rentals easy for customers</a></div>
-                                                    <div class="blog-card__intro">
-                                                        <p>Incididunt ut labore et dolore magna aliqua laboris
-                                                            nisialiquip ex loea Lorem ipsum dolor eiusmod tempor
-                                                            incididunt ...</p>
-                                                    </div>
-                                                    <div class="blog-card__more"><a class="uk-button uk-button-default"
-                                                                                    href="05_blog-post.html">Read
-                                                        more</a></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="blog-card">
-                                            <div class="blog-card__box">
-                                                <div class="blog-card__media"><a href="05_blog-post.html"><img
-                                                        src="../static/assets/img/blog-thumb-2.jpg"
-                                                        th:src="@{/assets/img/blog-thumb-2.jpg}"
-                                                        alt="Enjoy your family trips with full happiness"/></a>
-                                                    <div class="blog-card__date"><span>Jan</span><span>25</span></div>
-                                                </div>
-                                                <div class="blog-card__body">
-                                                    <div class="blog-card__info">
-                                                        <div class="blog-card__author"><i class="fas fa-user"></i>Stephen
-                                                            Moya
-                                                        </div>
-                                                        <div class="blog-card__category"><i
-                                                                class="fas fa-folder-open"></i>Car Hire
-                                                        </div>
-                                                    </div>
-                                                    <div class="blog-card__title"><a href="05_blog-post.html">Enjoy your
-                                                        family trips with full happiness</a></div>
-                                                    <div class="blog-card__intro">
-                                                        <p>Incididunt ut labore et dolore magna aliqua laboris
-                                                            nisialiquip ex loea Lorem ipsum dolor eiusmod tempor
-                                                            incididunt ...</p>
-                                                    </div>
-                                                    <div class="blog-card__more"><a class="uk-button uk-button-default"
-                                                                                    href="05_blog-post.html">Read
-                                                        more</a></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="blog-card">
-                                            <div class="blog-card__box">
-                                                <div class="blog-card__media"><a href="05_blog-post.html"><img
-                                                        src="../static/assets/img/blog-thumb-3.jpg"
-                                                        th:src="@{/assets/img/blog-thumb-3.jpg}"
-                                                        alt="Quick hire with no-extra charges at all"/></a>
-                                                    <div class="blog-card__date"><span>Feb</span><span>10</span></div>
-                                                </div>
-                                                <div class="blog-card__body">
-                                                    <div class="blog-card__info">
-                                                        <div class="blog-card__author"><i class="fas fa-user"></i>Stephen
-                                                            Moya
-                                                        </div>
-                                                        <div class="blog-card__category"><i
-                                                                class="fas fa-folder-open"></i>Car Hire
-                                                        </div>
-                                                    </div>
-                                                    <div class="blog-card__title"><a href="05_blog-post.html">Quick hire
-                                                        with no-extra charges at all</a></div>
-                                                    <div class="blog-card__intro">
-                                                        <p>Incididunt ut labore et dolore magna aliqua laboris
-                                                            nisialiquip ex loea Lorem ipsum dolor eiusmod tempor
-                                                            incididunt ...</p>
-                                                    </div>
-                                                    <div class="blog-card__more"><a class="uk-button uk-button-default"
-                                                                                    href="05_blog-post.html">Read
-                                                        more</a></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="blog-card">
-                                            <div class="blog-card__box">
-                                                <div class="blog-card__media"><a href="05_blog-post.html"><img
-                                                        src="../static/assets/img/blog-thumb-1.jpg"
-                                                        th:src="@{/assets/img/blog-thumb-1.jpg}"
-                                                        alt="Making car rentals easy for customers"/></a>
-                                                    <div class="blog-card__date"><span>Jan</span><span>17</span></div>
-                                                </div>
-                                                <div class="blog-card__body">
-                                                    <div class="blog-card__info">
-                                                        <div class="blog-card__author"><i class="fas fa-user"></i>Stephen
-                                                            Moya
-                                                        </div>
-                                                        <div class="blog-card__category"><i
-                                                                class="fas fa-folder-open"></i>Car Hire
-                                                        </div>
-                                                    </div>
-                                                    <div class="blog-card__title"><a href="05_blog-post.html">Making car
-                                                        rentals easy for customers</a></div>
-                                                    <div class="blog-card__intro">
-                                                        <p>Incididunt ut labore et dolore magna aliqua laboris
-                                                            nisialiquip ex loea Lorem ipsum dolor eiusmod tempor
-                                                            incididunt ...</p>
-                                                    </div>
-                                                    <div class="blog-card__more"><a class="uk-button uk-button-default"
-                                                                                    href="05_blog-post.html">Read
-                                                        more</a></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin-top"></ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
     </main>
 
     <!--Footer-->
-    <footer class="page-footer">
-        <div class="uk-container">
-            <div class="page-footer__inner">
-                <div class="page-footer__logo">
-                    <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
-                                                                          src="../static/assets/img/logo-white.png"
-                                                                          th:src="@{/assets/img/logo-white.png}"
-                                                                          alt="Trip-Weaver"></a></div>
-                </div>
-                <div class="page-footer__text">
-                    <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
-                </div>
-                <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
-            </div>
-
-            <!-- Additional blocks-->
-        </div>
-        <div id="offcanvas" data-uk-offcanvas="overlay: true">
-            <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
-                <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
-                <div class="uk-margin">
-                    <div class="uk-margin-bottom">
-                        <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
-                                                                              src="../static/assets/img/logo-white.png"
-                                                                              th:src="@{/assets/img/logo-white.png}"
-                                                                              alt="GetRider"></a></div>
-                    </div>
-                    <div class="uk-margin">
-                        <ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
-                            <li class="uk-parent"><a href="#"> <img src="../static/assets/img/search.svg"
-                                                                    th:src="@{/assets/img/search.svg}" data-uk-svg
-                                                                    alt="search">Find a Ride</a>
-                            </li>
-                            <li><a href="07_typography.html"> <img src="../static/assets/img/car.svg"
-                                                                   th:src="@{/assets/img/car.svg}" data-uk-svg
-                                                                   alt="car">Create Trip</a></li>
-                            <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
-                                                                th:src="@{/assets/img/help2.svg}" data-uk-svg
-                                                                alt="help2">About</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"> <img
-                        src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
-                        alt="call" data-uk-svg>
-                    <span th:text="${loggedUser.getUsername()}"></span></a>
-                </div>
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                              href="#" th:href="@{/auth/logout}"> <img
-                        src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
-                    <span>Logout</span></a>
-                </div>
-                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                                  href="#" th:href="@{/auth/login}">
-                    <img
-                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
-                            data-uk-svg>
-                    <span>Login</span></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="uk-flex-top" id="callback" data-uk-modal="">
-            <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-                <button class="uk-modal-close-default" type="button" data-uk-close=""></button>
-                <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
-            </div>
-        </div>
-        <!-- End Additional blocks-->
-
-    </footer>
+    <footer th:replace="~{Fragments.html :: footer}"></footer>
 
 </div>
-<script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
-<script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
-<script src="../static/assets/js/uikit-icons.min.js" th:src="@{/assets/js/uikit-icons.min.js}"></script>
-<script src="../static/assets/js/datepicker.min.js" th:src="@{/assets/js/datepicker.min.js}"></script>
-<script src="../static/assets/js/i18n/datepicker.en.js" th:src="@{/assets/js/datepicker.en.js}"></script>
-<script src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
+<div th:replace="~{Fragments.html::script}"></div>
 </body>
 
 </html>
