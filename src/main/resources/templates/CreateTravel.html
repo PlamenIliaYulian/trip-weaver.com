@@ -17,7 +17,7 @@
                 <div class="main-search-section main-search-section--left">
                     <div class="search-box">
                         <div class="search-box__title">Where do you want to go?</div>
-                        <form id="create-travel-form" action="#" th:object="${travelDto}" method="post" th:action="@{__${requestURI}__}">
+                        <form id="create-travel-form" action="#" th:object="${travelDto}" method="post" th:action="@{/travels/new}">
                             <div class="search-form">
                                 <div class="uk-grid uk-child-width-1-2@s uk-grid-collapse" data-uk-grid>
                                     <div class="uk-inline uk-width-1-1">
@@ -49,7 +49,7 @@
                                                th:field="*{endingPointCity}"
                                                pattern=".+"
                                                title="Ending point city cannot be empty.">
-
+                                        <label class="error" th:errors="*{endingPointCity}"> Title placeholder. </label>
                                     </div>
                                     <div class="uk-inline uk-width-1-1">
                                         <input class="uk-input"
@@ -57,12 +57,15 @@
                                                name="Ending Point Address"
                                                placeholder="Ending Point Address (Optional)"
                                                th:field="*{endingPointAddress}">
+                                        <label class="error" th:errors="*{endingPointAddress}"> Title placeholder. </label>
                                     </div>
                                     <div><input class="uk-input input-data js-data" type="text"
-                                                th:field="*{departureTime}" placeholder="Date / Time"></div>
+                                                th:field="*{departureTime}" placeholder="Date / Time">
+                                        <label class="error" th:errors="*{departureTime}"> Title placeholder. </label></div>
                                     <div>
                                         <input class="input-user uk-input" type="text" th:field="*{freeSeats}"
                                                placeholder="No. of Passenger(s)">
+                                        <label class="error" th:errors="*{freeSeats}"> Title placeholder. </label>
                                     </div>
                                     <div class="uk-width-1-1">
                                         <textarea class="uk-textarea" name="comment" th:field="*{comment}"
@@ -145,7 +148,13 @@
 
     </footer>
 </div>
-<div th:replace="~{Fragments.html::script}"></div>
+<!--<div th:replace="~{Fragments.html::script}"></div>-->
+<script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
+<script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
+<script src="../static/assets/js/uikit-icons.min.js" th:src="@{/assets/js/uikit-icons.min.js}"></script>
+<script src="../static/assets/js/datepicker.min.js" th:src="@{/assets/js/datepicker.min.js}"></script>
+<script src="../static/assets/js/i18n/datepicker.en.js" th:src="@{/assets/js/datepicker.en.js}"></script>
+<script src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
 
 </body>
 </html>

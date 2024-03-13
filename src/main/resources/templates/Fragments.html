@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(title)">
     <meta charset="utf-8">
-    <title th:text="${title}" >Home page</title>
+    <title th:text="${title}">Home page</title>
     <meta content="Chernyh Mihail" name="author">
     <meta content="GetRider" name="description">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,15 +17,15 @@
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 </head>
 <body>
-    <header th:fragment="page-header" class="page-header">
+<header th:fragment="page-header" class="page-header">
     <div class="page-header__scroll" data-uk-sticky>
         <div class="uk-container">
             <div class="page-header__inner">
                 <div class="page-header__logo">
                     <div class="logo"><a class="logo__link" href="#" th:href="@{/}"><img class="logo__img"
-                                                                                              src="../static/assets/img/logo.png"
-                                                                                              th:src="@{/assets/img/logo.png}"
-                                                                                              alt="GetRider"></a>
+                                                                                         src="../static/assets/img/logo.png"
+                                                                                         th:src="@{/assets/img/logo.png}"
+                                                                                         alt="GetRider"></a>
                     </div>
                 </div>
                 <div class="page-header__menu">
@@ -92,87 +92,87 @@
         </div>
     </div>
 </header>
-    <footer th:fragment="footer" class="page-footer">
-        <div class="uk-container">
-            <div class="page-footer__inner">
-                <div class="page-footer__logo">
+<footer th:fragment="footer" class="page-footer">
+    <div class="uk-container">
+        <div class="page-footer__inner">
+            <div class="page-footer__logo">
+                <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
+                                                                      src="../static/assets/img/logo-white.png"
+                                                                      th:src="@{/assets/img/logo-white.png}"
+                                                                      alt="Trip-Weaver"></a></div>
+            </div>
+            <div class="page-footer__text">
+                <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
+            </div>
+            <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
+        </div>
+
+        <!-- Additional blocks-->
+    </div>
+    <div id="offcanvas" data-uk-offcanvas="overlay: true">
+        <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
+            <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
+            <div class="uk-margin">
+                <div class="uk-margin-bottom">
                     <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
                                                                           src="../static/assets/img/logo-white.png"
                                                                           th:src="@{/assets/img/logo-white.png}"
-                                                                          alt="Trip-Weaver"></a></div>
+                                                                          alt="GetRider"></a></div>
                 </div>
-                <div class="page-footer__text">
-                    <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
-                </div>
-                <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
-            </div>
-
-            <!-- Additional blocks-->
-        </div>
-        <div id="offcanvas" data-uk-offcanvas="overlay: true">
-            <div class="uk-offcanvas-bar uk-flex uk-flex-column uk-flex-between">
-                <button class="uk-offcanvas-close" type="button" data-uk-close=""></button>
                 <div class="uk-margin">
-                    <div class="uk-margin-bottom">
-                        <div class="logo"><a class="logo__link" href="/"><img class="logo__img"
-                                                                              src="../static/assets/img/logo-white.png"
-                                                                              th:src="@{/assets/img/logo-white.png}"
-                                                                              alt="GetRider"></a></div>
-                    </div>
-                    <div class="uk-margin">
-                        <ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
-                            <li class="uk-parent"><a href="#"> <img src="../static/assets/img/search.svg"
-                                                                    th:src="@{/assets/img/search.svg}" data-uk-svg
-                                                                    alt="search">Find a Ride</a>
-                            </li>
-                            <li><a  th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
-                                                                   th:src="@{/assets/img/car.svg}" data-uk-svg
-                                                                   alt="car">Create Trip</a></li>
-                            <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
-                                                                th:src="@{/assets/img/help2.svg}" data-uk-svg
-                                                                alt="help2">About</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"> <img
-                        src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
-                        alt="call" data-uk-svg>
-                    <span th:text="${loggedUser.getUsername()}"></span></a>
-                </div>
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                              href="#" th:href="@{/auth/logout}"> <img
-                        src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
-                    <span>Logout</span></a>
-                </div>
-                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                                  href="#" th:href="@{/auth/login}">
-                    <img
-                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
-                            data-uk-svg>
-                    <span>Login</span></a>
+                    <ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
+                        <li class="uk-parent"><a href="#"> <img src="../static/assets/img/search.svg"
+                                                                th:src="@{/assets/img/search.svg}" data-uk-svg
+                                                                alt="search">Find a Ride</a>
+                        </li>
+                        <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
+                                                               th:src="@{/assets/img/car.svg}" data-uk-svg
+                                                               alt="car">Create Trip</a></li>
+                        <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
+                                                            th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                                            alt="help2">About</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <div class="uk-flex-top" id="callback" data-uk-modal="">
-            <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-                <button class="uk-modal-close-default" type="button" data-uk-close=""></button>
-                <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
+            <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"> <img
+                    src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
+                    alt="call" data-uk-svg>
+                <span th:text="${loggedUser.getUsername()}"></span></a>
+            </div>
+            <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                          href="#" th:href="@{/auth/logout}"> <img
+                    src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
+                <span>Logout</span></a>
+            </div>
+            <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
+                                                                              href="#" th:href="@{/auth/login}">
+                <img
+                        src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
+                        data-uk-svg>
+                <span>Login</span></a>
             </div>
         </div>
-        <!-- End Additional blocks-->
-
-    </footer>
-    <div th:fragment="script">
-        <script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
-        <script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
-        <script src="../static/assets/js/uikit-icons.min.js" th:src="@{/assets/js/uikit-icons.min.js}"></script>
-        <script src="../static/assets/js/datepicker.min.js" th:src="@{/assets/js/datepicker.min.js}"></script>
-        <script src="../static/assets/js/i18n/datepicker.en.js" th:src="@{/assets/js/datepicker.en.js}"></script>
-        <script src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
-        <script src="../static/assets/js/main.js" th:src="@{/assets/js/create.travel.custom.js}"></script>
     </div>
+
+    <div class="uk-flex-top" id="callback" data-uk-modal="">
+        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+            <button class="uk-modal-close-default" type="button" data-uk-close=""></button>
+            <p>Start sharing rides and reducing your carbon footprint with Trip-Weaver today!</p>
+        </div>
+    </div>
+    <!-- End Additional blocks-->
+
+</footer>
+<div th:fragment="script">
+    <script src="../static/assets/js/main.js" th:src="@{/assets/js/create.travel.custom.js}"></script>
+    <script src="../static/assets/js/jquery.min.js" th:src="@{/assets/js/jquery.min.js}"></script>
+    <script src="../static/assets/js/uikit.min.js" th:src="@{/assets/js/uikit.min.js}"></script>
+    <script src="../static/assets/js/uikit-icons.min.js" th:src="@{/assets/js/uikit-icons.min.js}"></script>
+    <script src="../static/assets/js/datepicker.min.js" th:src="@{/assets/js/datepicker.min.js}"></script>
+    <script src="../static/assets/js/i18n/datepicker.en.js" th:src="@{/assets/js/datepicker.en.js}"></script>
+    <script src="../static/assets/js/main.js" th:src="@{/assets/js/main.js}"></script>
+</div>
 </body>
 </html>
