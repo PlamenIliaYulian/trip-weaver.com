@@ -74,7 +74,7 @@ public class AuthenticationMvcController {
         try {
             authenticationHelper.verifyAuthentication(loginDto.getUsername(), loginDto.getPassword());
             session.setAttribute("currentUser", loginDto.getUsername());
-            return "redirect:/travels/new";
+            return "redirect:/travels/search";
         } catch (AuthenticationException e) {
             errors.rejectValue("username", "auth_error", e.getMessage());
             return "Login";

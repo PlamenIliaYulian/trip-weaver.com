@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Travel Search')}"></head>
+
+<body class="page-search page-search--result">
+
+<!-- Loader-->
+<div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
+<!-- Loader end-->
+
+
+<div class="page-wrapper">
+    <header th:replace="~{Fragments.html :: page-header}"></header>
+    <main class="page-main">
+        <div class="main-search-grid uk-grid uk-child-width-1-2@xl uk-grid-match uk-grid-collapse" data-uk-grid>
+            <div>
+                <div class="main-search-section main-search-section--left">
+                    <div class="search-box">
+                        <div class="search-box__title">Where do you want to go?</div>
+                        <div class="search-form">
+                            <div class="uk-grid uk-child-width-1-2@s uk-grid-collapse" data-uk-grid>
+                                <div>
+                                    <div class="uk-inline uk-width-1-1">
+
+                                        <form id="create-travel-form" action="#" th:object="${filterDto}">
+                                            <div class="search-form">
+                                                <div class="uk-grid uk-child-width-1-2@s uk-grid-collapse"
+                                                     data-uk-grid>
+                                                    <div class="uk-inline uk-width-1-1">
+                                                        <input class="input-place uk-input"
+                                                               type="text"
+                                                               placeholder="Starting Point City"
+                                                               th:field="*{startingPointCity}">
+                                                    </div>
+                                                    <div class="uk-inline uk-width-1-1">
+                                                        <input class="input-place uk-input"
+                                                               type="text"
+                                                               placeholder="Ending Point City"
+                                                               th:field="*{endingPointCity}">
+                                                    </div>
+                                                    <div><input class="uk-input" type="datetime-local"
+                                                                th:field="*{departureBefore}"
+                                                                placeholder="Date / Time">
+                                                    </div>
+                                                    <div><input class="uk-input" type="datetime-local"
+                                                                th:field="*{departureAfter}"
+                                                                placeholder="Date / Time">
+                                                    </div>
+                                                    <div>
+                                                        <input class="input-user uk-input" type="text"
+                                                               th:field="*{minFreeSeats}"
+                                                               placeholder="Min No. of Passenger(s)">
+                                                    </div>
+                                                    <div class="uk-inline uk-width-1-1">
+                                                        <input class="input-place uk-input"
+                                                               type="text"
+                                                               placeholder="Driver Username"
+                                                               th:field="*{driverUsername}">
+                                                    </div>
+                                                    <div class="uk-inline uk-width-1-1">
+                                                        <input class="input-place uk-input"
+                                                               type="text"
+                                                               placeholder="Comment"
+                                                               th:field="*{commentContains}">
+                                                    </div>
+                                                    <select id="browse-posts-input-sortBy" th:field="*{sortBy}">
+                                                        <option value="">Sort By</option>
+                                                        <option value="startingPointCity">Starting City</option>
+                                                        <option value="endingPointCity">Ending City</option>
+                                                        <option value="departureTime">Departure Time</option>
+                                                        <option value="freeSeats">Free Seats</option>
+                                                        <option value="createdOn">Create dOn</option>
+                                                        <option value="driver">Driver</option>
+                                                        <option value="distance">Distance</option>
+                                                        <option value="duration">Duration</option>
+
+                                                    </select>
+                                                    <select id="browse-posts-input-sortORder" th:field="*{sortOrder}">
+                                                        <option value="">Sort Order</option>
+                                                        <option value="asc">Ascending</option>
+                                                        <option value="desc">Descending</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="search-form-btn">
+                                                <button class="uk-button uk-button-danger" type="submit"><span
+                                                        class="uk-margin-small-right"
+                                                        data-uk-icon="search"> </span><span>Search</span>
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-background-muted">
+                    <div class="main-search-section">
+                        <div class="search-result">
+                            <div class="search-result__info"><span data-uk-icon="search"></span><span>Jacksonville  Airport, FL  to  Sherton Hotel, Newyork City, NY<br> Tomorrow, 9:00 PM - 1 Passenger(s)</span>
+                            </div>
+                            <div class="search-result__col"><img src="../static/assets/img/ico-car.png"
+                                                                 alt="icon"><span>23 rides available for you.</span>
+                            </div>
+                            <div class="search-result__list">
+                                <div class="search-result-item">
+                                    <div class="search-result-item__car"><img
+                                            src="../static/assets/img/search-car-1.png"
+                                            alt="car"></div>
+                                    <div class="search-result-item__info">
+                                        <div class="user-box">
+                                            <div class="user-box__avatar"><img src="../static/assets/img/driver-1.png"
+                                                                               alt="driver"></div>
+                                            <div class="user-box__info">
+                                                <div class="user-box__name">Ben Strokes</div>
+                                                <div class="user-box__rating"><i class="fas fa-star"></i><b>4.8 /
+                                                    5 </b><span>(12 Reviews)</span></div>
+                                            </div>
+                                        </div>
+                                        <ul class="list-info">
+                                            <li><img src="../static/assets/img/driver-service-1.png"
+                                                     alt="driver-service"><span>Max. 2 passengers in back seats</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-2.png"
+                                                     alt="driver-service"><span>Pets are not allowed in the Car</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-3.png"
+                                                     alt="driver-service"><span>Smoking is not allowed</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="search-result-item__price">
+                                        <div class="price-box">
+                                            <div class="price-box__time">2:00 PM</div>
+                                            <div class="price-box__price">
+                                                <div class="current-price">$19.50</div>
+                                                <div class="col-user">For 1 Passenger</div>
+                                                <button class="uk-button uk-button-danger" type="button">Book this
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="search-result-item">
+                                    <div class="search-result-item__car"><img
+                                            src="../static/assets/img/search-car-2.png"
+                                            alt="car"></div>
+                                    <div class="search-result-item__info">
+                                        <div class="user-box">
+                                            <div class="user-box__avatar"><img src="../static/assets/img/driver-2.png"
+                                                                               alt="driver"></div>
+                                            <div class="user-box__info">
+                                                <div class="user-box__name">Shane Michael</div>
+                                                <div class="user-box__rating"><i class="fas fa-star"></i><b>4.8 /
+                                                    5 </b><span>(12 Reviews)</span></div>
+                                            </div>
+                                        </div>
+                                        <ul class="list-info">
+                                            <li><img src="../static/assets/img/driver-service-1.png"
+                                                     alt="driver-service"><span>Max. 2 passengers in back seats</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-2.png"
+                                                     alt="driver-service"><span>Pets are not allowed in the Car</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-3.png"
+                                                     alt="driver-service"><span>Smoking is not allowed</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="search-result-item__price">
+                                        <div class="price-box">
+                                            <div class="price-box__time">2:00 PM</div>
+                                            <div class="price-box__price">
+                                                <div class="current-price">$19.50</div>
+                                                <div class="col-user">For 1 Passenger</div>
+                                                <button class="uk-button uk-button-danger" type="button">Book this
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="search-result-item">
+                                    <div class="search-result-item__car"><img
+                                            src="../static/assets/img/search-car-3.png"
+                                            alt="car"></div>
+                                    <div class="search-result-item__info">
+                                        <div class="user-box">
+                                            <div class="user-box__avatar"><img src="../static/assets/img/driver-3.png"
+                                                                               alt="driver"></div>
+                                            <div class="user-box__info">
+                                                <div class="user-box__name">John Matthew</div>
+                                                <div class="user-box__rating"><i class="fas fa-star"></i><b>4.8 /
+                                                    5 </b><span>(12 Reviews)</span></div>
+                                            </div>
+                                        </div>
+                                        <ul class="list-info">
+                                            <li><img src="../static/assets/img/driver-service-1.png"
+                                                     alt="driver-service"><span>Max. 2 passengers in back seats</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-2.png"
+                                                     alt="driver-service"><span>Pets are not allowed in the Car</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-3.png"
+                                                     alt="driver-service"><span>Smoking is not allowed</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="search-result-item__price">
+                                        <div class="price-box">
+                                            <div class="price-box__time">2:00 PM</div>
+                                            <div class="price-box__price">
+                                                <div class="current-price">$19.50</div>
+                                                <div class="col-user">For 1 Passenger</div>
+                                                <button class="uk-button uk-button-danger" type="button">Book this
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="search-result-item">
+                                    <div class="search-result-item__car"><img
+                                            src="../static/assets/img/search-car-1.png"
+                                            alt="car"></div>
+                                    <div class="search-result-item__info">
+                                        <div class="user-box">
+                                            <div class="user-box__avatar"><img src="../static/assets/img/driver-1.png"
+                                                                               alt="driver"></div>
+                                            <div class="user-box__info">
+                                                <div class="user-box__name">Ben Strokes</div>
+                                                <div class="user-box__rating"><i class="fas fa-star"></i><b>4.8 /
+                                                    5 </b><span>(12 Reviews)</span></div>
+                                            </div>
+                                        </div>
+                                        <ul class="list-info">
+                                            <li><img src="../static/assets/img/driver-service-1.png"
+                                                     alt="driver-service"><span>Max. 2 passengers in back seats</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-2.png"
+                                                     alt="driver-service"><span>Pets are not allowed in the Car</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-3.png"
+                                                     alt="driver-service"><span>Smoking is not allowed</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="search-result-item__price">
+                                        <div class="price-box">
+                                            <div class="price-box__time">2:00 PM</div>
+                                            <div class="price-box__price">
+                                                <div class="current-price">$19.50</div>
+                                                <div class="col-user">For 1 Passenger</div>
+                                                <button class="uk-button uk-button-danger" type="button">Book this
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="search-result-item">
+                                    <div class="search-result-item__car"><img
+                                            src="../static/assets/img/search-car-2.png"
+                                            alt="car"></div>
+                                    <div class="search-result-item__info">
+                                        <div class="user-box">
+                                            <div class="user-box__avatar"><img src="../static/assets/img/driver-2.png"
+                                                                               alt="driver"></div>
+                                            <div class="user-box__info">
+                                                <div class="user-box__name">Shane Michael</div>
+                                                <div class="user-box__rating"><i class="fas fa-star"></i><b>4.8 /
+                                                    5 </b><span>(12 Reviews)</span></div>
+                                            </div>
+                                        </div>
+                                        <ul class="list-info">
+                                            <li><img src="../static/assets/img/driver-service-1.png"
+                                                     alt="driver-service"><span>Max. 2 passengers in back seats</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-2.png"
+                                                     alt="driver-service"><span>Pets are not allowed in the Car</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-3.png"
+                                                     alt="driver-service"><span>Smoking is not allowed</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="search-result-item__price">
+                                        <div class="price-box">
+                                            <div class="price-box__time">2:00 PM</div>
+                                            <div class="price-box__price">
+                                                <div class="current-price">$19.50</div>
+                                                <div class="col-user">For 1 Passenger</div>
+                                                <button class="uk-button uk-button-danger" type="button">Book this
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="search-result-item">
+                                    <div class="search-result-item__car"><img
+                                            src="../static/assets/img/search-car-3.png"
+                                            alt="car"></div>
+                                    <div class="search-result-item__info">
+                                        <div class="user-box">
+                                            <div class="user-box__avatar"><img src="../static/assets/img/driver-3.png"
+                                                                               alt="driver"></div>
+                                            <div class="user-box__info">
+                                                <div class="user-box__name">John Matthew</div>
+                                                <div class="user-box__rating"><i class="fas fa-star"></i><b>4.8 /
+                                                    5 </b><span>(12 Reviews)</span></div>
+                                            </div>
+                                        </div>
+                                        <ul class="list-info">
+                                            <li><img src="../static/assets/img/driver-service-1.png"
+                                                     alt="driver-service"><span>Max. 2 passengers in back seats</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-2.png"
+                                                     alt="driver-service"><span>Pets are not allowed in the Car</span>
+                                            </li>
+                                            <li><img src="../static/assets/img/driver-service-3.png"
+                                                     alt="driver-service"><span>Smoking is not allowed</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="search-result-item__price">
+                                        <div class="price-box">
+                                            <div class="price-box__time">2:00 PM</div>
+                                            <div class="price-box__price">
+                                                <div class="current-price">$19.50</div>
+                                                <div class="col-user">For 1 Passenger</div>
+                                                <button class="uk-button uk-button-danger" type="button">Book this
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <!-- Additional blocks-->
+    <div th:replace="~{Fragments.html :: additional-blocks}"></div>
+    <!--Footer-->
+    <footer th:replace="~{Fragments.html :: footer}"></footer>
+</div>
+<div th:replace="~{Fragments.html::script}"></div>
+</body>
+
+</html>

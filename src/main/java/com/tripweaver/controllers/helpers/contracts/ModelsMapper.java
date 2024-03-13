@@ -2,6 +2,7 @@ package com.tripweaver.controllers.helpers.contracts;
 
 import com.tripweaver.models.*;
 import com.tripweaver.models.dtos.*;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 
 public interface ModelsMapper {
     User userFromDtoCreate(UserDtoCreate userDto);
@@ -13,4 +14,5 @@ public interface ModelsMapper {
     User userFromDto(UserDto userDto, int userId);
 
     Feedback feedbackForPassengerFromDto(FeedbackDto feedbackDto);
+    TravelFilterOptions travelFilterOptionsFromDto(TravelFilterOptionsDto travelFilterOptionsDto);
 }

@@ -7,6 +7,8 @@ import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.TravelDto;
+import com.tripweaver.models.dtos.TravelFilterOptionsDto;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.TravelService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +21,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/travels")
@@ -116,5 +122,34 @@ public class TravelMvcController {
         }
     }
 
+    @GetMapping("/search")
+    public String showAllTravels(@ModelAttribute("filterDto") TravelFilterOptionsDto travelFilterOptionsDto,
+                                 HttpSession session,
+                                 Model model) {
 
+        User user;
+        try {
+            user = authenticationHelper.tryGetUserFromSession(session);
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+        TravelFilterOptions filterOptions = modelsMapper.travelFilterOptionsFromDto(travelFilterOptionsDto);
+        List<Travel> travels = travelService.getAllTravels(filterOptions);
+        model.addAttribute("travels", travels);
+
+        if (!travels.isEmpty()) {
+            Travel travel = travels
+                    .stream()
+                    .sorted(Comparator.comparing(Travel::getDepartureTime))
+                    .limit(1)
+                    .toList()
+                    .get(0);
+            model.addAttribute("departingSoonestTravel", travel);
+        } else {
+            model.addAttribute("departingSoonestTravel", new Travel());
+        }
+
+        model.addAttribute("filterDto", travelFilterOptionsDto);
+        return "AllTravels";
+    }
 }
