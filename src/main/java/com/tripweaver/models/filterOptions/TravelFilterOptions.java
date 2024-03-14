@@ -17,6 +17,11 @@ public class TravelFilterOptions {
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
 
+    public TravelFilterOptions() {
+        this(null, null, null, null, null,
+                null, null, null, null, null);
+    }
+
     public TravelFilterOptions(String startingPointCity,
                                String endingPointCity,
                                String departureBefore,

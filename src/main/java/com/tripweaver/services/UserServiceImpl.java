@@ -224,14 +224,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public HashMap<String, Integer> getTotalTravelsAsPassengerHashMap(List<User> passengers) {
-        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null,
-                null,null, null, null, null,
-                null, null,null);
-
         HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
         for (User passenger : passengers) {
             int totalTravels = travelService
-                    .getTravelsByPassenger(passenger, passenger, travelFilterOptions)
+                    .getTravelsByPassenger(passenger, passenger, new TravelFilterOptions())
                     .stream()
                     .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
                     .toList()
@@ -243,12 +239,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public HashMap<String, Integer> getTotalDistanceAsPassengerHashMap(List<User> passengers) {
-        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
-                null, null, null, null, null, null,
-                null);
         HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
         for (User passenger : userRepository.getTopTwelveTravelPassengersByRating()) {
-            int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions)
+            int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, new TravelFilterOptions())
                     .stream()
                     .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
                     .map(Travel::getDistanceInKm)
@@ -261,12 +254,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public HashMap<String, Integer> getTotalTravelsAsDriverHashMap(List<User> drivers) {
         HashMap<String, Integer> totalTravelsAsDriverHashMap = new HashMap<>();
-        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
-                null, null, null, null, null, null,
-                null);
         for (User driver : drivers) {
             int totalTravels = travelService
-                    .getTravelsByDriver(driver, driver, travelFilterOptions)
+                    .getTravelsByDriver(driver, driver, new TravelFilterOptions())
                     .stream()
                     .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
                     .toList()
@@ -279,11 +269,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public HashMap<String, Integer> getTotalDistanceAsDriverHashMap(List<User> drivers) {
         HashMap<String, Integer> totalDistancAsDrivereHashMap = new HashMap<>();
-        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
-                null, null, null, null, null, null,
-                null);
         for (User driver : drivers) {
-            int totalDistance = travelService.getTravelsByDriver(driver, driver, travelFilterOptions)
+            int totalDistance = travelService.getTravelsByDriver(driver, driver, new TravelFilterOptions())
                     .stream()
                     .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
                     .map(Travel::getDistanceInKm)
