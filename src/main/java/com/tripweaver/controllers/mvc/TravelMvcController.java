@@ -164,7 +164,6 @@ public class TravelMvcController {
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
             Travel travel = travelService.getTravelById(id);
-            model.addAttribute("loggedInUser", loggedInUser);
             model.addAttribute("travel", travel);
 
             TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
