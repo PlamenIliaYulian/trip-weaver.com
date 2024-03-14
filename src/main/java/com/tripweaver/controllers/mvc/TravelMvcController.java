@@ -3,6 +3,7 @@ package com.tripweaver.controllers.mvc;
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
+import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
@@ -14,13 +15,11 @@ import com.tripweaver.services.contracts.TravelService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -151,5 +150,24 @@ public class TravelMvcController {
 
         model.addAttribute("filterDto", travelFilterOptionsDto);
         return "AllTravels";
+    }
+    @GetMapping("/{id}")
+    public String showSinglePost(@PathVariable int id,
+                                 Model model,
+                                 HttpSession session) {
+
+        try {
+            User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
+            Travel travel = travelService.getTravelById(id);
+            model.addAttribute("loggedInUser", loggedInUser);
+            model.addAttribute("travel", travel);
+            return "SingleTravel";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
     }
 }
