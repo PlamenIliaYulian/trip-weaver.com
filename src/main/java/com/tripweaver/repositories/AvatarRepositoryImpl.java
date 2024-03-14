@@ -59,8 +59,8 @@ public class AvatarRepositoryImpl implements AvatarRepository {
         try {
             Map params1 = ObjectUtils.asMap(
                     "use_filename", true,
-                    "unique_filename", false,
-                    "overwrite", true
+                    "unique_filename", true,
+                    "overwrite", false
             );
 
             return cloudinary
