@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{Fragments.html :: head('Trip-Weaver | Travel Search')}"></head>
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Travel Information')}"></head>
 
 <body class="page-blog">
 
@@ -9,14 +9,14 @@
 <div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
 <!-- Loader end-->
 
-
 <div class="page-wrapper">
     <header th:replace="~{Fragments.html :: page-header}"></header>
     <main class="page-main">
         <div class="section-banner">
             <div class="section-banner__bg">
-                <div class="uk-cover-container"><img src="../static/assets/img/img-banner-blog.jpg" alt="img-banner"
-                                                     data-uk-cover>
+                <div class="uk-cover-container"><img
+                        th:src="@{/assets/img/img-banner-blog.jpg}"
+                        src="../static/assets/img/img-banner-blog.jpg" alt="img-banner" data-uk-cover>
                     <canvas></canvas>
                 </div>
             </div>
@@ -24,40 +24,98 @@
                 <div class="uk-overlay uk-position-center-left uk-width-1-1">
                     <div class="uk-container uk-width-1-1">
                         <div class="section-banner__title">
-                            <h1>Latest News</h1>
+                            <h1>Travel Detailed Information</h1>
                         </div>
-                        <div class="section-banner__text decor-bottom">Incididunt ut laboret dolore magna aliqua enim
-                            minim veniam<br> nostrud ullamco laboris nisi aliquip ex loea.
+                        <div class="section-banner__text decor-bottom">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="section-slider-blog">
+            <div class="uk-container">
+                <div class="search-result__list">
+                    <div class="search-result-item">
+                        <div class="search-result-item__car"><img src="../static/assets/img/search-car-1.png"
+                                                                  th:src="@{/assets/img/search-car-1.png}"
+                                                                  alt="car"></div>
+                        <div class="search-result-item__info">
+                            <div class="user-box">
+                                <div class="user-box__avatar">
+                                    <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
+                                         alt="driver-pic"></div>
+                                <div class="user-box__info">
+                                    <div class="user-box__name"
+                                         th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
+                                        Ben Strokes
+                                    </div>
+                                    <div class="user-box__rating"><i class="fas fa-star"></i>
+                                        <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="list-info">
+                                <li><img src="../static/assets/img/driver-service-1.png"
+                                         th:src="@{/assets/img/capacity.svg}"
+                                         alt="driver-service">
+                                    <span th:text="'Max. ' + ${travel.getFreeSeats()} + ' seats available.'">Max. 2 passengers in back seats</span>
+                                </li>
+                                <li><img src="../static/assets/img/driver-service-1.png"
+                                         th:src="@{/assets/img/free_seats.svg}"
+                                         alt="driver-service">
+                                    <span th:text="${travel.getFreeSeats() - travel.getUsersApprovedForTheTravel().size()} + ' free seats available.'">Max. 2 passengers in back seats</span>
+                                </li>
+                                <li><img src="../static/assets/img/driver-service-2.png"
+                                         th:src="@{/assets/img/comments.svg}"
+                                         alt="driver-service">
+                                    <span th:unless="${travel.getComment()==null}"
+                                          th:text="${travel.getComment()}">Pets are not allowed in the Car</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="search-result-item__price">
+                            <div class="price-box">
+                                <div class="price-box__time"
+                                     th:text="${#temporals.format(travel.getDepartureTime(), 'yyyy-MMM-dd hh:mm a')}">
+                                    2:00 PM
+                                </div>
+                                <div class="price-box__price">
+                                    <div class="current-price"
+                                         th:text="${travel.getStartingPointCity() + ' - '+ travel.getEndingPointCity()}">
+                                        $19.50
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="section-slider-blog" id="single-travel-section-slider-blog">
+
+            <div class="section-title uk-text-center">
+                <div class="uk-h2">Approved Passengers</div>
+            </div>
+
             <div class="uk-container">
                 <div class="slider-blog">
                     <div data-uk-slideshow="max-height: 285; min-height: 275; animation: slide">
                         <div class="uk-grid uk-grid-collapse" data-uk-grid>
-                            <div class="uk-width-2-3@m">
-                                <div class="slider-blog__photos">
-                                    <ul>
-                                        <li class="uk-animation-fade" data-uk-slideshow-item="0"><img
-                                                class="uk-width-1-1" src="../static/assets/img/img-article-intro-1.jpg"
-                                                alt="img-slider-blog"></li>
-                                        <li class="uk-animation-fade" data-uk-slideshow-item="1"><img
-                                                class="uk-width-1-1" src="../static/assets/img/img-article-intro-2.jpg"
-                                                alt="img-slider-blog"></li>
-                                        <li class="uk-animation-fade" data-uk-slideshow-item="2"><img
-                                                class="uk-width-1-1" src="../static/assets/img/img-article-intro-3.jpg"
-                                                alt="img-slider-blog"></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="uk-width-1-3@m">
+                            <div class="uk-width-3-3@m">
                                 <div class="slider-blog__content">
                                     <div class="slider-blog__box">
                                         <ul class="uk-slideshow-items">
-                                            <li>
+                                            <li th:each="approvedUser : ${travel.getUsersApprovedForTheTravel()}">
+                                                <div class="user-box__avatar">
+                                                    <img class="uk-width-1-1"
+                                                            th:src="${approvedUser.getAvatar().getAvatarUrl()}"
+                                                            alt="img-slider-blog">
+
+                                                </div>
                                                 <div class="blog-card">
                                                     <div class="blog-card__body">
                                                         <div class="blog-card__info">
@@ -81,54 +139,7 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <div class="blog-card">
-                                                    <div class="blog-card__body">
-                                                        <div class="blog-card__info">
-                                                            <div class="blog-card__author"><i class="fas fa-user"></i>Stephen
-                                                                Moya
-                                                            </div>
-                                                            <div class="blog-card__category"><i
-                                                                    class="fas fa-folder-open"></i>Car Hire
-                                                            </div>
-                                                        </div>
-                                                        <div class="blog-card__title"><a href="05_blog-post.html">Making
-                                                            Car Rentals Easy & Secure</a></div>
-                                                        <div class="blog-card__intro">
-                                                            <p>Incididunt ut labore et dolore magna aliqua laboris
-                                                                nisialiquip ex loea Lorem ipsum dolor eiusmod tempor
-                                                                incididunt ...</p>
-                                                        </div>
-                                                        <div class="blog-card__more"><a class="uk-button-link"
-                                                                                        href="05_blog-post.html">Read
-                                                            more</a></div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="blog-card">
-                                                    <div class="blog-card__body">
-                                                        <div class="blog-card__info">
-                                                            <div class="blog-card__author"><i class="fas fa-user"></i>Stephen
-                                                                Moya
-                                                            </div>
-                                                            <div class="blog-card__category"><i
-                                                                    class="fas fa-folder-open"></i>Car Hire
-                                                            </div>
-                                                        </div>
-                                                        <div class="blog-card__title"><a href="05_blog-post.html">Making
-                                                            Car Rentals Easy & Secure</a></div>
-                                                        <div class="blog-card__intro">
-                                                            <p>Incididunt ut labore et dolore magna aliqua laboris
-                                                                nisialiquip ex loea Lorem ipsum dolor eiusmod tempor
-                                                                incididunt ...</p>
-                                                        </div>
-                                                        <div class="blog-card__more"><a class="uk-button-link"
-                                                                                        href="05_blog-post.html">Read
-                                                            more</a></div>
-                                                    </div>
-                                                </div>
-                                            </li>
+
                                         </ul>
                                     </div>
                                     <div class="slider-blog__dots">
@@ -141,6 +152,7 @@
                 </div>
             </div>
         </div>
+
         <div class="page-content">
             <div class="uk-section uk-container">
                 <div class="uk-grid uk-child-width-1-3@m uk-child-width-1-2@s" data-uk-grid>

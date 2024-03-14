@@ -121,7 +121,7 @@
                     <div class="search-result">
                         <div class="search-result__info"><span data-uk-icon="search"></span>
                             <p th:unless="${travels.isEmpty()}"
-                               th:text="'Soonest possible travel - FROM ' + ${departingSoonestTravel.getEndingPointAddress()} + ', ' + ${departingSoonestTravel.getStartingPointCity()}
+                               th:text="'Soonest possible travel - FROM ' + ${departingSoonestTravel.getStartingPointAddress()} + ', ' + ${departingSoonestTravel.getStartingPointCity()}
                                   + ' TO  ' + ${departingSoonestTravel.getEndingPointAddress()}  + ', ' + ${departingSoonestTravel.getEndingPointCity()} + ' departuring on ' + ${#temporals.format(departingSoonestTravel.getDepartureTime(), 'yyyy-MMM-dd hh:mm a')} + ' with ' +
                                   ${departingSoonestTravel.getFreeSeats()} + ' seat(s) available.'"></p>
                             <a th:unless="${travels.isEmpty()}" class="uk-button uk-button-danger" th:href="@{/travels/{id}(id=${departingSoonestTravel.getTravelId()})}">View</a>
