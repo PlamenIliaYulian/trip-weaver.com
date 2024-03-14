@@ -3632,7 +3632,6 @@ textarea {
 }
 
 
-
 .search-form [class*=uk-drop-bottom] {
     background-image: url("data:image/svg+xml,%3Csvg fill='%23ccc' aria-hidden='true' focusable='false' data-prefix='fas' data-icon='user' class='svg-inline--fa fa-user fa-w-14' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z'%3E%3C/path%3E%3C/svg%3E");
     width: 100%;
@@ -5242,13 +5241,13 @@ body.page-search--result .page-header__phone .uk-button {
     padding-left: 10px;
 }
 
-#login-page-background{
+#login-page-background {
     background-image: url("https://images.unsplash.com/photo-1460467820054-c87ab43e9b59?q=80&w=1967&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
     background-position: center;
     background-size: cover;
 }
 
-#register-page-background{
+#register-page-background {
     background-position: center;
     background-size: cover;
 }
@@ -5259,6 +5258,16 @@ body.page-search--result .page-header__phone .uk-button {
 
 #single-travel-section-slider-blog {
     padding-top: 0;
+}
+
+#single-travel-blog-card {
+    display: flex;
+}
+
+#single-travel-user-box-avatar {
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }
 
 /*Custom CSS END*/

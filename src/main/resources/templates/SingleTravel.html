@@ -96,11 +96,9 @@
         </div>
 
         <div class="section-slider-blog" id="single-travel-section-slider-blog">
-
             <div class="section-title uk-text-center">
                 <div class="uk-h2">Approved Passengers</div>
             </div>
-
             <div class="uk-container">
                 <div class="slider-blog">
                     <div data-uk-slideshow="max-height: 285; min-height: 275; animation: slide">
@@ -109,34 +107,66 @@
                                 <div class="slider-blog__content">
                                     <div class="slider-blog__box">
                                         <ul class="uk-slideshow-items">
-                                            <li th:each="approvedUser : ${travel.getUsersApprovedForTheTravel()}">
-                                                <div class="user-box__avatar">
-                                                    <img class="uk-width-1-1"
-                                                            th:src="${approvedUser.getAvatar().getAvatarUrl()}"
-                                                            alt="img-slider-blog">
 
-                                                </div>
-                                                <div class="blog-card">
+                                            <li th:each="approvedUser : ${travel.getUsersApprovedForTheTravel()}">
+
+                                                <div class="blog-card" id="single-travel-blog-card">
+                                                    <div class="user-box__avatar" id="single-travel-user-box-avatar">
+                                                        <a th:href="@{/users/__${approvedUser.getUserId()}__}"><img
+                                                                class="uk-width-1-1"
+                                                                th:src="${approvedUser.getAvatar().getAvatarUrl()}"
+                                                                alt="img-slider-blog">
+                                                        </a>
+                                                    </div>
                                                     <div class="blog-card__body">
                                                         <div class="blog-card__info">
-                                                            <div class="blog-card__author"><i class="fas fa-user"></i>Stephen
-                                                                Moya
+                                                            <div class="blog-card__author"><i class="fas fa-user"></i>
+                                                                <a th:href="@{/users/__${approvedUser.getUserId()}__}">
+                                                                <span th:text="${approvedUser.getFirstName()} + ' ' + ${approvedUser.getLastName()}">
+                                                                </span>
+                                                                </a>
                                                             </div>
                                                             <div class="blog-card__category"><i
-                                                                    class="fas fa-folder-open"></i>Car Hire
+                                                                    class="fas fa-folder-open"></i>
+                                                                <a th:href="@{/users/__${approvedUser.getUserId()}__}">
+                                                                <span th:text="${approvedUser.getUsername()}">
+                                                                </span>
+                                                                </a>
                                                             </div>
                                                         </div>
                                                         <div class="blog-card__title"><a href="05_blog-post.html">Making
                                                             Car Rentals Easy & Secure</a></div>
+
                                                         <div class="blog-card__intro">
-                                                            <p>Incididunt ut labore et dolore magna aliqua laboris
-                                                                nisialiquip ex loea Lorem ipsum dolor eiusmod tempor
-                                                                incididunt ...</p>
+                                                            <div class="driver-card__services">
+                                                                <ul>
+                                                                    <li><img
+                                                                            src="../static/assets/img/mode_of_travel.svg"
+                                                                            th:src="@{/assets/img/mode_of_travel.svg}"
+                                                                            alt="driver-service"><span th:text="'Total Distance: ' +
+                                                         ${passengerTotalDistance.get(approvedUser.getUsername())} + ' km'">100 km</span>
+                                                                    </li>
+                                                                    <li><img
+                                                                            src="../static/assets/img/directions_car.svg"
+                                                                            th:src="@{/assets/img/directions_car.svg}"
+                                                                            alt="driver-service"><span th:text="'Total Travels: ' +
+                                                         ${passengerTotalTravels.get(approvedUser.getUsername())}">10</span>
+                                                                    </li>
+                                                                    <li><img src="../static/assets/img/mail.svg"
+                                                                             th:src="@{/assets/img/mail.svg}"
+                                                                             alt="driver-service"><span
+                                                                            th:text="${approvedUser.getEmail()}">Email</span>
+                                                                    </li>
+                                                                    <li><img src="../static/assets/img/phone.svg"
+                                                                             th:src="@{/assets/img/phone.svg}"
+                                                                             alt="driver-service"><span
+                                                                            th:text="${approvedUser.getPhoneNumber()}">Phone number</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
-                                                        <div class="blog-card__more"><a class="uk-button-link"
-                                                                                        href="05_blog-post.html">Read
-                                                            more</a></div>
                                                     </div>
+
                                                 </div>
                                             </li>
 

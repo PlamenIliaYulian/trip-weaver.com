@@ -78,6 +78,8 @@ public class HomeMvcController {
         return new User();
     }
 
+    /*ToDo totalTravels/Distance as Driver/Passenger to move these implementations to repository!
+    *  We also use this methods in TravelMvcController.*/
     @GetMapping
     public String showHomePage(Model model) {
         model.addAttribute("totalUsersCount", userService.getAllUsersCount());

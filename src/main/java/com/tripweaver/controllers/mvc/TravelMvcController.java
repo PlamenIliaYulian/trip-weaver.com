@@ -12,6 +12,7 @@ import com.tripweaver.models.dtos.TravelFilterOptionsDto;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.TravelService;
+import com.tripweaver.services.contracts.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,15 +35,18 @@ public class TravelMvcController {
     private final RoleService roleService;
     private final TravelService travelService;
     private final ModelsMapper modelsMapper;
+    private final UserService userService;
 
     public TravelMvcController(AuthenticationHelper authenticationHelper,
                                RoleService roleService,
                                TravelService travelService,
-                               ModelsMapper modelsMapper) {
+                               ModelsMapper modelsMapper,
+                               UserService userService) {
         this.authenticationHelper = authenticationHelper;
         this.roleService = roleService;
         this.travelService = travelService;
         this.modelsMapper = modelsMapper;
+        this.userService = userService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -161,6 +166,24 @@ public class TravelMvcController {
             Travel travel = travelService.getTravelById(id);
             model.addAttribute("loggedInUser", loggedInUser);
             model.addAttribute("travel", travel);
+
+            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
+                    null, null, null, null, null, null,
+                    null);
+            HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
+            HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
+            for (User passenger : userService.getTopTwelveTravelPassengersByRating()) {
+                int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions)
+                        .stream()
+                        .map(Travel::getDistanceInKm)
+                        .reduce(0, Integer::sum);
+                totalDistanceAsPassengerHashMap.put(passenger.getUsername(), totalDistance);
+                int totalTravels = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions).size();
+                totalTravelsAsPassengerHashMap.put(passenger.getUsername(), totalTravels);
+            }
+            model.addAttribute("passengerTotalDistance", totalDistanceAsPassengerHashMap);
+            model.addAttribute("passengerTotalTravels", totalTravelsAsPassengerHashMap);
+
             return "SingleTravel";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
