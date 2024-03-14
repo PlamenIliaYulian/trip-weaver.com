@@ -22,10 +22,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/travels")
@@ -71,7 +71,7 @@ public class TravelMvcController {
     }
 
     @ModelAttribute("isBlocked")
-    public boolean populateIsBlocked(HttpSession httpSession){
+    public boolean populateIsBlocked(HttpSession httpSession) {
         return (httpSession.getAttribute("currentUser") != null &&
                 authenticationHelper
                         .tryGetUserFromSession(httpSession)
@@ -90,7 +90,7 @@ public class TravelMvcController {
 
     @GetMapping("/new")
     public String showCreateNewTravelPage(HttpSession httpSession,
-                                          Model model){
+                                          Model model) {
         try {
             authenticationHelper.tryGetUserFromSession(httpSession);
             model.addAttribute("travelDto", new TravelDto());
@@ -102,9 +102,9 @@ public class TravelMvcController {
 
     @PostMapping("/new")
     public String handleCreateTravel(@Valid @ModelAttribute("travelDto") TravelDto travelDto,
-                                   BindingResult errors,
-                                   Model model,
-                                   HttpSession session) {
+                                     BindingResult errors,
+                                     Model model,
+                                     HttpSession session) {
 
         if (errors.hasErrors()) {
             return "CreateTravel";
@@ -156,32 +156,24 @@ public class TravelMvcController {
         model.addAttribute("filterDto", travelFilterOptionsDto);
         return "AllTravels";
     }
+
     @GetMapping("/{id}")
-    public String showSinglePost(@PathVariable int id,
-                                 Model model,
-                                 HttpSession session) {
+    public String showSingleTravel(@PathVariable int id,
+                                   Model model,
+                                   HttpSession session) {
 
         try {
-            User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
+            authenticationHelper.tryGetUserFromSession(session);
             Travel travel = travelService.getTravelById(id);
             model.addAttribute("travel", travel);
 
-            TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
-                    null, null, null, null, null, null,
-                    null);
-            HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
-            HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
-            for (User passenger : userService.getTopTwelveTravelPassengersByRating()) {
-                int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions)
-                        .stream()
-                        .map(Travel::getDistanceInKm)
-                        .reduce(0, Integer::sum);
-                totalDistanceAsPassengerHashMap.put(passenger.getUsername(), totalDistance);
-                int totalTravels = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions).size();
-                totalTravelsAsPassengerHashMap.put(passenger.getUsername(), totalTravels);
-            }
-            model.addAttribute("passengerTotalDistance", totalDistanceAsPassengerHashMap);
-            model.addAttribute("passengerTotalTravels", totalTravelsAsPassengerHashMap);
+            List<User> listOfApprovedAndAppliedPassengers = new ArrayList<>();
+            listOfApprovedAndAppliedPassengers.addAll(travel.getUsersAppliedForTheTravel());
+            listOfApprovedAndAppliedPassengers.addAll(travel.getUsersApprovedForTheTravel());
+            model.addAttribute("passengerTotalDistance",
+                    userService.getTotalDistanceAsPassengerHashMap(listOfApprovedAndAppliedPassengers));
+            model.addAttribute("passengerTotalTravels",
+                    userService.getTotalTravelsAsPassengerHashMap(listOfApprovedAndAppliedPassengers));
 
             return "SingleTravel";
         } catch (EntityNotFoundException e) {

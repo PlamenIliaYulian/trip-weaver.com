@@ -3,6 +3,7 @@ package com.tripweaver.services.contracts;
 import com.tripweaver.models.*;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface UserService {
@@ -64,4 +65,9 @@ public interface UserService {
 
     /*Ilia*/
     void deleteUser(User userToBeDeleted, User loggedUser);
+    HashMap<String, Integer> getTotalTravelsAsPassengerHashMap(List<User> passengers);
+    HashMap<String, Integer> getTotalDistanceAsPassengerHashMap(List<User> passengers);
+    HashMap<String, Integer> getTotalTravelsAsDriverHashMap(List<User> drivers);
+    HashMap<String, Integer> getTotalDistanceAsDriverHashMap(List<User> drivers);
+
 }

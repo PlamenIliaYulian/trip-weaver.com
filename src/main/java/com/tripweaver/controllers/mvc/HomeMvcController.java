@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -78,48 +80,23 @@ public class HomeMvcController {
         return new User();
     }
 
-    /*ToDo totalTravels/Distance as Driver/Passenger to move these implementations to repository!
-    *  We also use this methods in TravelMvcController.*/
     @GetMapping
     public String showHomePage(Model model) {
+
+        List<User> topTwelvePassengers = userService.getTopTwelveTravelPassengersByRating();
+        List<User> topTwelveOrganizers = userService.getTopTwelveTravelOrganizersByRating();
+
         model.addAttribute("totalUsersCount", userService.getAllUsersCount());
         model.addAttribute("totalTravelsCount", travelService.getAllTravelsCount());
-        model.addAttribute("topTenTravelOrganizers", userService.getTopTwelveTravelOrganizersByRating());
-        model.addAttribute("topTenPassengers", userService.getTopTwelveTravelPassengersByRating());
+        model.addAttribute("topTenTravelOrganizers", topTwelveOrganizers);
+        model.addAttribute("topTenPassengers", topTwelvePassengers);
         model.addAttribute("fiveStarRatingFeedbackCount", feedbackService.getAllFiveStarReviewsCount());
 
-        HashMap<String, Integer> totalTravelsAsDriverHashMap = new HashMap<>();
-        HashMap<String, Integer> totalDistancAsDrivereHashMap = new HashMap<>();
-        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
-                null, null, null, null, null, null,
-                null);
-        for (User driver : userService.getTopTwelveTravelOrganizersByRating()) {
-            int totalDistance = travelService.getTravelsByDriver(driver, driver, travelFilterOptions)
-                    .stream()
-                    .map(Travel::getDistanceInKm)
-                    .reduce(0, Integer::sum);
-            totalDistancAsDrivereHashMap.put(driver.getUsername(), totalDistance);
-            int totalTravels = travelService.getTravelsByDriver(driver, driver, travelFilterOptions).size();
-            totalTravelsAsDriverHashMap.put(driver.getUsername(), totalTravels);
-        }
-        model.addAttribute("driverTotalDistance", totalDistancAsDrivereHashMap);
-        model.addAttribute("driverTotalTravels", totalTravelsAsDriverHashMap);
+        model.addAttribute("passengerTotalDistance", userService.getTotalDistanceAsPassengerHashMap(topTwelvePassengers));
+        model.addAttribute("passengerTotalTravels", userService.getTotalTravelsAsPassengerHashMap(topTwelvePassengers));
 
-
-        HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
-        HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
-        for (User passenger : userService.getTopTwelveTravelPassengersByRating()) {
-            int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions)
-                    .stream()
-                    .map(Travel::getDistanceInKm)
-                    .reduce(0, Integer::sum);
-            totalDistanceAsPassengerHashMap.put(passenger.getUsername(), totalDistance);
-            int totalTravels = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions).size();
-            totalTravelsAsPassengerHashMap.put(passenger.getUsername(), totalTravels);
-        }
-        model.addAttribute("passengerTotalDistance", totalDistanceAsPassengerHashMap);
-        model.addAttribute("passengerTotalTravels", totalTravelsAsPassengerHashMap);
-
+        model.addAttribute("driverTotalDistance", userService.getTotalDistanceAsDriverHashMap(topTwelveOrganizers));
+        model.addAttribute("driverTotalTravels", userService.getTotalTravelsAsDriverHashMap(topTwelveOrganizers));
 
         return "Home";
     }

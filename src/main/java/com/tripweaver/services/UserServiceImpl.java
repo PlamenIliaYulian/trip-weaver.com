@@ -4,21 +4,16 @@ import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.*;
 import com.tripweaver.models.enums.FeedbackType;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
-import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.services.contracts.FeedbackService;
-import com.tripweaver.services.contracts.RoleService;
-import com.tripweaver.services.contracts.UserService;
+import com.tripweaver.services.contracts.*;
 import com.tripweaver.services.helpers.ValidationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tripweaver.services.helpers.ConstantHelper.*;
@@ -29,16 +24,19 @@ public class UserServiceImpl implements UserService {
     private final AvatarService avatarService;
     private final RoleService roleService;
     private final FeedbackService feedbackService;
+    private final TravelService travelService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            AvatarService avatarService,
                            RoleService roleService,
-                           FeedbackService feedbackService) {
+                           FeedbackService feedbackService,
+                           TravelService travelService) {
         this.userRepository = userRepository;
         this.avatarService = avatarService;
         this.roleService = roleService;
         this.feedbackService = feedbackService;
+        this.travelService = travelService;
     }
 
     @Override
@@ -224,7 +222,78 @@ public class UserServiceImpl implements UserService {
         userRepository.updateUser(userToBeDeleted);
     }
 
-    private void checkForUniqueUsername(User user) {
+    @Override
+    public HashMap<String, Integer> getTotalTravelsAsPassengerHashMap(List<User> passengers) {
+        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null,
+                null,null, null, null, null,
+                null, null,null);
+
+        HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
+        for (User passenger : passengers) {
+            int totalTravels = travelService
+                    .getTravelsByPassenger(passenger, passenger, travelFilterOptions)
+                    .stream()
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .toList()
+                    .size();
+            totalTravelsAsPassengerHashMap.put(passenger.getUsername(), totalTravels);
+        }
+        return totalTravelsAsPassengerHashMap;
+    }
+
+    @Override
+    public HashMap<String, Integer> getTotalDistanceAsPassengerHashMap(List<User> passengers) {
+        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
+                null, null, null, null, null, null,
+                null);
+        HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
+        for (User passenger : userRepository.getTopTwelveTravelPassengersByRating()) {
+            int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, travelFilterOptions)
+                    .stream()
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .map(Travel::getDistanceInKm)
+                    .reduce(0, Integer::sum);
+            totalDistanceAsPassengerHashMap.put(passenger.getUsername(), totalDistance);
+        }
+        return totalDistanceAsPassengerHashMap;
+    }
+
+    @Override
+    public HashMap<String, Integer> getTotalTravelsAsDriverHashMap(List<User> drivers) {
+        HashMap<String, Integer> totalTravelsAsDriverHashMap = new HashMap<>();
+        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
+                null, null, null, null, null, null,
+                null);
+        for (User driver : drivers) {
+            int totalTravels = travelService
+                    .getTravelsByDriver(driver, driver, travelFilterOptions)
+                    .stream()
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .toList()
+                    .size();
+            totalTravelsAsDriverHashMap.put(driver.getUsername(), totalTravels);
+        }
+        return totalTravelsAsDriverHashMap;
+    }
+
+    @Override
+    public HashMap<String, Integer> getTotalDistanceAsDriverHashMap(List<User> drivers) {
+        HashMap<String, Integer> totalDistancAsDrivereHashMap = new HashMap<>();
+        TravelFilterOptions travelFilterOptions = new TravelFilterOptions(null, null, null,
+                null, null, null, null, null, null,
+                null);
+        for (User driver : drivers) {
+            int totalDistance = travelService.getTravelsByDriver(driver, driver, travelFilterOptions)
+                    .stream()
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .map(Travel::getDistanceInKm)
+                    .reduce(0, Integer::sum);
+            totalDistancAsDrivereHashMap.put(driver.getUsername(), totalDistance);
+        }
+        return totalDistancAsDrivereHashMap;
+    }
+
+        private void checkForUniqueUsername(User user) {
         boolean duplicateExists = true;
 
         try {
