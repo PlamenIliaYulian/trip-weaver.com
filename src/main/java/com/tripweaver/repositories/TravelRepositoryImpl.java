@@ -96,7 +96,7 @@ public class TravelRepositoryImpl implements TravelRepository {
                 parameters.put("driverUsername", String.format("%%%s%%", value));
             });
             travelFilterOptions.getCommentContains().ifPresent(value -> {
-                if (value.length() != 0) {
+                if (!value.isEmpty()) {
                     filters.add(" travel.comment like :commentContains ");
                     parameters.put("commentContains", String.format("%%%s%%", value));
                 }
