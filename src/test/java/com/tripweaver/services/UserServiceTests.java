@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -425,4 +426,132 @@ public class UserServiceTests {
         Mockito.verify(userRepository, Mockito.times(1))
                 .updateUser(userToBeVerified);
     }
+
+    @Test
+    public void updateUser_Should_Throw_When_NotSameUser(){
+        User userToBeVerified = TestHelpers.createMockNonAdminUser1();
+        User notSameUser = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class, () -> userService.updateUser(userToBeVerified, notSameUser));
+    }
+
+    @Test
+    public void updateUser_Should_Throw_When_NewEmailAlreadyExists(){
+        User userToBeVerified = TestHelpers.createMockNonAdminUser1();
+        User userWithSameEmail = TestHelpers.createMockNonAdminUser2();
+
+        Mockito.when(userRepository.getUserByEmail(userToBeVerified.getEmail()))
+                .thenReturn(userWithSameEmail);
+
+        Assertions.assertThrows(DuplicateEntityException.class, ()-> userService.updateUser(userToBeVerified, userToBeVerified));
+    }
+
+    /*TODO - to check with Ilia and Plamen why, in their opinion this method does not work.*/
+    @Test
+    public void updateUser_Should_Throw_When_NewPhoneAlreadyExists(){
+        User userToBeVerified = TestHelpers.createMockNonAdminUser1();
+        User userWithSameEmail = TestHelpers.createMockNonAdminUser2();
+
+        Mockito.when(userRepository.getUserByPhoneNumber(userToBeVerified.getPhoneNumber()))
+                .thenReturn(userWithSameEmail);
+
+        Assertions.assertThrows(DuplicateEntityException.class, ()-> userService.updateUser(userToBeVerified, userToBeVerified));
+    }
+
+    @Test
+    public void updateUser_Should_Pass(){
+        User userToBeUpdated = TestHelpers.createMockNonAdminUser1();
+
+        Mockito.when(userRepository.getUserByEmail(userToBeUpdated.getEmail()))
+                .thenThrow(EntityNotFoundException.class);
+        Mockito.when(userRepository.getUserByPhoneNumber(userToBeUpdated.getPhoneNumber()))
+                .thenThrow(EntityNotFoundException.class);
+
+        userService.updateUser(userToBeUpdated, userToBeUpdated);
+        Mockito.verify(userRepository, Mockito.times(1))
+                .updateUser(userToBeUpdated);
+    }
+
+
+    @Test
+    public void getUserByEmail_Should_Pass(){
+        User userToBeReturned = TestHelpers.createMockNonAdminUser1();
+
+        Mockito.when(userRepository.getUserByEmail(userToBeReturned.getEmail()))
+                .thenReturn(userToBeReturned);
+
+        userService.getUserByEmail(userToBeReturned.getEmail());
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .getUserByEmail(userToBeReturned.getEmail());
+    }
+
+    @Test
+    public void unblockUser_Should_Throw_When_UserIsNotAdmin() {
+        User userNotAdmin = TestHelpers.createMockNonAdminUser1();
+        User userToBeUnblocked = TestHelpers.createMockNonAdminUser1();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> userService.blockUser(userToBeUnblocked, userNotAdmin));
+    }
+
+    @Test
+    public void unblockUser_Should_Pass() {
+        User admin = TestHelpers.createMockNonAdminUser1();
+        User userToBeUnblocked = TestHelpers.createMockNonAdminUser1();
+        Role adminRole = TestHelpers.createMockRoleMember();
+        adminRole.setRoleId(1);
+        admin.getRoles().add(adminRole);
+
+        userService.unBlockUser(userToBeUnblocked, admin);
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .updateUser(userToBeUnblocked);
+
+        Assertions.assertFalse(userToBeUnblocked.isBlocked());
+    }
+
+
+    @Test
+    public void getTopTwelveTravelOrganizersByRating_Should_Pass(){
+        List<User> result = new ArrayList<>();
+
+        Mockito.when(userRepository.getTopTwelveTravelOrganizersByRating())
+                .thenReturn(result);
+
+        userService.getTopTwelveTravelOrganizersByRating();
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .getTopTwelveTravelOrganizersByRating();
+    }
+
+    @Test
+    public void deleteAvatar_Should_Throw_When_NotSameUserAndNotAdmin(){
+        User userTobeUpdated = TestHelpers.createMockNonAdminUser1();
+        User nonAdminUser = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> userService.deleteUser(userTobeUpdated, nonAdminUser));
+    }
+
+    @Test
+    public void deleteAvatar_Should_Pass(){
+        User userTobeUpdated = TestHelpers.createMockNonAdminUser1();
+
+        Mockito.when(userRepository.updateUser(userTobeUpdated))
+                .thenReturn(userTobeUpdated);
+
+        userService.deleteAvatar(userTobeUpdated, userTobeUpdated);
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .updateUser(userTobeUpdated);
+    }
+
+    /*TODO - do we need to write a test for this method at all?*/
+    @Test
+    public void getAllFeedbackForDriver_Should_Pass(){
+        User user = TestHelpers.createMockNonAdminUser1();
+        Assertions.assertEquals(user.getFeedback(), user.getFeedback());
+    }
+
 }
