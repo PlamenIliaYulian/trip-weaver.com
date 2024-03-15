@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{Fragments.html :: head('Trip-Weaver | User Search')}"></head>
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Users')}"></head>
 <body class="page-search page-search--result">
 
 <!-- Loader-->
@@ -82,7 +82,7 @@
                 <div class="main-search-section">
                     <div class="search-result">
                         <div class="search-result__info"><span data-uk-icon="search"></span>
-                            <p >Below are our active users:</p>
+                            <p >Below are active users:</p>
                         </div>
                         <div class="search-result__col"><img src="../static/assets/img/capacity.svg"
                                                              th:src="@{/assets/img/capacity.svg}" alt="icon">
@@ -90,28 +90,35 @@
                         </div>
                         <div class="search-result__list">
                             <div class="search-result-item" th:each="user : ${users}">
-                                <div class="search-result-item__car"><img src="../static/assets/img/search-car-1.png"
+                                <div class="search-result-item__car"><!--<img src="../static/assets/img/search-car-1.png"
                                                                           th:src="@{/assets/img/search-car-1.png}"
-                                                                          alt="people"></div>
+                                                                          alt="people">-->
+                                    <div class="user-box__avatar" id="all-users-avatar-view">
+                                        <img th:src="${user.getAvatar().getAvatarUrl()}"
+                                             alt="driver-pic"></div>
+                                </div>
                                 <div class="search-result-item__info">
                                     <div class="user-box">
-                                        <div class="user-box__avatar">
+                                        <!--<div class="user-box__avatar">
                                             <img th:src="${user.getAvatar().getAvatarUrl()}"
-                                                 alt="driver-pic"></div>
+                                                 alt="driver-pic"></div>-->
                                         <div class="user-box__info">
                                             <div class="user-box__name"
-                                                 th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">
+                                                 th:text="${user.getUsername()}">
                                                 Ben Strokes
                                             </div>
                                             <div class="user-box__rating"><i class="fas fa-star"></i>
-                                                <b th:text="${user.getAverageDriverRating()} + ' / 5'">4.8/5 </b>
+                                                <b th:text="${user.getAverageDriverRating()} + ' / 5 as Driver'">4.8/5 </b>
+                                            </div>
+                                            <div class="user-box__rating"><i class="fas fa-star"></i>
+                                                <b th:text="${user.getAveragePassengerRating()} + ' / 5 as Passenger'">4.8/5 </b>
                                             </div>
                                         </div>
                                     </div>
                                     <ul class="list-info">
                                         <li><img src="../static/assets/img/mail.svg"
                                                  th:src="@{/assets/img/person.svg}" alt="driver-service"><span
-                                                th:text="${user.getUsername()}">Username</span></li>
+                                                th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">Username</span></li>
                                         <li><img src="../static/assets/img/mail.svg"
                                                  th:src="@{/assets/img/mail.svg}" alt="driver-service"><span
                                                 th:text="${user.getEmail()}">Email</span></li>
@@ -122,6 +129,11 @@
                                                  th:src="@{/assets/img/block_user.svg}" alt="block-user"><span th:if="${user.isBlocked}"
                                         >User is currently blocked.</span>
                                             <span th:unless="${user.isBlocked}">User is not blocked.</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/verified.svg"
+                                                 th:src="@{/assets/img/verified.svg}" alt="block-user"><span th:if="${user.isVerified()}"
+                                        >User is currently verified.</span>
+                                            <span th:unless="${user.isVerified()}">User is not verified.</span>
                                         </li>
                                     </ul>
 
