@@ -45,16 +45,13 @@
                                     </ul>
                                 </div>
                             </li>
+                            <li th:if="${isAdmin}"><a href="#" th:href="@{/travels/users}"> <img src="../static/assets/img/capacity.svg"
+                                                                               th:src="@{/assets/img/capacity.svg}" data-uk-svg
+                                                                               alt="search">Users</a>
+                            </li>
                             <li><a href="#" th:href="@{/travels/search}"> <img src="../static/assets/img/search.svg"
                                                                  th:src="@{/assets/img/search.svg}" data-uk-svg
                                                                  alt="search">Find a Ride</a>
-                                <!--       <div class="uk-navbar-dropdown">
-                                           <ul class="uk-nav uk-navbar-dropdown-nav">
-                                               <li><a href="02-search-1.html">Find a Ride</a></li>
-                                               <li><a href="02-search-2.html">Find a Ride Map</a></li>
-                                               <li><a href="02-search-3.html">Find a Ride Result</a></li>
-                                           </ul>
-                                       </div>-->
                             </li>
                             <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
                                                                    th:src="@{/assets/img/car.svg}" data-uk-svg
@@ -127,7 +124,12 @@
                         </li>
                         <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
                                                                th:src="@{/assets/img/car.svg}" data-uk-svg
-                                                               alt="car">Create Trip</a></li>
+                                                               alt="car">Create Trip</a>
+                        </li>
+                        <li th:if="${isAdmin}"><a href="#" th:href="@{/travels/users}"> <img src="../static/assets/img/capacity.svg"
+                                                                                             th:src="@{/assets/img/capacity.svg}" data-uk-svg
+                                                                                             alt="search">Users</a>
+                        </li>
                         <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
                                                             th:src="@{/assets/img/help2.svg}" data-uk-svg
                                                             alt="help2">About</a>

@@ -6,6 +6,7 @@ import com.tripweaver.models.*;
 import com.tripweaver.models.dtos.*;
 import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
+import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,17 @@ public class ModelsMapperImpl implements ModelsMapper {
                 dto.getDriverUsername(),
                 dto.getCommentContains(),
                 TRAVEL_STATUS_CREATED_ID,
+                dto.getSortBy(),
+                dto.getSortOrder()
+        );
+    }
+
+    @Override
+    public UserFilterOptions userFilterOptionsFromDto(UserFilterOptionsDto dto) {
+        return new UserFilterOptions(
+                dto.getUsername(),
+                dto.getEmail(),
+                dto.getPhoneNumber(),
                 dto.getSortBy(),
                 dto.getSortOrder()
         );
