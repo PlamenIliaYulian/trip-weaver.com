@@ -10,6 +10,8 @@ public interface FeedbackService {
     Feedback getFeedbackForDriverById (int id);
     /*Ilia*/
     Feedback getFeedbackForPassengerById (int id);
+
+    /*Yuli*/
     long getAllFiveStarReviewsCount();
 
 

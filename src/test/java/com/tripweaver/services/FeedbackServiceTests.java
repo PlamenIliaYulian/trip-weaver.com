@@ -46,4 +46,12 @@ public class FeedbackServiceTests {
         Mockito.verify(feedbackRepository, Mockito.times(1))
                 .getFeedbackForDriverById(Mockito.anyInt());
     }
+
+    @Test
+    public void getAllFiveStarReviewsCount_Should_CallRepository() {
+        feedbackService.getAllFiveStarReviewsCount();
+
+        Mockito.verify(feedbackRepository, Mockito.times(1))
+                .getAllFiveStarReviewsCount();
+    }
 }
