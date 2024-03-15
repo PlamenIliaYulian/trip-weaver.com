@@ -443,19 +443,24 @@ public class UserServiceTests {
         Mockito.when(userRepository.getUserByEmail(userToBeVerified.getEmail()))
                 .thenReturn(userWithSameEmail);
 
-        Assertions.assertThrows(DuplicateEntityException.class, ()-> userService.updateUser(userToBeVerified, userToBeVerified));
+        Assertions.assertThrows(DuplicateEntityException.class,
+                ()-> userService.updateUser(userToBeVerified, userToBeVerified));
     }
 
     /*TODO - to check with Ilia and Plamen why, in their opinion this method does not work.*/
     @Test
     public void updateUser_Should_Throw_When_NewPhoneAlreadyExists(){
         User userToBeVerified = TestHelpers.createMockNonAdminUser1();
-        User userWithSameEmail = TestHelpers.createMockNonAdminUser2();
+        User userWithSamePhone = TestHelpers.createMockNonAdminUser2();
+
+        Mockito.when(userRepository.getUserByEmail(userToBeVerified.getEmail()))
+                .thenReturn(userToBeVerified);
 
         Mockito.when(userRepository.getUserByPhoneNumber(userToBeVerified.getPhoneNumber()))
-                .thenReturn(userWithSameEmail);
+                .thenReturn(userWithSamePhone);
 
-        Assertions.assertThrows(DuplicateEntityException.class, ()-> userService.updateUser(userToBeVerified, userToBeVerified));
+        Assertions.assertThrows(DuplicateEntityException.class,
+                ()-> userService.updateUser(userToBeVerified, userToBeVerified));
     }
 
     @Test
