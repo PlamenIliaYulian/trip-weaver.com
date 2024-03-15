@@ -64,7 +64,19 @@
                                 <li><img src="../static/assets/img/driver-service-1.png"
                                          th:src="@{/assets/img/free_seats.svg}"
                                          alt="driver-service">
-                                    <span th:text="${travel.getFreeSeats() - travel.getUsersApprovedForTheTravel().size()} + ' free seats available.'">Max. 2 passengers in back seats</span>
+                                    <span th:text="${travel.getFreeSeats() - travel.getUsersApprovedForTheTravel().size()} + ' free seats available.'">
+                                        Max. 2 passengers in back seats</span>
+                                </li>
+                                <li><img src="../static/assets/img/driver-service-1.png"
+                                         th:src="@{/assets/img/mode_of_travel.svg}"
+                                         alt="driver-service">
+                                    <span th:text="${travel.getDistanceInKm()} + ' km.'">50km</span>
+                                </li>
+                                <li><img src="../static/assets/img/driver-service-1.png"
+                                         th:src="@{/assets/img/hourglass_bottom.svg}"
+                                         alt="driver-service">
+                                    <span th:text="${travel.getRideDurationInMinutes()/60} + 'h ' + ${travel.getRideDurationInMinutes()%60}+ 'min'">
+                                        2h 30min</span>
                                 </li>
                                 <li><img src="../static/assets/img/driver-service-2.png"
                                          th:src="@{/assets/img/comments.svg}"
@@ -137,6 +149,17 @@
                                                             </div>
                                                         </div>
 
+                                                        <div class="blog-card__title">
+                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}" class="uk-button button-decline" type="button"
+                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${approvedUser.getUserId()}__/decline}">
+                                                                Decline
+                                                            </a>
+                                                            <a th:if="${loggedUser.getUserId() == approvedUser.getUserId()}" class="uk-button button-cancel" type="button"
+                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${approvedUser.getUserId()}__/decline}">
+                                                                Cancel
+                                                            </a>
+                                                        </div>
+
                                                         <div class="blog-card__intro">
                                                             <div class="driver-card__services">
                                                                 <ul>
@@ -183,7 +206,7 @@
             </div>
         </div>
 
-        <div th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}" class="section-slider-blog single-travel-section-slider-blog">
+        <div class="section-slider-blog single-travel-section-slider-blog">
             <div class="section-title uk-text-center">
                 <div class="uk-h2">Applied Passengers</div>
             </div>
@@ -224,8 +247,21 @@
                                                                 </a>
                                                             </div>
                                                         </div>
-                                                        <div class="blog-card__title"><a href="05_blog-post.html">Making
-                                                            Car Rentals Easy & Secure</a></div>
+
+                                                        <div class="blog-card__title">
+                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}" class="uk-button button-approve" type="button"
+                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/approve}">
+                                                                Approve
+                                                            </a>
+                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}" class="uk-button button-decline" type="button"
+                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/decline}">
+                                                                Decline
+                                                            </a>
+                                                            <a th:if="${loggedUser.getUserId() == appliedPassanger.getUserId()}" class="uk-button button-cancel" type="button"
+                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/decline}">
+                                                                Cancel
+                                                            </a>
+                                                        </div>
 
                                                         <div class="blog-card__intro">
                                                             <div class="driver-card__services">

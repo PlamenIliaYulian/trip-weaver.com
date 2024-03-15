@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Error')}"></head>
+
+<body class="page-home">
+<div class="page-wrapper">
+
+    <header th:replace="~{Fragments.html :: page-header}"></header>
+
+    <main class="page-main">
+
+        <div class="section-banner">
+            <div class="section-banner__bg">
+                <div class="uk-cover-container"><img src="../static/assets/img/img-banner.jpg"
+                                                     th:src="@{/assets/img/img-banner.jpg}" alt="img-banner"
+                                                     data-uk-cover>
+                    <canvas></canvas>
+                </div>
+            </div>
+            <div class="section-banner__content uk-text-center">
+                <div class="uk-overlay uk-position-center-left uk-width-1-1">
+                    <div class="uk-container uk-width-1-1">
+                        <div class="section-banner__title"><span>Oops!</span>
+                            <h1 class="decor-top">Something went wrong...</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-steps">
+            <div class="uk-section uk-container">
+                <div class="error-content">
+                    <h3 class="display-1 fw-bold" th:text="${statusCode}">HTTP Status Code</h3>
+                    <p th:unless="${error == null}" class="error" th:text="${error}">Error placeholder</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Additional blocks-->
+    <div th:replace="~{Fragments.html :: additional-blocks}"></div>
+    <!--Footer-->
+    <footer th:replace="~{Fragments.html :: footer}"></footer>
+</div>
+<div th:replace="~{Fragments.html::script}"></div>
 </body>
 </html>

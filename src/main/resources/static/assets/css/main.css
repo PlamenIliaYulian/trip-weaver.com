@@ -5276,4 +5276,27 @@ body.page-search--result .page-header__phone .uk-button {
     height: 180px;
 }
 
+.button-approve{
+    background-color: #216524;
+}
+
+.button-decline{
+    background-color: #762317;
+}
+
+.button-cancel{
+    background-color: #762317;
+}
+
+.blog-card__title .button-approve,
+.blog-card__title .button-decline,
+.blog-card__title .button-cancel {
+    color: white;
+}
+
+
+/*.uk-button-danger:hover,
+.uk-button-danger:focus,
+.uk-button-danger:active*/
+
 /*Custom CSS END*/

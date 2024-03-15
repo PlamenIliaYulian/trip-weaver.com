@@ -4,6 +4,7 @@ import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -131,9 +131,8 @@ public class TravelMvcController {
                                  HttpSession session,
                                  Model model) {
 
-        User user;
         try {
-            user = authenticationHelper.tryGetUserFromSession(session);
+            authenticationHelper.tryGetUserFromSession(session);
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
         }
@@ -182,6 +181,72 @@ public class TravelMvcController {
             return "Error";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
+        }
+    }
+
+    @GetMapping("/{travelId}/applications/user/{userId}/approve")
+    public String approvePassenger(@PathVariable int travelId,
+                                   @PathVariable int userId,
+                                   HttpSession session,
+                                   Model model) {
+
+        try {
+            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
+            Travel travel = travelService.getTravelById(travelId);
+            User userToBeApproved = userService.getUserById(userId);
+            travelService.approvePassenger(userToBeApproved, loggedUser, travel);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("redirect:/travels/").append(travelId);
+            return sb.toString();
+
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
+    @GetMapping("/{travelId}/applications/user/{userId}/decline")
+    public String declinePassenger(@PathVariable int travelId,
+                                   @PathVariable int userId,
+                                   HttpSession session,
+                                   Model model) {
+
+        try {
+            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
+            Travel travel = travelService.getTravelById(travelId);
+            User userToBeDeclined = userService.getUserById(userId);
+            travelService.declinePassenger(userToBeDeclined, travel, loggedUser);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("redirect:/travels/").append(travelId);
+            return sb.toString();
+
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
         }
     }
 }
