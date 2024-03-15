@@ -38,4 +38,12 @@ public class FeedbackServiceTests {
         Mockito.verify(feedbackRepository, Mockito.times(1))
                 .createFeedback(feedback);
     }
+
+    @Test
+    public void getFeedbackForDriverById_Should_CallRepository() {
+        feedbackService.getFeedbackForDriverById(Mockito.anyInt());
+
+        Mockito.verify(feedbackRepository, Mockito.times(1))
+                .getFeedbackForDriverById(Mockito.anyInt());
+    }
 }

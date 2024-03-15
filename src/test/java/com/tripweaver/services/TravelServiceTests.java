@@ -9,6 +9,7 @@ import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.repositories.contracts.TravelRepository;
+import org.antlr.v4.runtime.tree.Tree;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import com.tripweaver.services.contracts.BingMapService;
@@ -20,12 +21,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 import static com.tripweaver.services.helpers.ConstantHelper.*;
-
-import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 public class TravelServiceTests {
@@ -320,6 +318,125 @@ public class TravelServiceTests {
         loggedUser.setUserId(2);
 
         travelService.applyForATrip(loggedUser, travel);
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .updateTravel(travel);
+    }
+
+    @Test
+    public void completeTravel_Should_Throw_When_UserTryingToCompleteTheRideIsNotDriver() {
+        Travel travelToBeCompleted = TestHelpers.createMockTravel2();
+        User notDriver = TestHelpers.createMockNonAdminUser1();
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> travelService.completeTravel(travelToBeCompleted, notDriver));
+    }
+
+    @Test
+    public void completeTravel_Should_Throw_When_ItsStatusIsNotCreated() {
+        Travel travelToBeCompleted = TestHelpers.createMockTravel1();
+        TravelStatus travelStatus = TestHelpers.createMockTravelStatusCanceled();
+        travelToBeCompleted.setStatus(travelStatus);
+        User driver = TestHelpers.createMockNonAdminUser1();
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> travelService.completeTravel(travelToBeCompleted, driver));
+    }
+
+    @Test
+    public void completeTravel_Should_CallRepository() {
+        Travel travelToBeCompleted = TestHelpers.createMockTravel1();
+        User driver = TestHelpers.createMockNonAdminUser1();
+
+        travelService.completeTravel(travelToBeCompleted, driver);
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .updateTravel(travelToBeCompleted);
+    }
+
+    @Test
+    public void getTravelById_Should_CallRepository() {
+        travelService.getTravelById(Mockito.anyInt());
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .getTravelById(Mockito.anyInt());
+    }
+
+    @Test
+    public void approvePassenger_Should_Throw_When_UserApplyingForRideIsBlocked() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User driver = travel.getDriver();
+        User blockedUser = TestHelpers.createMockNonAdminUser2();
+        blockedUser.setBlocked(true);
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> travelService.approvePassenger(blockedUser,driver, travel));
+    }
+
+    @Test
+    public void approvePassenger_Should_Throw_When_DriverIsBlocked() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User driver = travel.getDriver();
+        driver.setBlocked(true);
+        User passenger = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> travelService.approvePassenger(passenger,driver, travel));
+    }
+
+    @Test
+    public void approvePassenger_Should_Throw_When_UserTryingToApprovePassengerIsNotTravelDriver() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User notTravelDriver = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> travelService.approvePassenger(notTravelDriver,notTravelDriver, travel));
+    }
+
+    @Test
+    public void approvePassenger_Should_Throw_When_TravelHasStatusDifferentThanCreated() {
+        Travel travel = TestHelpers.createMockTravel1();
+        travel.setStatus(TestHelpers.createMockTravelStatusCanceled());
+        User driver = travel.getDriver();
+        User passenger = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> travelService.approvePassenger(passenger,driver, travel));
+    }
+
+    @Test
+    public void approvePassenger_Should_Throw_When_UserToBeApprovedIsNotInTheListWithAppliedPassengers() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User driver = travel.getDriver();
+        User passenger = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> travelService.approvePassenger(passenger,driver, travel));
+    }
+
+    @Test
+    public void approvePassenger_Should_Throw_When_NoMoreFreeSeatsAreAvailable() {
+        Travel travel = TestHelpers.createMockTravel1();
+        travel.setFreeSeats(1);
+        User driver = travel.getDriver();
+        User passenger = TestHelpers.createMockNonAdminUser2();
+        passenger.setUserId(3);
+
+        Assertions.assertThrows(InvalidOperationException.class,
+                () -> travelService.approvePassenger(passenger,driver, travel));
+    }
+
+    @Test
+    public void approvePassenger_Should_CallRepository() {
+        Travel travel = TestHelpers.createMockTravel1();
+        User driver = travel.getDriver();
+        User passenger = TestHelpers.createMockNonAdminUser2();
+        passenger.setUserId(3);
+        Set<User> appliedPassengers = new TreeSet<>();
+        appliedPassengers.add(passenger);
+
+        travel.setUsersAppliedForTheTravel(appliedPassengers);
+        travelService.approvePassenger(passenger,driver, travel);
 
         Mockito.verify(travelRepository, Mockito.times(1))
                 .updateTravel(travel);

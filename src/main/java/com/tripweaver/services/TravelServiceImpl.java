@@ -138,9 +138,9 @@ public class TravelServiceImpl implements TravelService {
         Set<User> usersAppliedForTheTravel = travel.getUsersAppliedForTheTravel();
 
         ValidationHelper.hasAlreadyApplied(userToBeApproved, travel, INVALID_OPERATION);
-        usersAppliedForTheTravel.remove(userToBeApproved);
         Set<User> usersApprovedForTheTravel = travel.getUsersApprovedForTheTravel();
         ValidationHelper.isThereAnyFreeSeatsInTravel(travel, usersApprovedForTheTravel);
+        usersAppliedForTheTravel.remove(userToBeApproved);
         usersApprovedForTheTravel.add(userToBeApproved);
         return travelRepository.updateTravel(travel);
     }

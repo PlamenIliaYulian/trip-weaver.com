@@ -39,4 +39,12 @@ public class RoleServiceTests {
 
         Assertions.assertEquals(2, role.getRoleId());
     }
+
+    @Test
+    public void getAllRoles_Should_CallRepository() {
+        roleService.getAllRoles();
+
+        Mockito.verify(roleRepository, Mockito.times(1))
+                .getAllRoles();
+    }
 }
