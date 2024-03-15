@@ -25,7 +25,7 @@
                                         <div class="uk-inline uk-width-1-1">
                                             <input class="input-place uk-input"
                                                    type="text"
-                                                   placeholder="Starting Point City"
+                                                   placeholder="Username"
                                                    th:field="*{username}">
                                         </div>
                                     </div>
@@ -33,7 +33,7 @@
                                         <div class="uk-inline uk-width-1-1">
                                             <input class="input-place uk-input"
                                                    type="text"
-                                                   placeholder="Ending Point City"
+                                                   placeholder="Email"
                                                    th:field="*{email}">
                                         </div>
                                     </div>
@@ -41,7 +41,7 @@
                                         <div class="uk-inline uk-width-1-1">
                                             <input class="input-place uk-input"
                                                    type="text"
-                                                   placeholder="Driver Username"
+                                                   placeholder="Phone number"
                                                    th:field="*{phoneNumber}">
                                         </div>
                                     </div>
@@ -50,9 +50,9 @@
                                             <select class="input-place uk-input" id="browse-posts-input-sortBy"
                                                     th:field="*{sortBy}">
                                                 <option value="">Sort By</option>
-                                                <option value="username">Starting City</option>
-                                                <option value="email">Ending City</option>
-                                                <option value="phoneNumber">Departure Time</option>
+                                                <option value="username">Username</option>
+                                                <option value="email">Email</option>
+                                                <option value="phoneNumber">Phone number</option>
                                             </select>
                                         </div>
                                     </div>
@@ -64,10 +64,6 @@
                                                 <option value="asc">Ascending</option>
                                                 <option value="desc">Descending</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="uk-inline uk-width-1-1">
                                         </div>
                                     </div>
                                 </div>
@@ -95,7 +91,7 @@
                         <div class="search-result__list">
                             <div class="search-result-item" th:each="user : ${users}">
                                 <div class="search-result-item__car"><img src="../static/assets/img/search-car-1.png"
-                                                                          th:src="@{/assets/img/blog-thumb-5.jpg}"
+                                                                          th:src="@{/assets/img/search-car-1.png}"
                                                                           alt="people"></div>
                                 <div class="search-result-item__info">
                                     <div class="user-box">
@@ -113,11 +109,9 @@
                                         </div>
                                     </div>
                                     <ul class="list-info">
-                                        <!--<li><img src="../static/assets/img/driver-service-1.png"
-                                                 th:src="@{/assets/img/capacity.svg}"
-                                                 alt="driver-service">
-                                            <span th:text="'Max. ' + ${travel.getFreeSeats()} + ' seats available.'">Max. 2 passengers in back seats</span>
-                                        </li>-->
+                                        <li><img src="../static/assets/img/mail.svg"
+                                                 th:src="@{/assets/img/person.svg}" alt="driver-service"><span
+                                                th:text="${user.getUsername()}">Username</span></li>
                                         <li><img src="../static/assets/img/mail.svg"
                                                  th:src="@{/assets/img/mail.svg}" alt="driver-service"><span
                                                 th:text="${user.getEmail()}">Email</span></li>
@@ -125,45 +119,25 @@
                                                  th:src="@{/assets/img/phone.svg}" alt="driver-service"><span
                                                 th:text="${user.getPhoneNumber()}">Phone number</span></li>
                                         <li><img src="../static/assets/img/phone.svg"
-                                                 th:src="@{/assets/img/block_user.svg}" alt="block-user"><span th:if="${isBlocked}"
-                                        >User is currently blocked!</span>
-                                            <span th:unless="${isBlocked}">User is not blocked!</span>
+                                                 th:src="@{/assets/img/block_user.svg}" alt="block-user"><span th:if="${user.isBlocked}"
+                                        >User is currently blocked.</span>
+                                            <span th:unless="${user.isBlocked}">User is not blocked.</span>
                                         </li>
-                                        <!--<li><img src="../static/assets/img/driver-service-1.png"
-                                                 th:src="@{/assets/img/free_seats.svg}"
-                                                 alt="driver-service">
-                                            <span th:text="${travel.getFreeSeats() - travel.getUsersApprovedForTheTravel().size()} + ' free seats available.'">Max. 2 passengers in back seats</span>
-                                        </li>-->
-                                       <!-- <li><img src="../static/assets/img/driver-service-2.png"
-                                                 th:src="@{/assets/img/comments.svg}"
-                                                 alt="driver-service">
-                                            <span th:unless="${travel.getComment()==null}"
-                                                  th:text="${travel.getComment()}">Pets are not allowed in the Car</span>
-                                        </li>-->
                                     </ul>
 
                                 </div>
                                 <div class="search-result-item__price">
                                     <div class="price-box">
-                                        <!--<div class="price-box__time"
-                                             th:text="${#temporals.format(travel.getDepartureTime(), 'yyyy-MMM-dd hh:mm a')}">
-                                            2:00 PM
-                                        </div>-->
-                                        <div class="price-box__price">
-                                            <!--<div class="current-price"
-                                                 th:text="${travel.getStartingPointCity() + ' - '+ travel.getEndingPointCity()}">
-                                                $19.50
-                                            </div>-->
-                                            <!--<div class="col-user">For 1 Passenger</div>-->
-                                            <!--<a class="uk-button uk-button-danger" type="button" th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
-                                            </a>-->
 
-                                            <a th:unless="${isBlocked}" class="uk-button button-decline" type="button"
-                                               th:href="@{/users/{userId}(id=${user.getUserId()})/block}">
+                                        <div class="price-box__price">
+
+
+                                            <a th:unless="${user.isBlocked}" class="uk-button button-decline" type="button"
+                                               th:href="@{/users/{userId}/block(userId=${user.getUserId()})}">
                                                 Block
                                             </a>
-                                            <a th:if="${isBlocked}"  class="uk-button button-approve" type="button"
-                                               th:href="@{/users/{userId}(id=${user.getUserId()})/unblock}">
+                                            <a th:if="${user.isBlocked}"  class="uk-button button-approve" type="button"
+                                               th:href="@{/users/{userId}/unblock(userId=${user.getUserId()})}">
                                                 Unblock
                                             </a>
                                         </div>

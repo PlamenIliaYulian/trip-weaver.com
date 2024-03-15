@@ -143,7 +143,7 @@ public class UserMvcController {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromSession(session);
             User userToBeUnblocked = userService.getUserById(userId);
-            userService.blockUser(userToBeUnblocked, loggedUser);
+            userService.unBlockUser(userToBeUnblocked, loggedUser);
 
             return "redirect:/users/search";
 

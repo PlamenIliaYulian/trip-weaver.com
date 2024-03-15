@@ -5294,6 +5294,11 @@ body.page-search--result .page-header__phone .uk-button {
     color: white;
 }
 
+.price-box__price .button-approve,
+.price-box__price .button-decline{
+    color: white;
+}
+
 
 /*.uk-button-danger:hover,
 .uk-button-danger:focus,
