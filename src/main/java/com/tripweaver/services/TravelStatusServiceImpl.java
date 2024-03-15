@@ -3,6 +3,7 @@ package com.tripweaver.services;
 import com.tripweaver.models.TravelStatus;
 import com.tripweaver.repositories.contracts.TravelStatusRepository;
 import com.tripweaver.services.contracts.TravelStatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,6 +11,7 @@ public class TravelStatusServiceImpl implements TravelStatusService {
 
     private final TravelStatusRepository travelStatusRepository;
 
+    @Autowired
     public TravelStatusServiceImpl(TravelStatusRepository travelStatusRepository) {
         this.travelStatusRepository = travelStatusRepository;
     }
