@@ -459,7 +459,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void updateUser_Should_Pass(){
+    public void updateUser_Should_CallRepository(){
         User userToBeUpdated = TestHelpers.createMockNonAdminUser1();
 
         Mockito.when(userRepository.getUserByEmail(userToBeUpdated.getEmail()))
@@ -474,7 +474,7 @@ public class UserServiceTests {
 
 
     @Test
-    public void getUserByEmail_Should_Pass(){
+    public void getUserByEmail_Should_CallRepository(){
         User userToBeReturned = TestHelpers.createMockNonAdminUser1();
 
         Mockito.when(userRepository.getUserByEmail(userToBeReturned.getEmail()))
@@ -496,7 +496,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void unblockUser_Should_Pass() {
+    public void unblockUser_Should_CallRepository() {
         User admin = TestHelpers.createMockNonAdminUser1();
         User userToBeUnblocked = TestHelpers.createMockNonAdminUser1();
         Role adminRole = TestHelpers.createMockRoleMember();
@@ -513,7 +513,7 @@ public class UserServiceTests {
 
 
     @Test
-    public void getTopTwelveTravelOrganizersByRating_Should_Pass(){
+    public void getTopTwelveTravelOrganizersByRating_Should_CallRepository(){
         List<User> result = new ArrayList<>();
 
         Mockito.when(userRepository.getTopTwelveTravelOrganizersByRating())
@@ -535,7 +535,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void deleteAvatar_Should_Pass(){
+    public void deleteAvatar_Should_CallRepository(){
         User userTobeUpdated = TestHelpers.createMockNonAdminUser1();
 
         Mockito.when(userRepository.updateUser(userTobeUpdated))

@@ -51,5 +51,16 @@ public class AvatarServiceTests {
                 .getAvatarById(Mockito.anyInt());
     }
 
+    /*Ilia*/
+    @Test
+    public void getDefaultAvatar_Should_CallRepository() {
+        avatarService.getDefaultAvatar();
+
+        Mockito.verify(avatarRepository, Mockito.times(1))
+                .getDefaultAvatar();
+    }
+
+
+
 
 }
