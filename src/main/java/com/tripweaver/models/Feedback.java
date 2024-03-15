@@ -10,7 +10,7 @@ import java.util.Comparator;
 @Entity
 @Table(name = "feedback")
 @SecondaryTable(name = "comments_for_feedback", pkJoinColumns = @PrimaryKeyJoinColumn(name = "feedback_id"))
-public class Feedback implements Comparable<Feedback>{
+public class Feedback implements Comparable<Feedback> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class Feedback implements Comparable<Feedback>{
     @JoinColumn(name = "user_author_id")
     private User author;
     @JsonIgnore
-    @ManyToOne(targetEntity=User.class,fetch=FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_receiver_id")
     private User receiver;
     @Column(name = "rating")
@@ -105,7 +105,7 @@ public class Feedback implements Comparable<Feedback>{
     }
 
     @Override
-    public int compareTo(Feedback o){
+    public int compareTo(Feedback o) {
         return Comparator.comparing(Feedback::getAuthor)
                 .thenComparing(Feedback::getReceiver)
                 .thenComparing(Feedback::getTravel)

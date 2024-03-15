@@ -26,13 +26,11 @@ public class AvatarServiceImpl implements AvatarService {
         return avatarRepository.getDefaultAvatar();
     }
 
-    /*Ilia*/
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
         return avatarRepository.uploadPictureToCloudinary(multipartFile);
     }
 
-    /*Ilia*/
     @Override
     public Avatar getAvatarById(int id) {
         return avatarRepository.getAvatarById(id);

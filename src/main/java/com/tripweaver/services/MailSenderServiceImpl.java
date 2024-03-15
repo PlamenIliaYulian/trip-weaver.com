@@ -15,11 +15,11 @@ public class MailSenderServiceImpl implements MailSenderService {
     private final String mailSubject = "www.trip-weaver.com - Please Verify Your Email Address";
     private String mailbody = """
             Dear %s,
-            
+                        
             Thank you for signing up for our service. To complete your registration and gain access to all features, please verify your email address by clicking the link below:
-            
+                        
             %s
-            
+                        
             If you did not create an account with us, please disregard this email.
             Thank you,
             Trip Weavers
@@ -42,7 +42,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         String verificationFullLink = String.format(verificationLink, recipient.getEmail());
         message.setFrom(senderMail);
         message.setTo(recipient.getEmail());
-        message.setText(String.format(mailbody, recipient.getUsername(),verificationFullLink));
+        message.setText(String.format(mailbody, recipient.getUsername(), verificationFullLink));
         message.setSubject(mailSubject);
         mailSender.send(message);
     }

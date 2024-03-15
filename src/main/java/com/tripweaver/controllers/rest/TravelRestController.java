@@ -15,7 +15,6 @@ import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,11 +31,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
+
 @RestController
 @RequestMapping("/api/v1/travels")
 @Tag(name = "Travel")
 public class TravelRestController {
-    public static final int TRAVEL_STATUS_CREATED_ID = 1;
     private final ModelsMapper modelsMapper;
     private final AuthenticationHelper authenticationHelper;
     private final TravelService travelService;
@@ -55,7 +55,6 @@ public class TravelRestController {
         this.bingMapService = bingMapService;
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Create new travel.",
             description = "Create a new travel in the database. Authentication needed.",
@@ -76,7 +75,9 @@ public class TravelRestController {
                             description = "Missing Authentication.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Not authenticated", value = "The requested resource requires authentication.",
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to create a Travel.")
                                     },
                                     mediaType = "Plain text")
@@ -86,9 +87,13 @@ public class TravelRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "User is blocked", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "User is blocked",
+                                                    value = "Unauthorized operation.",
                                                     description = "A blocked user is not able to create travels."),
-                                            @ExampleObject(name = "User is not verified", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "User is not verified",
+                                                    value = "Unauthorized operation.",
                                                     description = "Before verifying their email, users cannot participate in rides.")
                                     },
                                     mediaType = "Plain text")
@@ -98,7 +103,9 @@ public class TravelRestController {
                             description = "Bad request.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Bad request.", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "Bad request.",
+                                                    value = "Invalid operation.",
                                                     description = "Departure time cannot be before current moment.")
                                     },
                                     mediaType = "Plain text")
@@ -156,7 +163,6 @@ public class TravelRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Get a single travel by numeric ID.",
             description = "Get only one travel info by providing numeric ID in the endpoint.",
@@ -180,7 +186,9 @@ public class TravelRestController {
                             description = "Not Found status.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Missing travel", value = "Travel with ID '200' not found.",
+                                            @ExampleObject(
+                                                    name = "Missing travel",
+                                                    value = "Travel with ID '200' not found.",
                                                     description = "There is no such travel with the provided ID.")
                                     },
                                     mediaType = "Plain text")
@@ -190,7 +198,9 @@ public class TravelRestController {
                             description = "Missing Authentication.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Not authenticated", value = "The requested resource requires authentication.",
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to get a travel by ID.")
                                     },
                                     mediaType = "Plain text")
@@ -251,7 +261,6 @@ public class TravelRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Driver approves applied passenger for a certain travel.",
             description = "Approve a passenger that has applied to join a specific travel providing the travel numeric ID " +
@@ -296,7 +305,8 @@ public class TravelRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to view a User.")
                                     },
                                     mediaType = "Plain text")
@@ -306,11 +316,17 @@ public class TravelRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "User to be approved is blocked", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "User to be approved is blocked",
+                                                    value = "Unauthorized operation.",
                                                     description = "A blocked user is not able to be approved in travels."),
-                                            @ExampleObject(name = "User to approve is blocked", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "User to approve is blocked",
+                                                    value = "Unauthorized operation.",
                                                     description = "A blocked user is not able to approve any passengers."),
-                                            @ExampleObject(name = "User to approve is not the driver", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "User to approve is not the driver",
+                                                    value = "Unauthorized operation.",
                                                     description = "A user who is not the driver of the travel is not able to approve any passengers."),
                                     },
                                     mediaType = "Plain text")
@@ -320,9 +336,13 @@ public class TravelRestController {
                             description = "Bad request.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Travel status not 'created'", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "Travel status not 'created'",
+                                                    value = "Invalid operation.",
                                                     description = "The travel has a status different from 'CREATED'."),
-                                            @ExampleObject(name = "User not applied", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "User not applied",
+                                                    value = "Invalid operation.",
                                                     description = "User to be approved has not applied for the travel.")
                                     },
                                     mediaType = "Plain text")

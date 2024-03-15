@@ -34,6 +34,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import static com.tripweaver.services.helpers.ConstantHelper.CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "User")
@@ -45,7 +47,6 @@ public class UserRestController {
     private final AuthenticationHelper authenticationHelper;
     private final ModelsMapper modelsMapper;
     private final AvatarService avatarService;
-
 
     @Autowired
     public UserRestController(UserService userService, MailSenderService mailService,
@@ -67,6 +68,9 @@ public class UserRestController {
     @PostMapping
     public User createUser(@RequestBody @Valid UserDtoCreate userDtoCreate) {
         try {
+            if (!userDtoCreate.getPassword().equals(userDtoCreate.getConfirmPassword())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD);
+            }
             User user = modelsMapper.userFromDtoCreate(userDtoCreate);
             user = userService.createUser(user);
             mailService.sendEmail(user);
@@ -78,7 +82,6 @@ public class UserRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Updates the information of the user found by the numeric ID.",
             description = "Used to update User's first name, last name, email, phone number or password.",
@@ -105,7 +108,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to update a User information.")
                                     },
                                     mediaType = "Plain text")
@@ -115,7 +119,9 @@ public class UserRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Logged user not the same", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "Logged user not the same",
+                                                    value = "Unauthorized operation.",
                                                     description = "The logged user who is updating the info is not the same" +
                                                             "as the one who will be updated.")
                                     },
@@ -127,7 +133,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
                                                     description = "There is no such user with the provided ID.")
                                     },
                                     mediaType = "Plain text")
@@ -137,9 +144,13 @@ public class UserRestController {
                             description = "Conflict.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Email", value = "Duplication exist. Email has to be unique.",
+                                            @ExampleObject(
+                                                    name = "Email",
+                                                    value = "Duplication exist. Email has to be unique.",
                                                     description = "Provided email already exists in the database."),
-                                            @ExampleObject(name = "Phone number", value = "Duplication exist. Phone number has to be unique.",
+                                            @ExampleObject(
+                                                    name = "Phone number",
+                                                    value = "Duplication exist. Phone number has to be unique.",
                                                     description = "Provided phone number already exists in the database.")
 
                                     },
@@ -150,9 +161,13 @@ public class UserRestController {
                             description = "Bad request.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Travel status not 'created'", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "Travel status not 'created'",
+                                                    value = "Invalid operation.",
                                                     description = "The travel has a status different from 'CREATED'."),
-                                            @ExampleObject(name = "User not applied", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "User not applied",
+                                                    value = "Invalid operation.",
                                                     description = "User to be approved has not applied for the travel.")
                                     },
                                     mediaType = "Plain text")
@@ -166,6 +181,9 @@ public class UserRestController {
                     @Valid @RequestBody UserDto userDto,
                     @RequestHeader HttpHeaders headers) {
         try {
+            if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD);
+            }
             User userToBeUpdated = modelsMapper.userFromDto(userDto, userId);
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
             return userService.updateUser(userToBeUpdated, loggedUser);
@@ -217,7 +235,6 @@ public class UserRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Blocks a user found by the numeric ID.",
             description = "Used to from admin of the system to block a certain user by his/her numeric ID.",
@@ -242,7 +259,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to update a User information.")
                                     },
                                     mediaType = "Plain text")
@@ -252,7 +270,9 @@ public class UserRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Not admin", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "Not admin",
+                                                    value = "Unauthorized operation.",
                                                     description = "You have to admin to block another user.")
                                     },
                                     mediaType = "Plain text")
@@ -263,7 +283,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
                                                     description = "There is no such user with the provided ID.")
                                     },
                                     mediaType = "Plain text")
@@ -304,7 +325,6 @@ public class UserRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Pulls from the database the count of all created users in the system.",
             description = "Used to obtain the total amount of users registered in the system.",
@@ -331,7 +351,6 @@ public class UserRestController {
         return userService.getTopTwelveTravelPassengersByRating();
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Uploads an avatar / profile picture to user's profile.",
             description = "Used to update user's profile by updating his/her avatar / profile picture.",
@@ -354,7 +373,9 @@ public class UserRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Logged user not the same", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "Logged user not the same",
+                                                    value = "Unauthorized operation.",
                                                     description = "The logged user who is adding the avatar is not the same" +
                                                             "as the one who will be updated.")
                                     },
@@ -366,7 +387,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to update a User information.")
                                     },
                                     mediaType = "Plain text")
@@ -377,7 +399,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
                                                     description = "There is no such user with the provided ID.")
                                     },
                                     mediaType = "Plain text")
@@ -387,7 +410,9 @@ public class UserRestController {
                             description = "Bad request.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Uploading picture", value = "Error during uploading the picture.",
+                                            @ExampleObject(
+                                                    name = "Uploading picture",
+                                                    value = "Error during uploading the picture.",
                                                     description = "The provided picture failed to be uploaded " +
                                                             "because the size is too large.")
                                     },
@@ -435,7 +460,6 @@ public class UserRestController {
         }
     }
 
-    /*Yuli*/
     @Operation(
             summary = "Leave a feedback to a passenger.",
             description = "Driver of the travel leaves a feedback to one of his passengers of a certain travel. " +
@@ -460,7 +484,9 @@ public class UserRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "User not the driver", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "User not the driver",
+                                                    value = "Unauthorized operation.",
                                                     description = "User leaving feedback for passenger is not the driver" +
                                                             "of the travel.")
                                     },
@@ -472,10 +498,12 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
                                                     description = "There is no such user with the provided ID."),
                                             @ExampleObject(
-                                                    name = "Missing travel", value = "Travel with ID '200' not found.",
+                                                    name = "Missing travel",
+                                                    value = "Travel with ID '200' not found.",
                                                     description = "There is no such travel with the provided ID.")
 
                                     },
@@ -487,7 +515,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to update a User information.")
                                     },
                                     mediaType = "Plain text")
@@ -497,12 +526,18 @@ public class UserRestController {
                             description = "Bad request.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Travel status not 'completed'", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "Travel status not 'completed'",
+                                                    value = "Invalid operation.",
                                                     description = "The travel has a status different from 'COMPLETED'."),
-                                            @ExampleObject(name = "User not approved", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "User not approved",
+                                                    value = "Invalid operation.",
                                                     description = "The user to be left feedback for is not on the " +
                                                             "approved list for the travel."),
-                                            @ExampleObject(name = "Feedback left", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "Feedback left",
+                                                    value = "Invalid operation.",
                                                     description = "Feedback for this passenger on this travel " +
                                                             "has already been submitted.")
                                     },
@@ -534,7 +569,6 @@ public class UserRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Leave a feedback to a driver.",
             description = "A passenger of the travel leaves a feedback to the driver of a certain travel. " +
@@ -559,7 +593,9 @@ public class UserRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "User not the driver", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "User not the driver",
+                                                    value = "Unauthorized operation.",
                                                     description = "User we are leaving feedback for is not the driver" +
                                                             "of the travel.")
                                     },
@@ -571,12 +607,16 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
                                                     description = "There is no such user with the provided ID."),
                                             @ExampleObject(
-                                                    name = "Missing travel", value = "Travel with ID '200' not found.",
+                                                    name = "Missing travel",
+                                                    value = "Travel with ID '200' not found.",
                                                     description = "There is no such travel with the provided ID."),
-                                            @ExampleObject(name = "User not approved", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "User not approved",
+                                                    value = "Invalid operation.",
                                                     description = "The user to left feedback for the driver is not on the " +
                                                             "approved list for the travel."),
 
@@ -589,7 +629,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to update a User information.")
                                     },
                                     mediaType = "Plain text")
@@ -599,14 +640,22 @@ public class UserRestController {
                             description = "Bad request.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Travel status not 'completed'", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "Travel status not 'completed'",
+                                                    value = "Invalid operation.",
                                                     description = "The travel has a status different from 'COMPLETED'."),
-                                            @ExampleObject(name = "User is the driver", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "User is the driver",
+                                                    value = "Invalid operation.",
                                                     description = "User leaving feedback for the driver is the driver itself."),
-                                            @ExampleObject(name = "User not approved", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "User not approved",
+                                                    value = "Invalid operation.",
                                                     description = "The user to be left feedback for is not on the " +
                                                             "approved list for the travel."),
-                                            @ExampleObject(name = "Feedback left", value = "Invalid operation.",
+                                            @ExampleObject(
+                                                    name = "Feedback left",
+                                                    value = "Invalid operation.",
                                                     description = "Feedback for the driver of this travel from this passenger " +
                                                             "has already been submitted.")
                                     },
@@ -676,7 +725,6 @@ public class UserRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "User viewing all his/her travels as driver of the travel.",
             description = "Get a list of all his/her travels as driver of the travel no matter the status of the" +
@@ -742,7 +790,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to view the resource.")
                                     },
                                     mediaType = "Plain text")
@@ -753,7 +802,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
                                                     description = "There is no such user with the provided ID.")
 
                                     },
@@ -764,7 +814,8 @@ public class UserRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Logged user not the same", value = "Unauthorized operation.",
+                                            @ExampleObject(name = "Logged user not the same",
+                                                    value = "Unauthorized operation.",
                                                     description = "The logged-in user is attempting to view travels " +
                                                             "belonging to a different user."
                                             )
@@ -842,7 +893,6 @@ public class UserRestController {
         }
     }
 
-    /*Ilia*/
     @Operation(
             summary = "Delete a single user by numeric ID.",
             description = "Delete a user by providing numeric ID in the endpoint. You need to be logged as " +
@@ -864,7 +914,9 @@ public class UserRestController {
                             description = "Not Found status.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Missing user", value = "User with ID '200' not found.",
+                                            @ExampleObject(
+                                                    name = "Missing user",
+                                                    value = "User with ID '200' not found.",
                                                     description = "There is no such user with the provided ID.")
                                     },
                                     mediaType = "Plain text")
@@ -875,7 +927,8 @@ public class UserRestController {
                             content = @Content(
                                     examples = {
                                             @ExampleObject(
-                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
                                                     description = "You need to be authenticated to delete a User.")
                                     },
                                     mediaType = "Plain text")
@@ -885,7 +938,9 @@ public class UserRestController {
                             description = "Not authorized.",
                             content = @Content(
                                     examples = {
-                                            @ExampleObject(name = "Not authorized", value = "Unauthorized operation.",
+                                            @ExampleObject(
+                                                    name = "Not authorized",
+                                                    value = "Unauthorized operation.",
                                                     description = "Only the user itself can delete his/her profile.")
                                     },
                                     mediaType = "Plain text")

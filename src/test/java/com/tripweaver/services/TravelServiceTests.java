@@ -30,7 +30,6 @@ public class TravelServiceTests {
 
     @Mock
     TravelRepository travelRepository;
-
     @Mock
     TravelStatusService travelStatusService;
     @Mock
@@ -38,7 +37,6 @@ public class TravelServiceTests {
     @InjectMocks
     TravelServiceImpl travelService;
 
-    /*Ilia*/
     @Test
     public void createTravel_Should_Throw_When_CreatorUserIsBlocked() {
         Travel mockTravel = TestHelpers.createMockTravel1();
@@ -49,7 +47,6 @@ public class TravelServiceTests {
                 () -> travelService.createTravel(mockTravel, mockCreator));
     }
 
-    /*Ilia*/
     @Test
     public void createTravel_Should_Throw_When_CreatorUserIsNotVerified() {
         Travel mockTravel = TestHelpers.createMockTravel1();
@@ -60,7 +57,6 @@ public class TravelServiceTests {
                 () -> travelService.createTravel(mockTravel, mockCreator));
     }
 
-    /*Ilia*/
     @Test
     public void createTravel_Should_Throw_When_TravelDepartureTimeBeforeCurrentMoment() {
         Travel mockTravel = TestHelpers.createMockTravel1();
@@ -71,7 +67,6 @@ public class TravelServiceTests {
                 () -> travelService.createTravel(mockTravel, mockCreator));
     }
 
-    /*Ilia*/
     @Test
     public void createTravel_Should_CallRepository_When_ValidArgumentsPassed() {
         Travel mockTravel = TestHelpers.createMockTravel1();
@@ -98,7 +93,6 @@ public class TravelServiceTests {
                 .createTravel(mockTravel);
     }
 
-    /*Ilia*/
     @Test
     public void getTravelsByDriver_Should_Throw_When_LoggedUserIsNotTheDriver() {
         User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
@@ -109,7 +103,6 @@ public class TravelServiceTests {
                 () -> travelService.getTravelsByDriver(mockDriver, mockLoggedUser, mockTravelFilterOptions));
     }
 
-    /*Ilia*/
     @Test
     public void getTravelsByDriver_Should_CallRepository_When_WhenValidArgumentsPassed() {
         User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
@@ -122,7 +115,6 @@ public class TravelServiceTests {
 
     }
 
-    /*Ilia*/
     @Test
     public void getAllTravels_Should_CallRepository() {
         TravelFilterOptions mockTravelFilterOptions = TestHelpers.createMockTravelFilterOptions();
@@ -134,7 +126,6 @@ public class TravelServiceTests {
 
     }
 
-    /*Ilia*/
     @Test
     public void declinePassenger_Should_Throw_When_UserToBeDeclinedIsNotDriverOrSameUser() {
         Travel mockTravel = TestHelpers.createMockTravel2();
@@ -146,7 +137,6 @@ public class TravelServiceTests {
                 () -> travelService.declinePassenger(mockUserToBeDeclined, mockTravel, mockLoggedUser));
     }
 
-    /*Ilia*/
     @Test
     public void declinePassenger_Should_Throw_When_TravelNotOpenForApplication() {
         Travel mockTravel = TestHelpers.createMockTravel2();
@@ -157,7 +147,6 @@ public class TravelServiceTests {
                 () -> travelService.declinePassenger(mockUserToBeDeclined, mockTravel, mockUserToBeDeclined));
     }
 
-    /*Ilia*/
     @Test
     public void declinePassenger_Should_Throw_When_UserToBeDeclinedNotInTravelLists() {
         Travel mockTravel = TestHelpers.createMockTravel2();
@@ -169,7 +158,6 @@ public class TravelServiceTests {
                 () -> travelService.declinePassenger(mockUserToBeDeclined, mockTravel, mockUserToBeDeclined));
     }
 
-    /*Ilia*/
     @Test
     public void declinePassenger_Should_CallRepository_When_WhenValidArgumentsPassed() {
         Travel mockTravel = TestHelpers.createMockTravel2();
@@ -180,7 +168,6 @@ public class TravelServiceTests {
         Mockito.verify(travelRepository, Mockito.times(1))
                 .updateTravel(mockTravel);
     }
-
 
     @Test
     public void cancelTravel_Should_Throw_When_UserIsNotDriver() {
@@ -200,7 +187,6 @@ public class TravelServiceTests {
         TravelStatus statusCancelled = TestHelpers.createMockTravelStatusCreated();
         statusCancelled.setTravelStatusId(3);
         travel.setStatus(statusCancelled);
-
 
         Assertions.assertThrows(InvalidOperationException.class,
                 () -> travelService.cancelTravel(travel, loggedUser));
@@ -441,6 +427,5 @@ public class TravelServiceTests {
         Mockito.verify(travelRepository, Mockito.times(1))
                 .updateTravel(travel);
     }
-
 
 }

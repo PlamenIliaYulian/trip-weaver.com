@@ -20,8 +20,6 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
         this.sessionFactory = sessionFactory;
     }
 
-
-    /*Ilia*/
     @Override
     public Feedback getFeedbackForDriverById(int id) {
         try (Session session = sessionFactory.openSession()) {
@@ -36,7 +34,6 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
         }
     }
 
-    /*Ilia*/
     @Override
     public Feedback getFeedbackForPassengerById(int id) {
         try (Session session = sessionFactory.openSession()) {

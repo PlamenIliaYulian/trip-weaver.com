@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.updateUser(user);
     }
 
-    /*Ilia*/
     @Override
     public List<User> getAllUsers(UserFilterOptions userFilterOptions, User loggedInUser) {
         ValidationHelper.isAdmin(loggedInUser, UNAUTHORIZED_OPERATION_NOT_ADMIN);
@@ -77,7 +76,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.getUserByEmail(email);
     }
 
-    /*Ilia*/
     @Override
     public User getUserById(int id) {
         return userRepository.getUserById(id);
@@ -97,7 +95,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.updateUser(userToBeUnBlocked);
     }
 
-    /*Ilia*/
     @Override
     public long getAllUsersCount() {
         return userRepository.getAllUsersCount();
@@ -108,7 +105,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.getTopTwelveTravelOrganizersByRating();
     }
 
-    /*Ilia*/
     @Override
     public List<User> getTopTwelveTravelPassengersByRating() {
         return userRepository.getTopTwelveTravelPassengersByRating();
@@ -132,7 +128,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.updateUser(userToBeUpdated);
     }
 
-    /*Ilia*/
     @Override
     public Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,
                                            Travel travel,
@@ -160,7 +155,6 @@ public class UserServiceImpl implements UserService {
         userRepository.updateUser(driver);
         return feedbackForDriver;
     }
-
 
     @Override
     public Feedback leaveFeedbackForPassenger(Feedback feedbackForPassenger,
@@ -198,7 +192,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    /*Ilia*/
     @Override
     public List<Feedback> getAllFeedbackForPassenger(User user) {
         return user.getFeedback()
@@ -214,7 +207,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.updateUser(userToBeVerified);
     }
 
-    /*Ilia*/
     @Override
     public void deleteUser(User userToBeDeleted, User loggedUser) {
         ValidationHelper.isSameUser(userToBeDeleted, loggedUser, UNAUTHORIZED_OPERATION);
@@ -222,6 +214,7 @@ public class UserServiceImpl implements UserService {
         userRepository.updateUser(userToBeDeleted);
     }
 
+    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalTravelsAsPassengerHashMap(List<User> passengers) {
         HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
@@ -229,7 +222,7 @@ public class UserServiceImpl implements UserService {
             int totalTravels = travelService
                     .getTravelsByPassenger(passenger, passenger, new TravelFilterOptions())
                     .stream()
-                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == TRAVEL_STATUS_COMPLETED)
                     .toList()
                     .size();
             totalTravelsAsPassengerHashMap.put(passenger.getUsername(), totalTravels);
@@ -237,13 +230,14 @@ public class UserServiceImpl implements UserService {
         return totalTravelsAsPassengerHashMap;
     }
 
+    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalDistanceAsPassengerHashMap(List<User> passengers) {
         HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
         for (User passenger : userRepository.getTopTwelveTravelPassengersByRating()) {
             int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, new TravelFilterOptions())
                     .stream()
-                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == TRAVEL_STATUS_COMPLETED)
                     .map(Travel::getDistanceInKm)
                     .reduce(0, Integer::sum);
             totalDistanceAsPassengerHashMap.put(passenger.getUsername(), totalDistance);
@@ -251,6 +245,7 @@ public class UserServiceImpl implements UserService {
         return totalDistanceAsPassengerHashMap;
     }
 
+    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalTravelsAsDriverHashMap(List<User> drivers) {
         HashMap<String, Integer> totalTravelsAsDriverHashMap = new HashMap<>();
@@ -258,7 +253,7 @@ public class UserServiceImpl implements UserService {
             int totalTravels = travelService
                     .getTravelsByDriver(driver, driver, new TravelFilterOptions())
                     .stream()
-                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == TRAVEL_STATUS_COMPLETED)
                     .toList()
                     .size();
             totalTravelsAsDriverHashMap.put(driver.getUsername(), totalTravels);
@@ -266,13 +261,14 @@ public class UserServiceImpl implements UserService {
         return totalTravelsAsDriverHashMap;
     }
 
+    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalDistanceAsDriverHashMap(List<User> drivers) {
         HashMap<String, Integer> totalDistancAsDrivereHashMap = new HashMap<>();
         for (User driver : drivers) {
             int totalDistance = travelService.getTravelsByDriver(driver, driver, new TravelFilterOptions())
                     .stream()
-                    .filter(travel -> travel.getStatus().getTravelStatusId() == COMPLETED_STATUS)
+                    .filter(travel -> travel.getStatus().getTravelStatusId() == TRAVEL_STATUS_COMPLETED)
                     .map(Travel::getDistanceInKm)
                     .reduce(0, Integer::sum);
             totalDistancAsDrivereHashMap.put(driver.getUsername(), totalDistance);
@@ -280,7 +276,7 @@ public class UserServiceImpl implements UserService {
         return totalDistancAsDrivereHashMap;
     }
 
-        private void checkForUniqueUsername(User user) {
+    private void checkForUniqueUsername(User user) {
         boolean duplicateExists = true;
 
         try {
@@ -329,6 +325,5 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateEntityException("User", "Phone number", userToBeUpdated.getPhoneNumber());
         }
     }
-
 
 }

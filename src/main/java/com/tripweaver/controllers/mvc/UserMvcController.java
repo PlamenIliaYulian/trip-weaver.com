@@ -5,7 +5,6 @@ import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Role;
 import com.tripweaver.models.Travel;
@@ -29,22 +28,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
 
 
 @Controller
 @RequestMapping("/users")
 public class UserMvcController {
 
-
-    public static final String PASSWORD_CONFIRMATION_SHOULD_MATCH_PASSWORD = "Password confirmation should match password.";
     private final AuthenticationHelper authenticationHelper;
     private final ModelsMapper modelsMapper;
     private final UserService userService;
     private final RoleService roleService;
-
     private final TravelService travelService;
     private final AvatarService avatarService;
 
@@ -83,7 +80,7 @@ public class UserMvcController {
                 authenticationHelper
                         .tryGetUserFromSession(httpSession)
                         .getRoles()
-                        .contains(roleService.getRoleById(1)));
+                        .contains(roleService.getRoleById(ADMIN_ID)));
     }
 
     @ModelAttribute("isAuthenticated")
@@ -106,8 +103,8 @@ public class UserMvcController {
 
     @GetMapping("/search")
     public String showAllUsersPage(@ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto userFilterOptionsDto,
-                                     Model model,
-                                     HttpSession session) {
+                                   Model model,
+                                   HttpSession session) {
 
         User loggedUser;
         try {
@@ -125,6 +122,7 @@ public class UserMvcController {
             return "redirect:/auth/login";
         }
     }
+
     @GetMapping("/{userId}/block")
     public String blockUser(@PathVariable int userId,
                             HttpSession session,
@@ -152,8 +150,8 @@ public class UserMvcController {
 
     @GetMapping("/{userId}/unblock")
     public String unblockUser(@PathVariable int userId,
-                            HttpSession session,
-                            Model model) {
+                              HttpSession session,
+                              Model model) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromSession(session);
             User userToBeUnblocked = userService.getUserById(userId);
@@ -202,6 +200,7 @@ public class UserMvcController {
                     .getTotalTravelsAsDriverHashMap(Collections.singletonList(user)));
             model.addAttribute("userTotalTravelsAsPassenger", userService
                     .getTotalTravelsAsPassengerHashMap(Collections.singletonList(user)));
+
             return "SingleUser";
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
@@ -215,9 +214,6 @@ public class UserMvcController {
             return "Error";
         }
     }
-
-
-
 
 
 }

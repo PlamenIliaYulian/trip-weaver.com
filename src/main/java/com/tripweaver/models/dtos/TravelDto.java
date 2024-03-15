@@ -1,8 +1,6 @@
 package com.tripweaver.models.dtos;
 
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.*;
-import org.springframework.data.jpa.repository.Temporal;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -20,7 +18,7 @@ public class TravelDto {
     private String endingPointAddress;
 
     @NotNull(message = "Please, select a departure date.")
-    @Future (message =  "Must be a future date.")
+    @Future(message = "Must be a future date.")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDateTime departureTime;
 

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
-public class Role implements Comparable<Role>{
+public class Role implements Comparable<Role> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -16,13 +16,12 @@ public class AvatarServiceTests {
 
     @Mock
     AvatarRepository avatarRepository;
-
     @InjectMocks
     AvatarServiceImpl avatarService;
 
 
     @Test
-    public void createAvatar_Should_CallRepository(){
+    public void createAvatar_Should_CallRepository() {
         Avatar avatar = TestHelpers.createMockAvatar();
 
         avatarService.createAvatar(avatar);
@@ -31,18 +30,16 @@ public class AvatarServiceTests {
                 .createAvatar(avatar);
     }
 
-    /*Ilia*/
     @Test
     public void uploadPictureToCloudinary_Should_CallRepository() {
-        MultipartFile mockMultipartFile= TestHelpers.createMockMultipartFile();
+        MultipartFile mockMultipartFile = TestHelpers.createMockMultipartFile();
 
         avatarService.uploadPictureToCloudinary(mockMultipartFile);
 
-        Mockito.verify(avatarRepository,Mockito.times(1))
+        Mockito.verify(avatarRepository, Mockito.times(1))
                 .uploadPictureToCloudinary(mockMultipartFile);
     }
 
-    /*Ilia*/
     @Test
     public void getAvatarById_Should_CallRepository() {
         avatarService.getAvatarById(Mockito.anyInt());
@@ -51,7 +48,6 @@ public class AvatarServiceTests {
                 .getAvatarById(Mockito.anyInt());
     }
 
-    /*Ilia*/
     @Test
     public void getDefaultAvatar_Should_CallRepository() {
         avatarService.getDefaultAvatar();
@@ -59,8 +55,5 @@ public class AvatarServiceTests {
         Mockito.verify(avatarRepository, Mockito.times(1))
                 .getDefaultAvatar();
     }
-
-
-
 
 }

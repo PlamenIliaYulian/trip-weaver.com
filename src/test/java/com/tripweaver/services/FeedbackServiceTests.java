@@ -3,7 +3,6 @@ package com.tripweaver.services;
 import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.models.Feedback;
 import com.tripweaver.repositories.contracts.FeedbackRepository;
-import com.tripweaver.services.contracts.FeedbackService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,6 @@ public class FeedbackServiceTests {
     @InjectMocks
     FeedbackServiceImpl feedbackService;
 
-    /*Ilia*/
     @Test
     public void getFeedbackForPassengerById_Should_CallRepository() {
         feedbackService.getFeedbackForPassengerById(Mockito.anyInt());
@@ -28,9 +26,8 @@ public class FeedbackServiceTests {
                 .getFeedbackForPassengerById(Mockito.anyInt());
     }
 
-
     @Test
-    public void createFeedback_Should_CallRepository(){
+    public void createFeedback_Should_CallRepository() {
         Feedback feedback = TestHelpers.createMockFeedbackForUser1ForDriver();
 
         feedbackService.createFeedback(feedback);

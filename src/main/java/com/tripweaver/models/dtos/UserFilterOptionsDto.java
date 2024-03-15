@@ -2,7 +2,6 @@ package com.tripweaver.models.dtos;
 
 public class UserFilterOptionsDto {
 
-
     private String username;
     private String email;
     private String phoneNumber;

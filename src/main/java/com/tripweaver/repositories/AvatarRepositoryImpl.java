@@ -16,11 +16,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static com.tripweaver.services.helpers.ConstantHelper.DEFAULT_AVATAR_ID;
+
 @Repository
 public class AvatarRepositoryImpl implements AvatarRepository {
 
     private final String CLOUDINARY_URL = "cloudinary://242857587276945:B5ODyO381gN-4aFLKDNVcrAFzxM@dol3hflxs";
-    public static final int DEFAULT_AVATAR_ID = 1;
     private final SessionFactory sessionFactory;
 
     @Autowired
@@ -30,7 +31,7 @@ public class AvatarRepositoryImpl implements AvatarRepository {
 
     @Override
     public Avatar createAvatar(Avatar avatar) {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.persist(avatar);
             session.getTransaction().commit();
@@ -51,7 +52,6 @@ public class AvatarRepositoryImpl implements AvatarRepository {
         }
     }
 
-    /*Ilia*/
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
         Cloudinary cloudinary = new Cloudinary(CLOUDINARY_URL);

@@ -35,6 +35,7 @@ public class UserDto {
     @Size(min = 10, max = 10, message = "Phone number must be 10 digits starting with 08.")
     @Pattern(regexp = "^08\\d{8}$", message = "Phone number must be 10 digits starting with 08.")
     private String phoneNumber;
+
     public UserDto() {
     }
 

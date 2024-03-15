@@ -1,6 +1,5 @@
 package com.tripweaver.services;
 
-import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.TravelStatus;
 import com.tripweaver.models.User;
@@ -37,7 +36,6 @@ public class TravelServiceImpl implements TravelService {
         this.bingMapService = bingMapService;
     }
 
-    /*Ilia*/
     @Override
     public Travel createTravel(Travel travel, User creatorDriver) {
         ValidationHelper.isUserBlocked(creatorDriver, UNAUTHORIZED_OPERATION_BLOCKED);
@@ -86,19 +84,17 @@ public class TravelServiceImpl implements TravelService {
     public Travel completeTravel(Travel travel, User loggedUser) {
         ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
         ValidationHelper.isTravelOpenForApplication(travel, TRAVEL_NOT_AVAILABLE);
-        TravelStatus completeStatus = travelStatusService.getStatusById(TRAVEL_STATUS_COMPLETE_ID);
+        TravelStatus completeStatus = travelStatusService.getStatusById(TRAVEL_STATUS_COMPLETED);
         travel.setStatus(completeStatus);
         return travelRepository.updateTravel(travel);
     }
 
-    /*Ilia*/
     @Override
     public List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions) {
         ValidationHelper.isSameUser(driver, loggedUser, UNAUTHORIZED_OPERATION);
         travelFilterOptions.setDriverId(Optional.of(driver.getUserId()));
         return travelRepository.getAllTravels(travelFilterOptions);
     }
-
 
     @Override
     public List<Travel> getTravelsByPassenger(User passenger, User loggedUser, TravelFilterOptions travelFilterOptions) {
@@ -112,7 +108,6 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.getTravelById(travelId);
     }
 
-    /*Ilia*/
     @Override
     public List<Travel> getAllTravels(TravelFilterOptions travelFilterOptions) {
         return travelRepository.getAllTravels(travelFilterOptions);
@@ -145,8 +140,6 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.updateTravel(travel);
     }
 
-
-    /*Ilia*/
     @Override
     public Travel declinePassenger(User userToBeDeclined, Travel travel, User userLoggedIn) {
         ValidationHelper.isDriverOrSameUser(travel, userToBeDeclined, userLoggedIn, UNAUTHORIZED_OPERATION_NOT_DRIVER);
@@ -167,6 +160,5 @@ public class TravelServiceImpl implements TravelService {
     public Long getAllTravelsCount() {
         return travelRepository.getAllTravelsCount();
     }
-
 
 }

@@ -5,14 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AvatarService {
 
-    /*Plamen*/
     Avatar createAvatar(Avatar avatar);
 
-    /*Yuli - DONE*/
     Avatar getDefaultAvatar();
 
-    /*Ilia*/
     String uploadPictureToCloudinary(MultipartFile multipartFile);
-    /*Ilia*/
+
     Avatar getAvatarById(int id);
 }

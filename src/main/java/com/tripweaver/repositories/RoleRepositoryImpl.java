@@ -15,6 +15,7 @@ import java.util.List;
 public class RoleRepositoryImpl implements RoleRepository {
 
     private final SessionFactory sessionFactory;
+
     @Autowired
     public RoleRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -35,11 +36,11 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Role getRoleByName(String name) {
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Role> query = session.createQuery("From Role WHERE roleName = :name ", Role.class);
             query.setParameter("roleName", name);
             List<Role> result = query.list();
-            if(result.isEmpty()){
+            if (result.isEmpty()) {
                 throw new EntityNotFoundException("Role", "name", name);
             }
             return result.get(0);

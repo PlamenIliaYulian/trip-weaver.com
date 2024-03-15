@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.tripweaver.services.helpers.ConstantHelper.*;
+
 public class TestHelpers {
 
     public static MultipartFile createMockMultipartFile() {
@@ -19,42 +21,42 @@ public class TestHelpers {
 
     public static Avatar createMockAvatar() {
         Avatar mockAvatar = new Avatar();
-        mockAvatar.setAvatarId(1);
+        mockAvatar.setAvatarId(DEFAULT_AVATAR_ID);
         mockAvatar.setAvatarUrl("URL");
         return mockAvatar;
     }
 
     public static Role createMockRoleAdmin() {
         Role mockRole = new Role();
-        mockRole.setRoleId(1);
+        mockRole.setRoleId(ADMIN_ID);
         mockRole.setRoleName("ADMIN");
         return mockRole;
     }
 
     public static Role createMockRoleMember() {
         Role mockRole = new Role();
-        mockRole.setRoleId(2);
+        mockRole.setRoleId(ROLE_MEMBER_ID);
         mockRole.setRoleName("MEMBER");
         return mockRole;
     }
 
     public static TravelStatus createMockTravelStatusCreated() {
         TravelStatus travelStatus = new TravelStatus();
-        travelStatus.setTravelStatusId(1);
+        travelStatus.setTravelStatusId(TRAVEL_STATUS_CREATED_ID);
         travelStatus.setStatusName("CREATED");
         return travelStatus;
     }
 
     public static TravelStatus createMockTravelStatusCanceled() {
         TravelStatus mockTravelStatus = new TravelStatus();
-        mockTravelStatus.setTravelStatusId(2);
+        mockTravelStatus.setTravelStatusId(TRAVEL_STATUS_CANCEL_ID);
         mockTravelStatus.setStatusName("CANCELED");
         return mockTravelStatus;
     }
 
     public static TravelStatus createMockTravelStatusCompleted() {
         TravelStatus mockTravelStatus = new TravelStatus();
-        mockTravelStatus.setTravelStatusId(3);
+        mockTravelStatus.setTravelStatusId(TRAVEL_STATUS_COMPLETED);
         mockTravelStatus.setStatusName("COMPLETED");
         return mockTravelStatus;
     }
@@ -158,7 +160,7 @@ public class TestHelpers {
                 4,
                 "Driver",
                 "Comment",
-                1,
+                TRAVEL_STATUS_CREATED_ID,
                 "driver",
                 "desc");
     }

@@ -97,7 +97,7 @@ public class ValidationHelper {
     }
 
     public static void isTravelCompleted(Travel travel, String message) {
-        if (travel.getStatus().getTravelStatusId() != COMPLETED_STATUS) {
+        if (travel.getStatus().getTravelStatusId() != TRAVEL_STATUS_COMPLETED) {
             throw new InvalidOperationException(message);
         }
     }

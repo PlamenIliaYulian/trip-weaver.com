@@ -2,7 +2,9 @@ package com.tripweaver.controllers.helpers;
 
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.InvalidOperationException;
-import com.tripweaver.models.*;
+import com.tripweaver.models.Feedback;
+import com.tripweaver.models.Travel;
+import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.*;
 import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
@@ -11,11 +13,10 @@ import com.tripweaver.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
+import static com.tripweaver.services.helpers.ConstantHelper.CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD;
 
 @Component
 public class ModelsMapperImpl implements ModelsMapper {
-    public static final String CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD = "Confirm password should match password";
     private final UserService userService;
 
     @Autowired

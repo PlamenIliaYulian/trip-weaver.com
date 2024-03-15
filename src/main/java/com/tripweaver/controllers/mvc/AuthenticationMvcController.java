@@ -6,7 +6,6 @@ import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.LoginDto;
-import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.UserService;
@@ -21,16 +20,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
+
 @Controller
 @RequestMapping("/auth")
 public class AuthenticationMvcController {
-
-
     private final ModelsMapper modelsMapper;
     private final AuthenticationHelper authenticationHelper;
     private final UserService userService;
     private final RoleService roleService;
-
 
     public AuthenticationMvcController(ModelsMapper modelsMapper,
                                        AuthenticationHelper authenticationHelper,
@@ -43,7 +41,7 @@ public class AuthenticationMvcController {
     }
 
     @ModelAttribute("isBlocked")
-    public boolean populateIsBlocked(HttpSession httpSession){
+    public boolean populateIsBlocked(HttpSession httpSession) {
         return (httpSession.getAttribute("currentUser") != null &&
                 authenticationHelper
                         .tryGetUserFromSession(httpSession)
@@ -122,7 +120,7 @@ public class AuthenticationMvcController {
 
     @ModelAttribute("loggedUser")
     public User populateLoggedUser(HttpSession httpSession) {
-        if(httpSession.getAttribute("currentUser") != null){
+        if (httpSession.getAttribute("currentUser") != null) {
             return authenticationHelper.tryGetUserFromSession(httpSession);
         }
         return new User();
@@ -134,7 +132,7 @@ public class AuthenticationMvcController {
                 authenticationHelper
                         .tryGetUserFromSession(httpSession)
                         .getRoles()
-                        .contains(roleService.getRoleById(1)));
+                        .contains(roleService.getRoleById(ADMIN_ID)));
     }
 
     @ModelAttribute("isNotBlocked")

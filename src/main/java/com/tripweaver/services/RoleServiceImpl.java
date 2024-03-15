@@ -18,7 +18,6 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
-    /*Ilia*/
     @Override
     public Role getRoleById(int id) {
         return roleRepository.getRoleById(id);

@@ -1,9 +1,7 @@
 package com.tripweaver.controllers.mvc;
 
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
-import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
-import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.TravelService;
@@ -16,9 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
 
 @Controller
 @RequestMapping("/")
@@ -60,11 +58,11 @@ public class HomeMvcController {
                 authenticationHelper
                         .tryGetUserFromSession(httpSession)
                         .getRoles()
-                        .contains(roleService.getRoleById(1)));
+                        .contains(roleService.getRoleById(ADMIN_ID)));
     }
 
     @ModelAttribute("isBlocked")
-    public boolean populateIsBlocked(HttpSession httpSession){
+    public boolean populateIsBlocked(HttpSession httpSession) {
         return (httpSession.getAttribute("currentUser") != null &&
                 authenticationHelper
                         .tryGetUserFromSession(httpSession)

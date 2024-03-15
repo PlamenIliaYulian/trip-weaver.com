@@ -1,19 +1,15 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.helpers.TestHelpers;
-import com.tripweaver.models.Feedback;
-import com.tripweaver.models.Role;
-import com.tripweaver.models.Travel;
-import com.tripweaver.models.User;
-import com.tripweaver.models.filterOptions.UserFilterOptions;
-import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.models.*;
+import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
-import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.AvatarService;
+import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
 
@@ -34,16 +32,12 @@ public class UserServiceTests {
     UserRepository userRepository;
     @Mock
     FeedbackService feedbackService;
-
     @Mock
     AvatarService avatarService;
-
     @Mock
     RoleService roleService;
-
     @InjectMocks
     UserServiceImpl userService;
-
 
     @Test
     public void createUser_Should_Throw_When_UsernameIsNotUnique() {
@@ -54,8 +48,6 @@ public class UserServiceTests {
                 () -> userService.createUser(userToBeCreated));
     }
 
-
-    /*Ilia*/
     @Test
     public void getAllUsers_Should_Throw_When_LoggedUserIsNotAdmin() {
         User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
@@ -66,7 +58,6 @@ public class UserServiceTests {
 
     }
 
-    /*Ilia*/
     @Test
     public void getAllUsers_Should_CallRepository_When_ValidArgumentsPassed() {
         User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
@@ -81,7 +72,6 @@ public class UserServiceTests {
                 .getAllUsers(mockUserFilterOptions);
     }
 
-    /*Ilia*/
     @Test
     public void getUserById_Should_CallRepository() {
         userService.getUserById(Mockito.anyInt());
@@ -90,7 +80,6 @@ public class UserServiceTests {
                 .getUserById(Mockito.anyInt());
     }
 
-    /*Ilia*/
     @Test
     public void getTopTenTravelPassengersByRating_Should_CallRepository() {
         userService.getTopTwelveTravelPassengersByRating();
@@ -99,7 +88,6 @@ public class UserServiceTests {
                 .getTopTwelveTravelPassengersByRating();
     }
 
-    /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_WhenTravelNotCompleted() {
         Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
@@ -112,7 +100,6 @@ public class UserServiceTests {
                         mockTravel, mockLoggedUser, mockDriver));
     }
 
-    /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_LoggedUserIsTheDriver() {
         Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
@@ -125,7 +112,6 @@ public class UserServiceTests {
                         mockTravel, mockTravelDriver, mockTravelDriver));
     }
 
-    /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_UserIsNotInTheApprovedList() {
         Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
@@ -140,7 +126,6 @@ public class UserServiceTests {
                         mockTravel, mockLoggedUser, mockDriver));
     }
 
-    /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_UserIsTheDriver() {
         Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
@@ -155,7 +140,6 @@ public class UserServiceTests {
                         mockTravel, mockLoggedUser, mockDriver));
     }
 
-    /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_Throw_When_FeedbackAlreadyLeft() {
         Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
@@ -174,7 +158,6 @@ public class UserServiceTests {
                         mockTravel, mockLoggedUser, mockDriver));
     }
 
-    /*Ilia*/
     @Test
     public void leaveFeedbackForDriver_Should_CallRepository_When_ValidArgumentsPassed() {
         Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
@@ -192,7 +175,6 @@ public class UserServiceTests {
                 .updateUser(mockDriver);
     }
 
-    /*Ilia*/
     @Test
     public void getAllFeedbackForPassenger_Should_ReturnListOfFeedback_When_Called() {
         User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
@@ -204,7 +186,6 @@ public class UserServiceTests {
         Assertions.assertEquals(feedbackSet.size(), feedbackList.size());
     }
 
-    /*Ilia*/
     @Test
     public void deleteUser_Should_Throw_When_UserIsNotTheSameAsLoggedUser() {
         User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1();
@@ -214,7 +195,6 @@ public class UserServiceTests {
                 () -> userService.deleteUser(mockUserToBeDeleted, mockUserLogged));
     }
 
-    /*Ilia*/
     @Test
     public void deleteUser_Should_CallRepository_When_ValidArgumentsPassed() {
         User mockUserToBeDeleted = TestHelpers.createMockNonAdminUser1();
@@ -223,7 +203,6 @@ public class UserServiceTests {
 
         Mockito.verify(userRepository, Mockito.times(1))
                 .updateUser(mockUserToBeDeleted);
-
 
     }
 
@@ -250,7 +229,6 @@ public class UserServiceTests {
         User userToBeCreated = TestHelpers.createMockNonAdminUser1();
         Role role = TestHelpers.createMockRoleMember();
 
-
         Mockito.when(userRepository.getUserByUsername(userToBeCreated.getUsername()))
                 .thenThrow(new EntityNotFoundException("User", "username", userToBeCreated.getUsername()));
 
@@ -267,7 +245,6 @@ public class UserServiceTests {
                 .thenReturn(new Role());
 
         userService.createUser(userToBeCreated);
-
 
         Mockito.verify(userRepository, Mockito.times(1))
                 .createUser(Mockito.any(User.class));
@@ -288,7 +265,6 @@ public class UserServiceTests {
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
                 () -> userService.blockUser(userToBeBlocked, userNotAdmin));
-
     }
 
     @Test
@@ -418,7 +394,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void verifyEmail_Should_CallRepository(){
+    public void verifyEmail_Should_CallRepository() {
         User userToBeVerified = TestHelpers.createMockNonAdminUser1();
 
         userService.verifyEmail(userToBeVerified);
@@ -428,15 +404,16 @@ public class UserServiceTests {
     }
 
     @Test
-    public void updateUser_Should_Throw_When_NotSameUser(){
+    public void updateUser_Should_Throw_When_NotSameUser() {
         User userToBeVerified = TestHelpers.createMockNonAdminUser1();
         User notSameUser = TestHelpers.createMockNonAdminUser2();
 
-        Assertions.assertThrows(UnauthorizedOperationException.class, () -> userService.updateUser(userToBeVerified, notSameUser));
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> userService.updateUser(userToBeVerified, notSameUser));
     }
 
     @Test
-    public void updateUser_Should_Throw_When_NewEmailAlreadyExists(){
+    public void updateUser_Should_Throw_When_NewEmailAlreadyExists() {
         User userToBeVerified = TestHelpers.createMockNonAdminUser1();
         User userWithSameEmail = TestHelpers.createMockNonAdminUser2();
 
@@ -444,12 +421,11 @@ public class UserServiceTests {
                 .thenReturn(userWithSameEmail);
 
         Assertions.assertThrows(DuplicateEntityException.class,
-                ()-> userService.updateUser(userToBeVerified, userToBeVerified));
+                () -> userService.updateUser(userToBeVerified, userToBeVerified));
     }
 
-    /*TODO - to check with Ilia and Plamen why, in their opinion this method does not work.*/
     @Test
-    public void updateUser_Should_Throw_When_NewPhoneAlreadyExists(){
+    public void updateUser_Should_Throw_When_NewPhoneAlreadyExists() {
         User userToBeVerified = TestHelpers.createMockNonAdminUser1();
         User userWithSamePhone = TestHelpers.createMockNonAdminUser2();
 
@@ -460,15 +436,16 @@ public class UserServiceTests {
                 .thenReturn(userWithSamePhone);
 
         Assertions.assertThrows(DuplicateEntityException.class,
-                ()-> userService.updateUser(userToBeVerified, userToBeVerified));
+                () -> userService.updateUser(userToBeVerified, userToBeVerified));
     }
 
     @Test
-    public void updateUser_Should_CallRepository(){
+    public void updateUser_Should_CallRepository() {
         User userToBeUpdated = TestHelpers.createMockNonAdminUser1();
 
         Mockito.when(userRepository.getUserByEmail(userToBeUpdated.getEmail()))
                 .thenThrow(EntityNotFoundException.class);
+
         Mockito.when(userRepository.getUserByPhoneNumber(userToBeUpdated.getPhoneNumber()))
                 .thenThrow(EntityNotFoundException.class);
 
@@ -477,9 +454,8 @@ public class UserServiceTests {
                 .updateUser(userToBeUpdated);
     }
 
-
     @Test
-    public void getUserByEmail_Should_CallRepository(){
+    public void getUserByEmail_Should_CallRepository() {
         User userToBeReturned = TestHelpers.createMockNonAdminUser1();
 
         Mockito.when(userRepository.getUserByEmail(userToBeReturned.getEmail()))
@@ -505,7 +481,7 @@ public class UserServiceTests {
         User admin = TestHelpers.createMockNonAdminUser1();
         User userToBeUnblocked = TestHelpers.createMockNonAdminUser1();
         Role adminRole = TestHelpers.createMockRoleMember();
-        adminRole.setRoleId(1);
+        adminRole.setRoleId(ADMIN_ID);
         admin.getRoles().add(adminRole);
 
         userService.unBlockUser(userToBeUnblocked, admin);
@@ -516,9 +492,8 @@ public class UserServiceTests {
         Assertions.assertFalse(userToBeUnblocked.isBlocked());
     }
 
-
     @Test
-    public void getTopTwelveTravelOrganizersByRating_Should_CallRepository(){
+    public void getTopTwelveTravelOrganizersByRating_Should_CallRepository() {
         List<User> result = new ArrayList<>();
 
         Mockito.when(userRepository.getTopTwelveTravelOrganizersByRating())
@@ -531,7 +506,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void deleteAvatar_Should_Throw_When_NotSameUserAndNotAdmin(){
+    public void deleteAvatar_Should_Throw_When_NotSameUserAndNotAdmin() {
         User userTobeUpdated = TestHelpers.createMockNonAdminUser1();
         User nonAdminUser = TestHelpers.createMockNonAdminUser2();
 
@@ -540,7 +515,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void deleteAvatar_Should_CallRepository(){
+    public void deleteAvatar_Should_CallRepository() {
         User userTobeUpdated = TestHelpers.createMockNonAdminUser1();
 
         Mockito.when(userRepository.updateUser(userTobeUpdated))
@@ -552,11 +527,15 @@ public class UserServiceTests {
                 .updateUser(userTobeUpdated);
     }
 
-    /*TODO - do we need to write a test for this method at all?*/
     @Test
-    public void getAllFeedbackForDriver_Should_Pass(){
-        User user = TestHelpers.createMockNonAdminUser1();
-        Assertions.assertEquals(user.getFeedback(), user.getFeedback());
+    public void getAllFeedbackForDriver_Should_Pass() {
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
+        Feedback mockFeedbackForDriver = TestHelpers.createMockFeedbackForUser1ForDriver();
+        Set<Feedback> feedbackSet = mockLoggedUser.getFeedback();
+        feedbackSet.add(mockFeedbackForDriver);
+        List<Feedback> feedbackList = userService.getAllFeedbackForDriver(mockLoggedUser);
+
+        Assertions.assertEquals(feedbackSet.size(), feedbackList.size());
     }
 
 }

@@ -157,7 +157,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public long getAllUsersCount() {
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Long> query = session.createQuery("select count(*) from User where isDeleted=false ", Long.class);
             return query.list().get(0);
         }

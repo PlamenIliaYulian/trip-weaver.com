@@ -1,7 +1,6 @@
 package com.tripweaver.models;
 
 import jakarta.persistence.*;
-import org.springframework.context.annotation.EnableMBeanExport;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -58,6 +57,7 @@ public class Travel implements Comparable<Travel> {
             joinColumns = @JoinColumn(name = "travel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> usersApprovedForTheTravel;
+
     public Travel() {
     }
 

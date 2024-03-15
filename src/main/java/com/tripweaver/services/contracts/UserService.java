@@ -1,6 +1,8 @@
 package com.tripweaver.services.contracts;
 
-import com.tripweaver.models.*;
+import com.tripweaver.models.Feedback;
+import com.tripweaver.models.Travel;
+import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 
 import java.util.HashMap;
@@ -8,66 +10,50 @@ import java.util.List;
 
 public interface UserService {
 
-
-    /*Plamen*/
     User createUser(User user);
 
-    /*Yuli - DONE*/
     User updateUser(User user, User loggedUser);
 
-    /*Ilia*/
     List<User> getAllUsers(UserFilterOptions userFilterOptions, User loggedInUser);
 
-    /*Plamen*/
     User getUserByUsername(String username);
 
-    /*Yuli - DONE*/
     User getUserByEmail(String email);
 
-    /*Ilia*/
     User getUserById(int id);
 
-    /*Plamen*/
     User blockUser(User userToBeBlocked, User loggedUser);
 
-    /*Yuli - DONE*/
     User unBlockUser(User userToBeUnBlocked, User loggedUser);
 
-    /*Plamen*/
     long getAllUsersCount();
 
-    /*Yuli - DONE*/
     List<User> getTopTwelveTravelOrganizersByRating();
 
-    /*Ilia*/
     List<User> getTopTwelveTravelPassengersByRating();
 
-    /*Plamen*/
     User addAvatar(User userToBeUpdated, String avatarUrl, User loggedUser);
 
-    /*Yuli - DONE*/
     User deleteAvatar(User userToBeUpdated, User loggedUser);
 
-    /*Ilia*/
-    Feedback leaveFeedbackForDriver(Feedback feedbackForDriver,Travel travel,User userToGiveFeedback, User driver);
+    Feedback leaveFeedbackForDriver(Feedback feedbackForDriver, Travel travel, User userToGiveFeedback, User driver);
 
-    /*Plamen*/
-    Feedback leaveFeedbackForPassenger(Feedback feedbackForPassenger,Travel travel,User loggedUser, User passenger);
+    Feedback leaveFeedbackForPassenger(Feedback feedbackForPassenger, Travel travel, User loggedUser, User passenger);
 
-    /*Yuli*/
     List<Feedback> getAllFeedbackForDriver(User user);
 
-    /*Ilia*/
     List<Feedback> getAllFeedbackForPassenger(User user);
 
-    /*Plamen*/
     User verifyEmail(User userToBeVerified);
 
-    /*Ilia*/
     void deleteUser(User userToBeDeleted, User loggedUser);
+
     HashMap<String, Integer> getTotalTravelsAsPassengerHashMap(List<User> passengers);
+
     HashMap<String, Integer> getTotalDistanceAsPassengerHashMap(List<User> passengers);
+
     HashMap<String, Integer> getTotalTravelsAsDriverHashMap(List<User> drivers);
+
     HashMap<String, Integer> getTotalDistanceAsDriverHashMap(List<User> drivers);
 
 }

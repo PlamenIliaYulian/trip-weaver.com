@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.tripweaver.services.helpers.ConstantHelper.ROLE_MEMBER_ID;
+
 @ExtendWith(MockitoExtension.class)
 public class RoleServiceTests {
 
@@ -20,7 +22,6 @@ public class RoleServiceTests {
     @InjectMocks
     RoleServiceImpl roleService;
 
-    /*Ilia*/
     @Test
     public void getRoleById_Should_CallRepository() {
         roleService.getRoleById(Mockito.anyInt());
@@ -29,15 +30,14 @@ public class RoleServiceTests {
                 .getRoleById(Mockito.anyInt());
     }
 
-
     @Test
-    public void getRoleByName_Should_ReturnRole_When_MethodCalled(){
+    public void getRoleByName_Should_ReturnRole_When_MethodCalled() {
         Mockito.when(roleRepository.getRoleByName(Mockito.anyString()))
                 .thenReturn(TestHelpers.createMockRoleMember());
 
         Role role = roleService.getRoleByName("ROLE_MEMBER");
 
-        Assertions.assertEquals(2, role.getRoleId());
+        Assertions.assertEquals(ROLE_MEMBER_ID, role.getRoleId());
     }
 
     @Test

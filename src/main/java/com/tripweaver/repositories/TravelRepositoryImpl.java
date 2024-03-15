@@ -59,8 +59,6 @@ public class TravelRepositoryImpl implements TravelRepository {
         }
     }
 
-
-    /*Ilia*/
     @Override
     public List<Travel> getAllTravels(TravelFilterOptions travelFilterOptions) {
         try (Session session = sessionFactory.openSession();) {
@@ -123,6 +121,27 @@ public class TravelRepositoryImpl implements TravelRepository {
                 queryString = new StringBuilder("FROM Travel AS travel JOIN travel.usersApprovedForTheTravel passengers ");
                 queryString.append(" WHERE ")
                         .append(String.join(" AND ", filters));
+
+                /*ToDo To Discuss this filtering.*/
+
+                /* travelFilterOptions.getPassengerId().ifPresent(value -> {
+                    filters.add(" (passengers.userId = :userId OR applicants.userId = :userId) ");
+                    parameters.put("userId", value);
+                });
+
+                queryString = new StringBuilder("FROM Travel AS travel ");
+                queryString.append("LEFT JOIN travel.usersApprovedForTheTravel AS passengers ")
+                        .append("LEFT JOIN travel.usersAppliedForTheTravel AS applicants ");
+                queryString.append(" WHERE ")
+                        .append(String.join(" AND ", filters));
+
+                queryString.append(generateOrderBy(travelFilterOptions));
+
+                Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
+                query.setProperties(parameters);
+                return query.list();*/
+
+
             } else {
                 queryString = new StringBuilder("FROM Travel AS travel ");
                 queryString.append(" WHERE ")

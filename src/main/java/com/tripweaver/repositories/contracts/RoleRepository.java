@@ -1,6 +1,7 @@
 package com.tripweaver.repositories.contracts;
 
 import com.tripweaver.models.Role;
+
 import java.util.List;
 
 public interface RoleRepository {

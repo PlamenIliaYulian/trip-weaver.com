@@ -28,6 +28,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
 import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
 
 @Controller
@@ -71,7 +72,7 @@ public class TravelMvcController {
                 authenticationHelper
                         .tryGetUserFromSession(httpSession)
                         .getRoles()
-                        .contains(roleService.getRoleById(1)));
+                        .contains(roleService.getRoleById(ADMIN_ID)));
     }
 
     @ModelAttribute("isBlocked")
