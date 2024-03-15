@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
 
 @Controller
 @RequestMapping("/travels")
@@ -36,6 +39,7 @@ public class TravelMvcController {
     private final TravelService travelService;
     private final ModelsMapper modelsMapper;
     private final UserService userService;
+
 
     public TravelMvcController(AuthenticationHelper authenticationHelper,
                                RoleService roleService,
@@ -137,6 +141,7 @@ public class TravelMvcController {
             return "redirect:/auth/login";
         }
         TravelFilterOptions filterOptions = modelsMapper.travelFilterOptionsFromDto(travelFilterOptionsDto);
+        filterOptions.setStatusId(Optional.of(TRAVEL_STATUS_CREATED_ID));
         List<Travel> travels = travelService.getAllTravels(filterOptions);
         model.addAttribute("travels", travels);
 

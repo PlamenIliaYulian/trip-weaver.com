@@ -8,11 +8,15 @@ import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Role;
+import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.TravelFilterOptionsDto;
 import com.tripweaver.models.dtos.UserFilterOptionsDto;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.AvatarService;
 import com.tripweaver.services.contracts.RoleService;
+import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +27,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 @Controller
@@ -35,17 +44,21 @@ public class UserMvcController {
     private final ModelsMapper modelsMapper;
     private final UserService userService;
     private final RoleService roleService;
+
+    private final TravelService travelService;
     private final AvatarService avatarService;
 
     public UserMvcController(AuthenticationHelper authenticationHelper,
                              ModelsMapper modelsMapper,
                              UserService userService,
                              RoleService roleService,
+                             TravelService travelService,
                              AvatarService avatarService) {
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
         this.userService = userService;
         this.roleService = roleService;
+        this.travelService = travelService;
         this.avatarService = avatarService;
     }
 
@@ -62,6 +75,7 @@ public class UserMvcController {
                         .isBlocked()
         );
     }
+
 
     @ModelAttribute("isAdmin")
     public boolean populateIsLoggedAndAdmin(HttpSession httpSession) {
@@ -91,7 +105,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/search")
-    public String showUsersAdminPage(@ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto userFilterOptionsDto,
+    public String showAllUsersPage(@ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto userFilterOptionsDto,
                                      Model model,
                                      HttpSession session) {
 
@@ -159,6 +173,50 @@ public class UserMvcController {
             return "Error";
         }
     }
+
+    @GetMapping("/{id}")
+    public String showSingleUserPage(@PathVariable int id,
+                                     @ModelAttribute("travelFilterOptions") TravelFilterOptionsDto dto,
+                                     Model model,
+                                     HttpSession session) {
+
+        try {
+            User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
+            User user = userService.getUserById(id);
+            List<Travel> allTravels = new ArrayList<>();
+            TravelFilterOptions travelFilterOptions = modelsMapper.travelFilterOptionsFromDto(dto);
+            TravelFilterOptions travelFilterOptions2 = modelsMapper.travelFilterOptionsFromDto(dto);
+            allTravels.addAll(travelService.getTravelsByDriver(user, loggedInUser, travelFilterOptions));
+            allTravels.addAll(travelService.getTravelsByPassenger(user, loggedInUser, travelFilterOptions2));
+
+            model.addAttribute("userById", user);
+            model.addAttribute("userTravels", allTravels);
+            model.addAttribute("feedbackForDriver", userService.getAllFeedbackForDriver(user));
+            model.addAttribute("feedbackForPassenger", userService.getAllFeedbackForPassenger(user));
+            model.addAttribute("travelFilterOptions", dto);
+            model.addAttribute("userTotalDistanceAsPassenger", userService
+                    .getTotalDistanceAsPassengerHashMap(Collections.singletonList(user)));
+            model.addAttribute("userTotalDistanceAsDriver", userService
+                    .getTotalDistanceAsDriverHashMap(Collections.singletonList(user)));
+            model.addAttribute("userTotalTravelsAsDriver", userService
+                    .getTotalTravelsAsDriverHashMap(Collections.singletonList(user)));
+            model.addAttribute("userTotalTravelsAsPassenger", userService
+                    .getTotalTravelsAsPassengerHashMap(Collections.singletonList(user)));
+            return "SingleUser";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
+
 
 
 

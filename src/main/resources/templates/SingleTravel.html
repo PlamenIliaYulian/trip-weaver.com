@@ -78,6 +78,11 @@
                                     <span th:text="${travel.getRideDurationInMinutes()/60} + 'h ' + ${travel.getRideDurationInMinutes()%60}+ 'min'">
                                         2h 30min</span>
                                 </li>
+                                <li><img src="../static/assets/img/driver-service-1.png"
+                                         th:src="@{/assets/img/status.svg}"
+                                         alt="driver-service">
+                                    <span th:text="${travel.getStatus().getStatusName()}">Status</span>
+                                </li>
                                 <li><img src="../static/assets/img/driver-service-2.png"
                                          th:src="@{/assets/img/comments.svg}"
                                          alt="driver-service">

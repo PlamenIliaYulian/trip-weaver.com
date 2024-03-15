@@ -26,8 +26,8 @@ dependencies {
 	implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.37.0'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-java8time
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
 
 }
 

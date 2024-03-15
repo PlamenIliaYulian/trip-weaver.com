@@ -76,6 +76,10 @@ public class TravelFilterOptions {
         return statusId;
     }
 
+    public void setStatusId(Optional<Integer> statusId) {
+        this.statusId = statusId;
+    }
+
     public Optional<Integer> getDriverId() {
         return driverId;
     }

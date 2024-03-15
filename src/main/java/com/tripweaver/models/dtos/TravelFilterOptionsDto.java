@@ -8,9 +8,9 @@ public class TravelFilterOptionsDto {
     private Integer minFreeSeats;
     private String driverUsername;
     private String commentContains;
+    private Integer statusId;
     private String sortBy;
     private String sortOrder;
-
 
     public TravelFilterOptionsDto(String startingPointCity,
                                   String endingPointCity,
@@ -54,6 +54,14 @@ public class TravelFilterOptionsDto {
 
     public void setDepartureBefore(String departureBefore) {
         this.departureBefore = departureBefore;
+    }
+
+    public Integer getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Integer statusId) {
+        this.statusId = statusId;
     }
 
     public String getDepartureAfter() {

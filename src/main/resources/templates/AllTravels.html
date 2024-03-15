@@ -124,7 +124,8 @@
                                th:text="'Soonest possible travel - FROM ' + ${departingSoonestTravel.getStartingPointAddress()} + ', ' + ${departingSoonestTravel.getStartingPointCity()}
                                   + ' TO  ' + ${departingSoonestTravel.getEndingPointAddress()}  + ', ' + ${departingSoonestTravel.getEndingPointCity()} + ' departuring on ' + ${#temporals.format(departingSoonestTravel.getDepartureTime(), 'yyyy-MMM-dd hh:mm a')} + ' with ' +
                                   ${departingSoonestTravel.getFreeSeats()} + ' seat(s) available.'"></p>
-                            <a th:unless="${travels.isEmpty()}" class="uk-button uk-button-danger" th:href="@{/travels/{id}(id=${departingSoonestTravel.getTravelId()})}">View</a>
+                            <a th:unless="${travels.isEmpty()}" class="uk-button uk-button-danger"
+                               th:href="@{/travels/{id}(id=${departingSoonestTravel.getTravelId()})}">View</a>
                             <p th:if="${travels.isEmpty()}">We are sorry, but there are currently no departing journeys
                                 available at
                                 the moment. Please check back later for updates.</p>
@@ -142,8 +143,11 @@
                                 <div class="search-result-item__info">
                                     <div class="user-box">
                                         <div class="user-box__avatar">
-                                            <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
-                                                 alt="driver-pic"></div>
+                                            <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
+                                                <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
+                                                     alt="driver-pic">
+                                            </a>
+                                        </div>
                                         <div class="user-box__info">
                                             <div class="user-box__name"
                                                  th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
@@ -165,12 +169,18 @@
                                                  alt="driver-service">
                                             <span th:text="${travel.getFreeSeats() - travel.getUsersApprovedForTheTravel().size()} + ' free seats available.'">Max. 2 passengers in back seats</span>
                                         </li>
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/status.svg}"
+                                                 alt="driver-service">
+                                            <span th:text="${travel.getStatus().getStatusName()}">Status</span>
+                                        </li>
                                         <li><img src="../static/assets/img/driver-service-2.png"
                                                  th:src="@{/assets/img/comments.svg}"
                                                  alt="driver-service">
                                             <span th:unless="${travel.getComment()==null}"
                                                   th:text="${travel.getComment()}">Pets are not allowed in the Car</span>
                                         </li>
+
                                     </ul>
 
                                 </div>
@@ -186,7 +196,8 @@
                                                 $19.50
                                             </div>
                                             <!--<div class="col-user">For 1 Passenger</div>-->
-                                            <a class="uk-button uk-button-danger" type="button" th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
+                                            <a class="uk-button uk-button-danger" type="button"
+                                               th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
                                             </a>
                                         </div>
                                     </div>

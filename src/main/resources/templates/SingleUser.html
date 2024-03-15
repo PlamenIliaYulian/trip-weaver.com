@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Profile')}"></head>
+<body class="page-search page-search--result">
+
+<!-- Loader-->
+<div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
+<!-- Loader end-->
+
+
+<div class="page-wrapper">
+    <header th:replace="~{Fragments.html :: page-header}"></header>
+    <main class="page-main">
+        <div class="main-search-grid uk-grid uk-child-width-1-2@xl uk-grid-match uk-grid-collapse" data-uk-grid>
+            <div>
+                <div class="main-search-section main-search-section--left">
+                    <div class="search-box">
+                        <div class="search-box__title">Where do you want to go?</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="uk-background-muted">
+                <div class="main-search-section">
+                    <div class="search-result">
+                        <div class="search-result__info">
+                            <div class="search-box">
+                                <form action="#" th:object="${travelFilterOptions}">
+                                    <div class="search-form">
+                                        <div class="uk-grid uk-child-width-1-2@s uk-grid-collapse" data-uk-grid>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <input class="input-place uk-input"
+                                                           type="text"
+                                                           placeholder="Starting Point City"
+                                                           th:field="*{startingPointCity}">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <input class="input-place uk-input"
+                                                           type="text"
+                                                           placeholder="Ending Point City"
+                                                           th:field="*{endingPointCity}">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <input class="input-user uk-input" type="text"
+                                                           th:field="*{minFreeSeats}"
+                                                           placeholder="Min No. of Passenger(s)">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <input class="input-place uk-input"
+                                                           type="text"
+                                                           placeholder="Driver Username"
+                                                           th:field="*{driverUsername}">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <select th:field="*{statusId}" class="input-place uk-input">
+                                                        <option value="">All Statuses</option>
+                                                        <option th:value="1"
+                                                                th:text="Created">
+                                                        </option>
+                                                        <option th:value="2"
+                                                                th:text="Cancelled">
+                                                        </option>
+                                                        <option th:value="3"
+                                                                th:text="Completed">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <select class="input-place uk-input" id="browse-posts-input-sortBy"
+                                                            th:field="*{sortBy}">
+                                                        <option value="">Sort By</option>
+                                                        <option value="startingPointCity">Starting City</option>
+                                                        <option value="endingPointCity">Ending City</option>
+                                                        <option value="departureTime">Departure Time</option>
+                                                        <option value="freeSeats">Free Seats</option>
+                                                        <option value="createdOn">Create dOn</option>
+                                                        <option value="driver">Driver</option>
+                                                        <option value="distance">Distance</option>
+                                                        <option value="duration">Duration</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <select class="input-place uk-input" id="browse-posts-input-sortORder"
+                                                            th:field="*{sortOrder}">
+                                                        <option value="">Sort Order</option>
+                                                        <option value="asc">Ascending</option>
+                                                        <option value="desc">Descending</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <input class="input-place uk-input"
+                                                           type="text"
+                                                           placeholder="Comment"
+                                                           th:field="*{commentContains}">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="search-form-btn">
+                                        <button class="uk-button uk-button-danger" type="submit"><span
+                                                class="uk-margin-small-right" data-uk-icon="search"> </span><span>SEARCH</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                        <div class="search-result__col"><img src="../static/assets/img/ico-car.png"
+                                                             th:src="@{/assets/img/ico-car.png}" alt="icon">
+                            <span th:text="'Participated in ' + ${userTravels.size()} + ' trips.'">23 rides available for you.</span>
+                        </div>
+                        <div class="search-result__list">
+                            <div class="search-result-item" th:each="travel : ${userTravels}">
+                                <div class="search-result-item__car"><img src="../static/assets/img/search-car-1.png"
+                                                                          th:src="@{/assets/img/search-car-1.png}"
+                                                                          alt="car"></div>
+                                <div class="search-result-item__info">
+                                    <div class="user-box">
+                                        <div class="user-box__avatar">
+                                            <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
+                                                 alt="driver-pic"></div>
+                                        <div class="user-box__info">
+                                            <div class="user-box__name"
+                                                 th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
+                                                Ben Strokes
+                                            </div>
+                                            <div class="user-box__rating"><i class="fas fa-star"></i>
+                                                <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="list-info">
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/driver_icon.svg}"
+                                                 alt="driver-service">
+                                            <span th:if="${travel.getDriver().getUserId() == userById.getUserId()}">As Driver</span>
+                                            <span th:unless="${travel.getDriver().getUserId() == userById.getUserId()}">As Passenger</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/capacity.svg}"
+                                                 alt="driver-service">
+                                            <span th:text="'Max. ' + ${travel.getFreeSeats()} + ' seats available.'">Max. 2 passengers in back seats</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/status.svg}"
+                                                 alt="driver-service">
+                                            <span th:text="${travel.getStatus().getStatusName()}">Status</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/free_seats.svg}"
+                                                 alt="driver-service">
+                                            <span th:text="${travel.getFreeSeats() - travel.getUsersApprovedForTheTravel().size()} + ' free seats available.'">Max. 2 passengers in back seats</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-2.png"
+                                                 th:src="@{/assets/img/comments.svg}"
+                                                 alt="driver-service">
+                                            <span th:unless="${travel.getComment()==null}"
+                                                  th:text="${travel.getComment()}">Pets are not allowed in the Car</span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="search-result-item__price">
+                                    <div class="price-box">
+                                        <div class="price-box__time"
+                                             th:text="${#temporals.format(travel.getDepartureTime(), 'yyyy-MMM-dd hh:mm a')}">
+                                            2:00 PM
+                                        </div>
+                                        <div class="price-box__price">
+                                            <div class="current-price"
+                                                 th:text="${travel.getStartingPointCity() + ' - '+ travel.getEndingPointCity()}">
+                                                $19.50
+                                            </div>
+                                            <!--<div class="col-user">For 1 Passenger</div>-->
+                                            <a class="uk-button uk-button-danger" type="button" th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Additional blocks-->
+    <div th:replace="~{Fragments.html :: additional-blocks}"></div>
+    <!--Footer-->
+    <footer th:replace="~{Fragments.html :: footer}"></footer>
+</div>
+<div th:replace="~{Fragments.html::script}"></div>
+</body>
+
+</html>

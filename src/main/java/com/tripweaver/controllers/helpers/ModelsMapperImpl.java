@@ -75,7 +75,7 @@ public class ModelsMapperImpl implements ModelsMapper {
                 dto.getMinFreeSeats(),
                 dto.getDriverUsername(),
                 dto.getCommentContains(),
-                TRAVEL_STATUS_CREATED_ID,
+                dto.getStatusId(),
                 dto.getSortBy(),
                 dto.getSortOrder()
         );
