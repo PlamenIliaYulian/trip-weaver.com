@@ -17,12 +17,16 @@ import com.tripweaver.services.contracts.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.hibernate.Session;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -250,6 +254,36 @@ public class TravelMvcController {
             model.addAttribute("error", e.getMessage());
             return "Error";
         } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
+    @GetMapping("/{travelId}/complete-travel")
+    public String completeTravel(@PathVariable int travelId,
+                                 HttpServletRequest servletRequest,
+                                 HttpSession session,
+                                 Model model) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
+            Travel travelToMarkAsCompleted = travelService.getTravelById(travelId);
+            travelService.completeTravel(travelToMarkAsCompleted, loggedInUser);
+
+            String referer = servletRequest.getHeader("Referer");
+            URI refererUri = new URI(referer);
+            return "redirect:"+ refererUri.getPath();
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (Exception e) {
             model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";

@@ -195,6 +195,8 @@
                                             <!--<div class="col-user">For 1 Passenger</div>-->
                                             <a class="uk-button uk-button-danger" type="button" th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
                                             </a>
+                                            <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}"class="uk-button button-approve margin-top-10px" type="button" th:href="@{/travels/__${travel.getTravelId()}__/complete-travel}">Complete
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

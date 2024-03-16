@@ -5281,6 +5281,10 @@ body.page-search--result .page-header__phone .uk-button {
     background-color: #216524;
 }
 
+.margin-top-10px{
+    margin-top: 10px;
+}
+
 .button-decline{
     background-color: #762317;
 }

@@ -177,7 +177,6 @@ public class UserMvcController {
                                      @ModelAttribute("travelFilterOptions") TravelFilterOptionsDto dto,
                                      Model model,
                                      HttpSession session) {
-
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
             User user = userService.getUserById(id);
