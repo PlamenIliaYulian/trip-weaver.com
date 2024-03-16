@@ -172,9 +172,10 @@ public class TravelMvcController {
                                    HttpSession session) {
 
         try {
-            authenticationHelper.tryGetUserFromSession(session);
+            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
             Travel travel = travelService.getTravelById(id);
             model.addAttribute("travel", travel);
+
 
             List<User> listOfApprovedAndAppliedPassengers = new ArrayList<>();
             listOfApprovedAndAppliedPassengers.addAll(travel.getUsersAppliedForTheTravel());
@@ -183,7 +184,8 @@ public class TravelMvcController {
                     userService.getTotalDistanceAsPassengerHashMap(listOfApprovedAndAppliedPassengers));
             model.addAttribute("passengerTotalTravels",
                     userService.getTotalTravelsAsPassengerHashMap(listOfApprovedAndAppliedPassengers));
-
+            model.addAttribute("isLoggedUserApprovedPassenger",
+                    listOfApprovedAndAppliedPassengers.contains(loggedUser));
             return "SingleTravel";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -260,6 +262,38 @@ public class TravelMvcController {
         }
     }
 
+    @GetMapping("/{travelId}/passengers/{passengerId}/cancel-participation")
+    public String cancelParticipationAsPassenger(@PathVariable int travelId,
+                                                 @PathVariable int passengerId,
+                                                 HttpServletRequest servletRequest,
+                                                 HttpSession session,
+                                                 Model model) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
+            User userToBeDeclined = userService.getUserById(passengerId);
+            Travel travel = travelService.getTravelById(travelId);
+            travelService.declinePassenger(userToBeDeclined, travel, loggedUser);
+
+            String referer = servletRequest.getHeader("Referer");
+            URI refererUri = new URI(referer);
+            return "redirect:" + refererUri.getPath();
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
     @GetMapping("/{travelId}/complete-travel")
     public String completeTravel(@PathVariable int travelId,
                                  HttpServletRequest servletRequest,
@@ -290,17 +324,15 @@ public class TravelMvcController {
         }
     }
 
-    @GetMapping("/{travelId}/passengers/{passengerId}/cancel-participation")
-    public String cancelParticipationAsPassenger(@PathVariable int travelId,
-                                                 @PathVariable int passengerId,
-                                                 HttpServletRequest servletRequest,
-                                                 HttpSession session,
-                                                 Model model) {
+    @GetMapping("/{travelId}/cancel-travel")
+    public String cancelTravel(@PathVariable int travelId,
+                               HttpServletRequest servletRequest,
+                               HttpSession session,
+                               Model model) {
         try {
-            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
-            User userToBeDeclined = userService.getUserById(passengerId);
-            Travel travel = travelService.getTravelById(travelId);
-            travelService.declinePassenger(userToBeDeclined, travel, loggedUser);
+            User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
+            Travel travelToMarkAsCompleted = travelService.getTravelById(travelId);
+            travelService.cancelTravel(travelToMarkAsCompleted, loggedInUser);
 
             String referer = servletRequest.getHeader("Referer");
             URI refererUri = new URI(referer);

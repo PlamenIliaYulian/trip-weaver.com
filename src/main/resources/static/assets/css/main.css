@@ -5277,20 +5277,28 @@ body.page-search--result .page-header__phone .uk-button {
     height: 180px;
 }
 
-.button-approve{
+.button-approve {
     background-color: #216524;
 }
 
-.margin-top-10px{
+.margin-top-10px {
     margin-top: 10px;
 }
 
-.button-decline{
+.white-color {
+    color: white;
+}
+
+.button-decline {
     background-color: #762317;
 }
 
-.button-cancel{
+.button-cancel {
     background-color: #762317;
+}
+
+.button-cancel:hover {
+    color: white;
 }
 
 .blog-card__title .button-approve,
@@ -5300,11 +5308,11 @@ body.page-search--result .page-header__phone .uk-button {
 }
 
 .price-box__price .button-approve,
-.price-box__price .button-decline{
+.price-box__price .button-decline {
     color: white;
 }
 
-#all-users-avatar-view{
+#all-users-avatar-view {
     width: 200px;
     height: 200px;
 }

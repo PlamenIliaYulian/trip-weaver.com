@@ -31,56 +31,64 @@
                 <div class="page-header__menu">
                     <nav class="page-nav" data-uk-navbar="">
                         <ul class="uk-navbar-nav">
-                            <li><a href="03_blog-1.html"> <img src="../static/assets/img/person-244.svg"
-                                                               th:src="@{/assets/img/person-244.svg}" data-uk-svg
-                                                               alt="person">Access</a>
+                            <li><a href="#"> <img src="../static/assets/img/person-244.svg"
+                                                  th:src="@{/assets/img/person-244.svg}" data-uk-svg
+                                                  alt="person">Profile</a>
                                 <div class="uk-navbar-dropdown">
                                     <ul th:unless="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
                                         <li><a href="#" th:href="@{/auth/register}">Register</a></li>
                                         <li><a href="#" th:href="@{/auth/login}">Login</a></li>
                                     </ul>
                                     <ul th:if="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
-                                        <li><a href="#">Profile</a></li>
+                                        <li><a th:href="@{/users/__${loggedUser.getUserId()}__}"
+                                               th:text="${loggedUser.getUsername()}">Profile</a></li>
                                         <li><a href="#" th:href="@{/auth/logout}">Logout</a></li>
                                     </ul>
                                 </div>
                             </li>
-                            <li th:if="${isAdmin}"><a href="#" th:href="@{/users/search}"> <img src="../static/assets/img/capacity.svg"
-                                                                               th:src="@{/assets/img/capacity.svg}" data-uk-svg
-                                                                               alt="search">Users</a>
+                            <li th:if="${isAdmin}"><a href="#" th:href="@{/users/search}"> <img
+                                    src="../static/assets/img/capacity.svg"
+                                    th:src="@{/assets/img/capacity.svg}" data-uk-svg
+                                    alt="search">Users</a>
                             </li>
                             <li><a href="#" th:href="@{/travels/search}"> <img src="../static/assets/img/search.svg"
-                                                                 th:src="@{/assets/img/search.svg}" data-uk-svg
-                                                                 alt="search">Find a Ride</a>
+                                                                               th:src="@{/assets/img/search.svg}"
+                                                                               data-uk-svg
+                                                                               alt="search">Find a Ride</a>
                             </li>
                             <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
                                                                    th:src="@{/assets/img/car.svg}" data-uk-svg
                                                                    alt="car">Create Trip</a></li>
-                            <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
-                                                                th:src="@{/assets/img/help2.svg}" data-uk-svg
-                                                                alt="help2">About</a></li>
+                            <li><a href="06_contact.html">
+                                <img src="../static/assets/img/help2.svg"
+                                     th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                     alt="help2">About</a></li>
+                            <li th:unless="${isAuthenticated}">
+                                <a th:href="@{/auth/login}" href="06_contact.html">
+                                    <img src="../static/assets/img/help2.svg"
+                                         th:src="@{/assets/img/login.svg}" data-uk-svg
+                                         alt="help2">Login
+                                </a>
+                            </li>
+                            <li th:if="${isAuthenticated}">
+                                <a th:href="@{/auth/logout}"
+                                   href="06_contact.html">
+                                    <img src="../static/assets/img/help2.svg"
+                                         th:src="@{/assets/img/logout.svg}" data-uk-svg
+                                         alt="help2">Logout
+                                </a>
+                            </li>
+                            <li th:unless="${isAuthenticated}">
+                                <a th:href="@{/auth/register}"
+                                   href="06_contact.html">
+                                    <img src="../static/assets/img/help2.svg"
+                                         th:src="@{/assets/img/register.svg}" data-uk-svg
+                                         alt="help2">Register
+                                </a>
+                            </li>
+
                         </ul>
                     </nav>
-                </div>
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger">
-                    <img
-                            src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
-                            alt="call" data-uk-svg>
-                    <span th:text="${loggedUser.getUsername()}"></span></a>
-                </div>
-                <div th:if="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                              href="#" th:href="@{/auth/logout}">
-                    <img
-                            src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call"
-                            data-uk-svg>
-                    <span>Logout</span></a>
-                </div>
-                <div th:unless="${isAuthenticated}" class="page-header__phone"><a class="uk-button uk-button-danger"
-                                                                                  href="#" th:href="@{/auth/login}">
-                    <img
-                            src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
-                            data-uk-svg>
-                    <span>Login</span></a>
                 </div>
                 <div class="page-header__btn"><a class="uk-button uk-button-danger" href="#offcanvas" data-uk-toggle
                                                  data-uk-icon="menu"></a>
@@ -103,7 +111,7 @@
             </div>
             <div class="page-footer__copy"><span>(c) 2024 All rights reserved.</span></div>
         </div>
-    </div >
+    </div>
 
     <!-- Additional blocks-->
     <div th:fragment="additional-blocks" id="offcanvas" data-uk-offcanvas="overlay: true">
@@ -118,40 +126,76 @@
                 </div>
                 <div class="uk-margin">
                     <ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
-                        <li class="uk-parent"><a href="#" th:href="@{/travels/search}"> <img src="../static/assets/img/search.svg"
-                                                                th:src="@{/assets/img/search.svg}" data-uk-svg
-                                                                alt="search">Find a Ride</a>
+                        <li class="uk-parent"><a href="#"> <img src="../static/assets/img/person-244.svg"
+                                              th:src="@{/assets/img/google_icons_person.svg}" data-uk-svg
+                                              alt="person">Profile</a>
+                            <ul class="uk-nav-sub">
+                                <ul th:unless="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                    <li><a href="#" th:href="@{/auth/register}">Register</a></li>
+                                    <li><a href="#" th:href="@{/auth/login}">Login</a></li>
+                                </ul>
+                                <ul th:if="${isAuthenticated}" class="uk-nav uk-navbar-dropdown-nav">
+                                    <li><a th:href="@{/users/__${loggedUser.getUserId()}__}"
+                                           th:text="${loggedUser.getUsername()}">Profile</a></li>
+                                    <li><a href="#" th:href="@{/auth/logout}">Logout</a></li>
+                                </ul>
+                            </ul>
+                        </li>
+                        <li th:if="${isAdmin}"><a href="#" th:href="@{/users/search}"> <img
+                                src="../static/assets/img/capacity.svg"
+                                th:src="@{/assets/img/capacity.svg}" data-uk-svg
+                                alt="search">Users</a>
+                        </li>
+                        <li><a href="#" th:href="@{/travels/search}"> <img src="../static/assets/img/search.svg"
+                                                                           th:src="@{/assets/img/search.svg}"
+                                                                           data-uk-svg
+                                                                           alt="search">Find a Ride</a>
+                        </li>
+                        <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
+                                                               th:src="@{/assets/img/car.svg}" data-uk-svg
+                                                               alt="car">Create Trip</a></li>
+                        <li><a href="06_contact.html">
+                            <img src="../static/assets/img/help2.svg"
+                                 th:src="@{/assets/img/help2.svg}" data-uk-svg
+                                 alt="help2">About</a></li>
+                        <li th:unless="${isAuthenticated}">
+                            <a th:href="@{/auth/login}" href="06_contact.html">
+                                <img src="../static/assets/img/help2.svg"
+                                     th:src="@{/assets/img/login.svg}" data-uk-svg
+                                     alt="help2">Login
+                            </a>
+                        </li>
+                        <li th:if="${isAuthenticated}">
+                            <a th:href="@{/auth/logout}"
+                               href="06_contact.html">
+                                <img src="../static/assets/img/help2.svg"
+                                     th:src="@{/assets/img/logout.svg}" data-uk-svg
+                                     alt="help2">Logout
+                            </a>
+                        </li>
+                        <li th:unless="${isAuthenticated}">
+                            <a th:href="@{/auth/register}"
+                               href="06_contact.html">
+                                <img src="../static/assets/img/help2.svg"
+                                     th:src="@{/assets/img/register.svg}" data-uk-svg
+                                     alt="help2">Register
+                            </a>
+                        </li>
+                        <!--<li><a href="#" th:href="@{/travels/search}"> <img
+                                src="../static/assets/img/search.svg"
+                                th:src="@{/assets/img/search.svg}" data-uk-svg
+                                alt="search">Find a Ride</a>
                         </li>
                         <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
                                                                th:src="@{/assets/img/car.svg}" data-uk-svg
                                                                alt="car">Create Trip</a>
                         </li>
-                        <li th:if="${isAdmin}"><a href="#" th:href="@{/users/search}"> <img src="../static/assets/img/capacity.svg"
-                                                                                             th:src="@{/assets/img/capacity.svg}" data-uk-svg
-                                                                                             alt="search">Users</a>
-                        </li>
-                        <li><a href="06_contact.html"> <img src="../static/assets/img/help2.svg"
-                                                            th:src="@{/assets/img/help2.svg}" data-uk-svg
-                                                            alt="help2">About</a>
-                        </li>
+                        <li th:if="${isAdmin}"><a href="#" th:href="@{/users/search}"> <img
+                                src="../static/assets/img/capacity.svg"
+                                th:src="@{/assets/img/capacity.svg}" data-uk-svg
+                                alt="search">Users</a>
+                        </li>-->
                     </ul>
-                    <div th:if="${isAuthenticated}" ><a class="uk-button uk-button-danger"> <img
-                            src="../static/assets/img/account_circle.svg" th:src="@{/assets/img/account_circle.svg}"
-                            alt="call" data-uk-svg>
-                        <span th:text="${loggedUser.getUsername()}"></span></a>
-                    </div>
-                    <div th:if="${isAuthenticated}"><a class="uk-button uk-button-danger"
-                                                      href="#" th:href="@{/auth/logout}"> <img
-                            src="../static/assets/img/logout.svg" th:src="@{/assets/img/logout.svg}" alt="call" data-uk-svg>
-                        <span>Logout</span></a>
-                    </div>
-                    <div th:unless="${isAuthenticated}" ><a class="uk-button uk-button-danger"
-                                                           href="#" th:href="@{/auth/login}">
-                        <img
-                                src="../static/assets/img/login.svg" th:src="@{/assets/img/login.svg}" alt="call"
-                                data-uk-svg>
-                        <span>Login</span></a>
-                    </div>
                 </div>
             </div>
         </div>

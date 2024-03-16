@@ -197,21 +197,33 @@
                                             <a class="uk-button uk-button-danger" type="button"
                                                th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
                                             </a>
-                                            <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}"
+                                            <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}
+                                            and ${travel.getStatus().getTravelStatusId() == 1 }"
+                                               class="uk-button button-cancel margin-top-10px white-color" type="button"
+                                               th:href="@{/travels/__${travel.getTravelId()}__/cancel-travel}">Cancel
+                                            </a>
+                                            <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}
+                                            and ${travel.getStatus().getTravelStatusId() == 1 }"
                                                class="uk-button button-approve margin-top-10px" type="button"
                                                th:href="@{/travels/__${travel.getTravelId()}__/complete-travel}">Complete
                                             </a>
+
                                             <a th:unless="${travel.getDriver().getUserId() == loggedUser.getUserId()}"
                                                th:if="${travel.getStatus().getTravelStatusId() == 1}"
                                                class="uk-button button-decline margin-top-10px"
                                                type="button"
                                                th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">Unsubscribe
                                             </a>
+                                            <a th:unless="${travel.getDriver().getUserId() == loggedUser.getUserId()}"
+                                               th:if="${travel.getStatus().getTravelStatusId() == 3}"
+                                               class="uk-button uk-button-danger margin-top-10px"
+                                               type="button"
+                                               th:href="@{__${requestURI}__}">Feedback
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
