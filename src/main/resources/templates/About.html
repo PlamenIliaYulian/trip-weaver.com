@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | About')}"></head>
+
+<body class="page-home">
+<div class="page-wrapper">
+
+    <header th:replace="~{Fragments.html :: page-header}"></header>
+
+    <main class="page-main">
+
+        <div class="section-banner">
+            <div class="section-banner__bg">
+                <div class="uk-cover-container"><img src="../static/assets/img/img-banner.jpg"
+                                                     th:src="@{/assets/img/img-banner.jpg}" alt="img-banner"
+                                                     data-uk-cover>
+                    <canvas></canvas>
+                </div>
+            </div>
+            <div class="section-banner__content uk-text-center">
+                <div class="uk-overlay uk-position-center-left uk-width-1-1">
+                    <div class="uk-container uk-width-1-1">
+                        <div class="section-banner__title">
+                            <h1><img src="../static/assets/img/crown-icon.svg.svg"
+                                     th:src="@{/assets/img/crown-icon.svg}" data-uk-svg
+                                     alt="crown">
+                            </h1>
+                            <h1 class="decor-top">Keep Calm And Stay Cool!</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-steps">
+            <div class="uk-section uk-container">
+                <div class="section-title uk-text-center">
+                    <div class="uk-h2">Creators Team</div>
+                </div>
+                <div class="section-title uk-text-center">
+                    <img src="../static/assets/img/the_best_team.png"
+                         th:src="@{/assets/img/the_best_team.png}" data-uk-svg
+                         alt="crown">
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Additional blocks-->
+    <div th:replace="~{Fragments.html :: additional-blocks}"></div>
+    <!--Footer-->
+    <footer th:replace="~{Fragments.html :: footer}"></footer>
+</div>
+<div th:replace="~{Fragments.html::script}"></div>
+</body>
+</html>
