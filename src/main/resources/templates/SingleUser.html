@@ -95,7 +95,8 @@
                                             </div>
                                             <div>
                                                 <div class="uk-inline uk-width-1-1">
-                                                    <select class="input-place uk-input" id="browse-posts-input-sortORder"
+                                                    <select class="input-place uk-input"
+                                                            id="browse-posts-input-sortORder"
                                                             th:field="*{sortOrder}">
                                                         <option value="">Sort Order</option>
                                                         <option value="asc">Ascending</option>
@@ -119,7 +120,8 @@
                                     </div>
                                     <div class="search-form-btn">
                                         <button class="uk-button uk-button-danger" type="submit"><span
-                                                class="uk-margin-small-right" data-uk-icon="search"> </span><span>SEARCH</span>
+                                                class="uk-margin-small-right"
+                                                data-uk-icon="search"> </span><span>SEARCH</span>
                                         </button>
                                     </div>
                                 </form>
@@ -155,7 +157,7 @@
                                                  th:src="@{/assets/img/driver_icon.svg}"
                                                  alt="driver-service">
                                             <span th:if="${travel.getDriver().getUserId() == userById.getUserId()}">As Driver</span>
-                                            <span th:unless="${travel.getDriver().getUserId() == userById.getUserId()}">As Passenger</span>
+                                            <span th:unless="${travel.getDriver().getUserId() == userById.getUserId()}">As Approved Passenger</span>
                                         </li>
                                         <li><img src="../static/assets/img/driver-service-1.png"
                                                  th:src="@{/assets/img/capacity.svg}"
@@ -192,10 +194,18 @@
                                                  th:text="${travel.getStartingPointCity() + ' - '+ travel.getEndingPointCity()}">
                                                 $19.50
                                             </div>
-                                            <!--<div class="col-user">For 1 Passenger</div>-->
-                                            <a class="uk-button uk-button-danger" type="button" th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
+                                            <a class="uk-button uk-button-danger" type="button"
+                                               th:href="@{/travels/{id}(id=${travel.getTravelId()})}">View
                                             </a>
-                                            <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}"class="uk-button button-approve margin-top-10px" type="button" th:href="@{/travels/__${travel.getTravelId()}__/complete-travel}">Complete
+                                            <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}"
+                                               class="uk-button button-approve margin-top-10px" type="button"
+                                               th:href="@{/travels/__${travel.getTravelId()}__/complete-travel}">Complete
+                                            </a>
+                                            <a th:unless="${travel.getDriver().getUserId() == loggedUser.getUserId()}"
+                                               th:if="${travel.getStatus().getTravelStatusId() == 1}"
+                                               class="uk-button button-decline margin-top-10px"
+                                               type="button"
+                                               th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">Unsubscribe
                                             </a>
                                         </div>
                                     </div>

@@ -272,7 +272,39 @@ public class TravelMvcController {
 
             String referer = servletRequest.getHeader("Referer");
             URI refererUri = new URI(referer);
-            return "redirect:"+ refererUri.getPath();
+            return "redirect:" + refererUri.getPath();
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
+    @GetMapping("/{travelId}/passengers/{passengerId}/cancel-participation")
+    public String cancelParticipationAsPassenger(@PathVariable int travelId,
+                                                 @PathVariable int passengerId,
+                                                 HttpServletRequest servletRequest,
+                                                 HttpSession session,
+                                                 Model model) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
+            User userToBeDeclined = userService.getUserById(passengerId);
+            Travel travel = travelService.getTravelById(travelId);
+            travelService.declinePassenger(userToBeDeclined, travel, loggedUser);
+
+            String referer = servletRequest.getHeader("Referer");
+            URI refererUri = new URI(referer);
+            return "redirect:" + refererUri.getPath();
         } catch (AuthenticationException e) {
             return "redirect:/auth/login";
         } catch (EntityNotFoundException e) {
