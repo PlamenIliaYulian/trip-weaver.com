@@ -37,9 +37,18 @@
             <div class="uk-container">
                 <div class="search-result__list">
                     <div class="search-result-item">
-                        <div class="search-result-item__car"><img src="../static/assets/img/search-car-1.png"
-                                                                  th:src="@{/assets/img/search-car-1.png}"
-                                                                  alt="car"></div>
+                        <div class="search-result-item__car">
+                            <div class="user-box__avatar" id="single-travel-box-avatar-car">
+                                <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
+
+                                    <img src="../static/assets/img/unsplash-just-some-car.jpg"
+                                         th:src="@{/assets/img/unsplash-just-some-car.jpg}"
+                                         alt="car">
+                                </a>
+                            </div>
+
+                        </div>
+
                         <div class="search-result-item__info">
                             <div class="user-box">
                                 <div class="user-box__avatar">
@@ -107,7 +116,7 @@
                                     and travel.getStatus().getTravelStatusId() == 3}"
                                        class="uk-button uk-button-danger"
                                        type="button"
-                                    th:href="@{__${requestURI}__}">Feedback
+                                       th:href="@{__${requestURI}__}">Feedback
 
                                     </a>
                                     <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}
@@ -136,8 +145,10 @@
         </div>
 
         <div class="section-slider-blog single-travel-section-slider-blog">
-            <div class="section-title uk-text-center">
-                <div class="uk-h2">Approved Passengers</div>
+            <div class="uk-section uk-container">
+                <div class="section-title uk-text-center">
+                    <div class="uk-h2">Approved Passengers</div>
+                </div>
             </div>
             <div class="uk-container">
                 <div class="slider-blog">
@@ -245,9 +256,12 @@
         </div>
 
         <div class="section-slider-blog single-travel-section-slider-blog">
-            <div class="section-title uk-text-center">
-                <div class="uk-h2">Applied Passengers</div>
+            <div class="uk-section uk-container">
+                <div class="section-title uk-text-center">
+                    <div class="uk-h2">Applied Passengers</div>
+                </div>
             </div>
+
             <div class="uk-container">
                 <div class="slider-blog">
                     <div data-uk-slideshow="max-height: 285; min-height: 275; animation: slide">

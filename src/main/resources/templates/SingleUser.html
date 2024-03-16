@@ -15,10 +15,282 @@
         <div class="main-search-grid uk-grid uk-child-width-1-2@xl uk-grid-match uk-grid-collapse" data-uk-grid>
             <div>
                 <div class="main-search-section main-search-section--left">
-                    <div class="search-box">
-                        <div class="search-box__title">Where do you want to go?</div>
 
+                    <!--User Information-->
+                    <div class="uk-section uk-container single-user-section-uk-container">
+                        <div class="section-title uk-text-center single-user-divider">
+                            <div class="uk-h2">User Information:</div>
+                        </div>
                     </div>
+                    <div class="search-result-item">
+                        <div class="search-result-item__car">
+                            <div class="user-box__avatar" id="all-users-avatar-view">
+                                <a th:href="@{/users/__${userById.getUserId()}__}">
+                                    <img th:src="${userById.getAvatar().getAvatarUrl()}"
+                                         alt="driver-pic"></a>
+                            </div>
+                        </div>
+                        <div class="search-result-item__info">
+                            <div class="user-box">
+                                <div class="user-box__info">
+                                    <div class="user-box__name">
+                                        <a th:href="@{/users/__${userById.getUserId()}__}"
+                                           th:text="${userById.getUsername()}">Ben Strokes</a>
+                                    </div>
+                                    <div class="user-box__rating"><i class="fas fa-star"></i>
+                                        <b th:text="${userById.getAverageDriverRating()} + ' / 5 as Driver'">4.8/5 </b>
+                                    </div>
+                                    <div class="user-box__rating"><i class="fas fa-star"></i>
+                                        <b th:text="${userById.getAveragePassengerRating()} + ' / 5 as Passenger'">4.8/5 </b>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="list-info">
+                                <li><img src="../static/assets/img/mail.svg"
+                                         th:src="@{/assets/img/person.svg}" alt="driver-service"><span
+                                        th:text="${userById.getFirstName()} + ' ' + ${userById.getLastName()}">Username</span>
+                                </li>
+                                <li><img src="../static/assets/img/mail.svg"
+                                         th:src="@{/assets/img/mail.svg}" alt="driver-service"><span
+                                        th:text="${userById.getEmail()}">Email</span></li>
+                                <li><img src="../static/assets/img/phone.svg"
+                                         th:src="@{/assets/img/phone.svg}" alt="driver-service"><span
+                                        th:text="${userById.getPhoneNumber()}">Phone number</span></li>
+                                <li><img src="../static/assets/img/phone.svg"
+                                         th:src="@{/assets/img/block_user.svg}" alt="block-user"><span
+                                        th:if="${userById.isBlocked}"
+                                >User is currently blocked.</span>
+                                    <span th:unless="${userById.isBlocked}">User is not blocked.</span>
+                                </li>
+                                <li><img src="../static/assets/img/verified.svg"
+                                         th:src="@{/assets/img/verified.svg}" alt="block-user"><span
+                                        th:if="${userById.isVerified()}"
+                                >User is currently verified.</span>
+                                    <span th:unless="${userById.isVerified()}">User is not verified.</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="search-result-item__price">
+                            <div class="price-box">
+
+                                <div class="price-box__price">
+                                    <a th:unless="${userById.isBlocked} and ${loggedUser.getUserId() == userById.getUserId()}"
+                                       class="uk-button button-decline" type="button"
+                                       th:href="@{/users/{userId}/block(userId=${userById.getUserId()})}">
+                                        Block
+                                    </a>
+                                    <a th:if="${userById.isBlocked}" class="uk-button button-approve" type="button"
+                                       th:href="@{/users/{userId}/unblock(userId=${userById.getUserId()})}">
+                                        Unblock
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="uk-section uk-container single-user-section-uk-container">
+                        <div class="section-title uk-text-center single-user-divider">
+                            <div class="uk-h2">Reviews When Driver:</div>
+                        </div>
+                    </div>
+                    <div class="slider-blog">
+                        <div data-uk-slideshow="max-height: 285; min-height: 275; animation: slide">
+                            <div class="uk-grid uk-grid-collapse" data-uk-grid>
+                                <div class="uk-width-3-3@m">
+                                    <div class="slider-blog__content">
+                                        <div class="slider-blog__box">
+                                            <ul class="uk-slideshow-items">
+
+                                                <li th:each="driverFeedback : ${feedbackForDriver}">
+
+                                                    <div class="blog-card single-travel-blog-card">
+                                                        <div class="blog-card__body single-travel-user-box-avatar">
+                                                            <div class="user-box__avatar">
+                                                                <a th:href="@{/users/__${driverFeedback.getAuthor().getUserId()}__}"><img
+                                                                        class="uk-width-1-1"
+                                                                        th:src="${driverFeedback.getAuthor().getAvatar().getAvatarUrl()}"
+                                                                        alt="img-slider-blog">
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="blog-card__body">
+                                                            <div class="blog-card__info">
+                                                                <div class="blog-card__author"><i
+                                                                        class="fas fa-user"></i>
+                                                                    <a th:href="@{/users/__${driverFeedback.getAuthor().getUserId()}__}">
+                                                                <span th:text="${driverFeedback.getAuthor().getFirstName()} + ' ' + ${driverFeedback.getAuthor().getLastName()}">
+                                                                </span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="blog-card__category">
+                                                                    <img src="../static/assets/img/badge.svg"
+                                                                         th:src="@{/assets/img/badge.svg}"
+                                                                         alt="car">
+                                                                    <a th:href="@{/users/__${driverFeedback.getAuthor().getUserId()}__}">
+                                                                <span th:text="${driverFeedback.getAuthor().getUsername()}">
+                                                                </span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                            <div><img src="../static/assets/img/mode_of_travel.svg"
+                                                                      th:src="@{/assets/img/directions_car.svg}"
+                                                                      alt="driver-service">
+                                                                <span th:text="'For travel from '
+                                                                        + ${driverFeedback.getTravel().getStartingPointCity()} + ' to '
+                                                                        + ${driverFeedback.getTravel().getEndingPointCity()} + ' on '
+                                                                        + ${#temporals.format(driverFeedback.getTravel().getDepartureTime(), 'yyyy-MMM-dd')}">100 km
+                                                                        </span>
+                                                            </div>
+
+                                                            <div class="blog-card__intro">
+                                                                <div class="driver-card__services">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <img src="../static/assets/img/stars.svg"
+                                                                                 th:src="@{/assets/img/stars.svg}"
+                                                                                 alt="driver-service">
+                                                                            <span><i
+                                                                                    th:each="i : ${#numbers.sequence(1, driverFeedback.getRating())}"
+                                                                                    class="fas fa-star color-orange">
+                                                                                    </i>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li><img
+                                                                                src="../static/assets/img/calendar.svg"
+                                                                                th:src="@{/assets/img/calendar.svg}"
+                                                                                alt="driver-service">
+                                                                            <span th:text="'Created on: ' + ${#temporals.format(driverFeedback.getCreated(), 'yyyy-MMM-dd hh:mm a')}">
+                                                                                        10</span>
+                                                                        </li>
+                                                                        <li><img src="../static/assets/img/history_edu.svg"
+                                                                                 th:src="@{/assets/img/history_edu.svg}"
+                                                                                 alt="driver-service">
+                                                                            <span th:text="${driverFeedback.getContent()}">
+                                                                                        10</span>
+                                                                        </li>
+
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="slider-blog__dots">
+                                            <ul class="uk-slideshow-nav uk-dotnav uk-flex uk-flex-right"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="uk-section uk-container single-user-section-uk-container">
+                        <div class="section-title uk-text-center single-user-divider">
+                            <div class="uk-h2">Reviews When Passenger:</div>
+                        </div>
+                    </div>
+                    <div class="slider-blog">
+                        <div data-uk-slideshow="max-height: 285; min-height: 275; animation: slide">
+                            <div class="uk-grid uk-grid-collapse" data-uk-grid>
+                                <div class="uk-width-3-3@m">
+                                    <div class="slider-blog__content">
+                                        <div class="slider-blog__box">
+                                            <ul class="uk-slideshow-items">
+
+                                                <li th:each="passengerFeedback : ${feedbackForPassenger}">
+
+                                                    <div class="blog-card single-travel-blog-card">
+                                                        <div class="blog-card__body single-travel-user-box-avatar">
+                                                            <div class="user-box__avatar">
+                                                                <a th:href="@{/users/__${passengerFeedback.getAuthor().getUserId()}__}"><img
+                                                                        class="uk-width-1-1"
+                                                                        th:src="${passengerFeedback.getAuthor().getAvatar().getAvatarUrl()}"
+                                                                        alt="img-slider-blog">
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="blog-card__body">
+                                                            <div class="blog-card__info">
+                                                                <div class="blog-card__author"><i
+                                                                        class="fas fa-user"></i>
+                                                                    <a th:href="@{/users/__${passengerFeedback.getAuthor().getUserId()}__}">
+                                                                <span th:text="${passengerFeedback.getAuthor().getFirstName()} + ' ' + ${passengerFeedback.getAuthor().getLastName()}">
+                                                                </span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="blog-card__category">
+                                                                    <img src="../static/assets/img/badge.svg"
+                                                                         th:src="@{/assets/img/badge.svg}"
+                                                                         alt="car">
+                                                                    <a th:href="@{/users/__${passengerFeedback.getAuthor().getUserId()}__}">
+                                                                <span th:text="${passengerFeedback.getAuthor().getUsername()}">
+                                                                </span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                            <div><img src="../static/assets/img/mode_of_travel.svg"
+                                                                      th:src="@{/assets/img/directions_car.svg}"
+                                                                      alt="driver-service">
+                                                                <span th:text="'For travel from '
+                                                                        + ${passengerFeedback.getTravel().getStartingPointCity()} + ' to '
+                                                                        + ${passengerFeedback.getTravel().getEndingPointCity()} + ' on '
+                                                                        + ${#temporals.format(passengerFeedback.getTravel().getDepartureTime(), 'yyyy-MMM-dd')}">100 km
+                                                                        </span>
+                                                            </div>
+
+                                                            <div class="blog-card__intro">
+                                                                <div class="driver-card__services">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <img src="../static/assets/img/stars.svg"
+                                                                                 th:src="@{/assets/img/stars.svg}"
+                                                                                 alt="driver-service">
+                                                                            <span><i
+                                                                                    th:each="i : ${#numbers.sequence(1, passengerFeedback.getRating())}"
+                                                                                    class="fas fa-star color-orange">
+                                                                                    </i>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li><img
+                                                                                src="../static/assets/img/calendar.svg"
+                                                                                th:src="@{/assets/img/calendar.svg}"
+                                                                                alt="driver-service">
+                                                                            <span th:text="'Created on: ' + ${#temporals.format(passengerFeedback.getCreated(), 'yyyy-MMM-dd hh:mm a')}">
+                                                                                        10</span>
+                                                                        </li>
+                                                                        <li><img src="../static/assets/img/history_edu.svg"
+                                                                                 th:src="@{/assets/img/history_edu.svg}"
+                                                                                 alt="driver-service">
+                                                                            <span th:text="${passengerFeedback.getContent()}">
+                                                                                        10</span>
+                                                                        </li>
+
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="slider-blog__dots">
+                                            <ul class="uk-slideshow-nav uk-dotnav uk-flex uk-flex-right"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -134,19 +406,30 @@
                         </div>
                         <div class="search-result__list">
                             <div class="search-result-item" th:each="travel : ${userTravels}">
-                                <div class="search-result-item__car"><img src="../static/assets/img/search-car-1.png"
-                                                                          th:src="@{/assets/img/search-car-1.png}"
-                                                                          alt="car"></div>
+                                <div class="search-result-item__car">
+                                    <div class="user-box__avatar" id="single-user-box-avatar">
+                                        <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
+
+                                            <img src="../static/assets/img/unsplash-just-some-car.jpg"
+                                                 th:src="@{/assets/img/unsplash-just-some-car.jpg}"
+                                                 alt="car">
+                                        </a>
+                                    </div>
+                                </div>
                                 <div class="search-result-item__info">
                                     <div class="user-box">
                                         <div class="user-box__avatar">
+                                            <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
                                             <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
-                                                 alt="driver-pic"></div>
+                                                 alt="driver-pic">
+                                            </a>
+                                        </div>
                                         <div class="user-box__info">
+                                            <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
                                             <div class="user-box__name"
                                                  th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
-                                                Ben Strokes
                                             </div>
+                                            </a>
                                             <div class="user-box__rating"><i class="fas fa-star"></i>
                                                 <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
                                             </div>
@@ -228,8 +511,8 @@
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </main>
 
     <!-- Additional blocks-->
