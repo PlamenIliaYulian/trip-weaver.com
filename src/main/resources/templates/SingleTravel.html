@@ -199,7 +199,7 @@
                             <div class="uk-width-3-3@m">
                                 <div class="slider-blog__content">
                                     <div class="slider-blog__box">
-                                        <ul class="uk-slideshow-items">
+                                        <ul class="uk-slideshow-items height-500px">
 
                                             <li th:each="approvedUser : ${travel.getUsersApprovedForTheTravel()}">
 
@@ -272,6 +272,44 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="max-height-100percent">
+                                                        <div class="add-reviews-form" id="add-reviews">
+                                                            <div class="uk-h2">Leave A Review For The Driver:</div>
+                                                            <p>Share your thoughts on the driver. Comment should be no longer than 200 symbols.</p>
+                                                            <form
+                                                                    action="#"
+                                                                    th:object="${feedbackForm}"
+                                                                    method="post"
+                                                                    th:action="@{/travels/__${travel.getTravelId()}__/driver/__${travel.getDriver().getUserId()}__/feedback-for-driver}">
+
+                                                                <div class="uk-grid uk-grid-medium uk-child-width-1-2@s" data-uk-grid>
+                                                                    <div class="uk-width-1-1">
+                                                                        <select th:field="*{rating}" class="input-place uk-input font-size-30px">
+                                                                            <option value="5">⭐⭐⭐⭐⭐</option>
+                                                                            <option value="4">⭐⭐⭐⭐</option>
+                                                                            <option value="3">⭐⭐⭐</option>
+                                                                            <option value="2">⭐⭐</option>
+                                                                            <option value="1">⭐</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="uk-width-1-1">
+                                                                        <input type="text"
+                                                                               pattern="^.{0,200}$"
+                                                                               title="Content must be maximum 200 symbols long."
+                                                                               th:field="*{content}"
+                                                                               class="uk-textarea"
+                                                                               name="comment"
+                                                                               placeholder="Comment (Optional)">
+                                                                    </div>
+                                                                    </br>
+                                                                    <div class="uk-width-1-1">
+                                                                        <button class="uk-button uk-button-danger" type="submit">Submit</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </div>
 
