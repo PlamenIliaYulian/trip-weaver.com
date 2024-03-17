@@ -5362,6 +5362,14 @@ body.page-search--result .page-header__phone .uk-button {
     background-color : rgba(65,77,205,0.99)
 }
 
+.flex-box-center-items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#update-user-avatar{
+    max-height: 40px;
+}
 
 
 /*Custom CSS END*/

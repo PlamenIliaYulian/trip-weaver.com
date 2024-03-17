@@ -27,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
@@ -285,6 +286,36 @@ public class UserMvcController {
         } catch (DuplicateEntityException e) {
             errors.rejectValue("email", "email_exists", e.getMessage());
             return "UserEdit";
+        }
+    }
+
+
+    @PostMapping("/{id}/edit/photos/upload")
+    public String uploadAvatar(@PathVariable int id,
+                               Model model,
+                               @RequestParam("file") MultipartFile file,
+                               HttpSession session) {
+        String message = "";
+
+
+        try {
+            String newAvatar = avatarService.uploadPictureToCloudinary(file);
+            User userById = userService.getUserById(id);
+            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
+            userService.addAvatar(userById, newAvatar, loggedUser);
+            message = "Uploaded the file successfully: " + file.getOriginalFilename();
+            model.addAttribute("message", message);
+            return "redirect:/users/{id}";
+        } catch (AuthenticationException e) {
+            model.addAttribute("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (RuntimeException e) {
+            model.addAttribute("message", e.getMessage());
+            return "Error";
         }
     }
 
