@@ -75,12 +75,14 @@
                             <div class="price-box">
 
                                 <div class="price-box__price">
-                                    <a th:unless="${userById.isBlocked} and ${loggedUser.getUserId() == userById.getUserId()}"
+                                    <a th:if="${!userById.isBlocked}
+                                    and ${loggedUser.getUserId() != userById.getUserId()}
+                                    and ${isAdmin}"
                                        class="uk-button button-decline" type="button"
                                        th:href="@{/users/{userId}/block(userId=${userById.getUserId()})}">
                                         Block
                                     </a>
-                                    <a th:if="${userById.isBlocked}" class="uk-button button-approve" type="button"
+                                    <a th:if="${userById.isBlocked} and ${isAdmin}" class="uk-button button-approve" type="button"
                                        th:href="@{/users/{userId}/unblock(userId=${userById.getUserId()})}">
                                         Unblock
                                     </a>
@@ -294,7 +296,7 @@
                 </div>
             </div>
 
-            <div class="uk-background-muted">
+            <div class="uk-background-muted" th:if="${loggedUser.getUserId() == userById.getUserId()}">
                 <div class="main-search-section">
                     <div class="search-result">
                         <div class="search-result__info">

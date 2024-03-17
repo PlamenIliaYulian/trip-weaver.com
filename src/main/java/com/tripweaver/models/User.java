@@ -28,7 +28,6 @@ public class User implements Comparable<User> {
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
-
     @Column(name = "created")
     private LocalDateTime created;
     @Column(name = "is_deleted")

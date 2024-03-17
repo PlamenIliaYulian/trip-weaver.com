@@ -33,9 +33,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
-import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
+import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 @Controller
 @RequestMapping("/travels")
@@ -189,6 +189,11 @@ public class TravelMvcController {
             model.addAttribute("isLoggedUserApprovedPassenger",
                     listOfApprovedAndAppliedPassengers.contains(loggedUser));
             model.addAttribute("feedbackForm", new FeedbackDto());
+            model.addAttribute("hasLoggedUserAlreadyLeftFeedback", !travel.getDriver().getFeedback().stream()
+                    .filter(feedback -> feedback.getAuthor().equals(loggedUser))
+                    .filter(feedback -> feedback.getTravel().equals(travel))
+                    .filter(feedback -> feedback.getReceiver().equals(travel.getDriver()))
+                    .collect(Collectors.toList()).isEmpty());
             return "SingleTravel";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -204,7 +209,6 @@ public class TravelMvcController {
                                    @PathVariable int userId,
                                    HttpSession session,
                                    Model model) {
-
         try {
             User loggedUser = authenticationHelper.tryGetUserFromSession(session);
             Travel travel = travelService.getTravelById(travelId);
@@ -397,6 +401,35 @@ public class TravelMvcController {
             return "Error";
         } catch (Exception e) {
             model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
+    @GetMapping("/{travelId}/apply")
+    public String applyForATrip(HttpSession session,
+                                @PathVariable int travelId,
+                                Model model) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
+            Travel travelToApplyFor = travelService.getTravelById(travelId);
+            travelService.applyForATrip(loggedInUser, travelToApplyFor);
+
+            return "redirect:/travels/{travelId}";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (AuthenticationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.CONFLICT.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";
         }

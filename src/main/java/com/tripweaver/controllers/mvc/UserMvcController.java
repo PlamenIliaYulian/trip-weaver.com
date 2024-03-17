@@ -188,8 +188,10 @@ public class UserMvcController {
             List<Travel> allTravels = new ArrayList<>();
             TravelFilterOptions travelFilterOptions = modelsMapper.travelFilterOptionsFromDto(dto);
             TravelFilterOptions travelFilterOptions2 = modelsMapper.travelFilterOptionsFromDto(dto);
-            allTravels.addAll(travelService.getTravelsByDriver(user, loggedInUser, travelFilterOptions));
-            allTravels.addAll(travelService.getTravelsByPassenger(user, loggedInUser, travelFilterOptions2));
+            if(loggedInUser.getUserId() == id){
+                allTravels.addAll(travelService.getTravelsByDriver(user, loggedInUser, travelFilterOptions));
+                allTravels.addAll(travelService.getTravelsByPassenger(user, loggedInUser, travelFilterOptions2));
+            }
 
             model.addAttribute("userById", user);
             model.addAttribute("userTravels", allTravels);
@@ -219,42 +221,7 @@ public class UserMvcController {
         }
     }
 
-//    @PostMapping("/travels/{travelId}/driver/{driverId}/feedback-for-driver")
-//    public String leaveFeedbackForDriver(@PathVariable int driverId,
-//                                         @PathVariable int travelId,
-//                                         Model model,
-//                                         HttpSession session,
-//                                         HttpServletRequest servletRequest,
-//                                         @Valid @ModelAttribute("feedbackForm") FeedbackDto feedbackDto,
-//                                         BindingResult errors) {
-//
-//
-//        try {
-//            if (errors.hasErrors()) {
-//                return "SingleTravel";
-//            }
-//
-//            User passenger = authenticationHelper.tryGetUserFromSession(session);
-//            User driver = userService.getUserById(driverId);
-//            Travel travel = travelService.getTravelById(travelId);
-//            Feedback feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto);
-//            userService.leaveFeedbackForDriver(feedbackForDriver, travel, passenger, driver);
-//
-//            return "SingleTravel";
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        } catch (AuthenticationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        } catch (UnauthorizedOperationException e) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-//        } catch (InvalidOperationException e) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-//        } catch (Exception e) {
-//            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
-//            model.addAttribute("error", e.getMessage());
-//            return "Error";
-//        }
-//    }
+
 
 
 }

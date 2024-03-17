@@ -52,13 +52,16 @@
                         <div class="search-result-item__info">
                             <div class="user-box">
                                 <div class="user-box__avatar">
-                                    <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
-                                         alt="driver-pic"></div>
+                                    <a th:href="@{/users/__${travel.getDriver().getUserId()}__}">
+                                        <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
+                                             alt="driver-pic"></a>
+                                </div>
                                 <div class="user-box__info">
-                                    <div class="user-box__name"
-                                         th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
-                                        Ben Strokes
-                                    </div>
+                                    <a th:href="@{/users/__${travel.getDriver().getUserId()}__}">
+                                        <div class="user-box__name"
+                                             th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
+                                        </div>
+                                    </a>
                                     <div class="user-box__rating"><i class="fas fa-star"></i>
                                         <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
                                     </div>
@@ -79,7 +82,7 @@
                                 <li><img src="../static/assets/img/driver-service-1.png"
                                          th:src="@{/assets/img/mode_of_travel.svg}"
                                          alt="driver-service">
-                                    <span th:text="${travel.getDistanceInKm()} + ' km.'">50km</span>
+                                    <span th:text="${travel.getDistanceInKm()} + ' km as Driver'">50km</span>
                                 </li>
                                 <li><img src="../static/assets/img/driver-service-1.png"
                                          th:src="@{/assets/img/hourglass_bottom.svg}"
@@ -112,12 +115,11 @@
                                          th:text="${travel.getStartingPointCity() + ' - '+ travel.getEndingPointCity()}">
                                         $19.50
                                     </div>
-                                    <a th:if="${isLoggedUserApprovedPassenger
-                                    and travel.getStatus().getTravelStatusId() == 3}"
-                                       class="uk-button uk-button-danger"
-                                       type="button"
-                                       th:href="@{__${requestURI}__}">Feedback
-
+                                    <a th:if="${travel.getFreeSeats() - travel.getUsersApprovedForTheTravel().size() > 0}
+                                    and ${travel.getStatus().getTravelStatusId() == 1} and ${!isLoggedUserApprovedPassenger}
+                                    and ${travel.getDriver().getUserId() != loggedUser.getUserId()}"
+                                       class="uk-button button-approve margin-top-10px white-color" type="button"
+                                       th:href="@{/travels/__${travel.getTravelId()}__/apply}">Apply
                                     </a>
                                     <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()}
                                     and ${travel.getStatus().getTravelStatusId() == 1 }"
@@ -140,11 +142,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="search-result__list">
+                <div th:if="${!hasLoggedUserAlreadyLeftFeedback} and ${travel.getStatus().getTravelStatusId() == 3}" class="search-result__list">
                     <div class="search-result-item__info">
                         <div class="add-reviews-form" id="add-reviews">
                             <div class="uk-h2">Leave A Review For The Driver:</div>
-                            <p>Share your thoughts on the driver.</p>
+                            <p>Share your thoughts on the driver. Comment should be no longer than 200 symbols.</p>
                             <form
                                     action="#"
                                     th:object="${feedbackForm}"
@@ -163,18 +165,15 @@
                                     </div>
 
                                     <div class="uk-width-1-1">
-                                        <textarea
+                                        <input type="text"
                                                 pattern="^.{0,200}$"
                                                 title="Content must be maximum 200 symbols long."
                                                 th:field="*{content}"
                                                 class="uk-textarea"
                                                 name="comment"
                                                 placeholder="Comment (Optional)">
-
-                                        </textarea>
                                     </div>
                                     </br>
-
                                     <div class="uk-width-1-1">
                                         <button class="uk-button uk-button-danger" type="submit">Submit</button>
                                     </div>
@@ -244,18 +243,6 @@
                                                                type="button"
                                                                th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">Unsubscribe
                                                             </a>
-                                                            <!--                                                            <a th:if="${loggedUser.getUserId() == approvedUser.getUserId()}-->
-                                                            <!--                                                            and ${travel.getStatus().getTravelStatusId() == 1}"-->
-                                                            <!--                                                               class="uk-button button-cancel" type="button"-->
-                                                            <!--                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${approvedUser.getUserId()}__/decline}">-->
-                                                            <!--                                                                Cancel-->
-                                                            <!--                                                            </a>-->
-                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId() }
-                                                            and ${travel.getStatus().getTravelStatusId() == 1}"
-                                                               class="uk-button uk-button-danger" type="button"
-                                                               th:href="@{__${requestURI}__}">
-                                                                Feedback
-                                                            </a>
                                                         </div>
 
                                                         <div class="blog-card__intro">
@@ -265,7 +252,7 @@
                                                                             src="../static/assets/img/mode_of_travel.svg"
                                                                             th:src="@{/assets/img/mode_of_travel.svg}"
                                                                             alt="driver-service"><span th:text="'Total Distance: ' +
-                                                         ${passengerTotalDistance.get(approvedUser.getUsername())} + ' km'">100 km</span>
+                                                         ${passengerTotalDistance.get(approvedUser.getUsername())} + ' km as Passenger'">100 km</span>
                                                                     </li>
                                                                     <li><img
                                                                             src="../static/assets/img/directions_car.svg"
@@ -378,7 +365,7 @@
                                                                             src="../static/assets/img/mode_of_travel.svg"
                                                                             th:src="@{/assets/img/mode_of_travel.svg}"
                                                                             alt="driver-service"><span th:text="'Total Distance: ' +
-                                                         ${passengerTotalDistance.get(appliedPassanger.getUsername())} + ' km'">100 km</span>
+                                                         ${passengerTotalDistance.get(appliedPassanger.getUsername())} + ' km as Passenger'">100 km</span>
                                                                     </li>
                                                                     <li><img
                                                                             src="../static/assets/img/directions_car.svg"

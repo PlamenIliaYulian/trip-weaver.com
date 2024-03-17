@@ -132,7 +132,7 @@
                                         </li>
                                         <li><img src="../static/assets/img/verified.svg"
                                                  th:src="@{/assets/img/verified.svg}" alt="block-user"><span th:if="${user.isVerified()}"
-                                        >User is currently verified.</span>
+                                        >User is verified.</span>
                                             <span th:unless="${user.isVerified()}">User is not verified.</span>
                                         </li>
                                     </ul>
