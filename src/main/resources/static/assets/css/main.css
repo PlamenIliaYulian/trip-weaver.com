@@ -5289,6 +5289,10 @@ body.page-search--result .page-header__phone .uk-button {
     color: white;
 }
 
+.white-color:hover {
+    color: white;
+}
+
 .button-decline {
     background-color: #762317;
 }
@@ -5348,6 +5352,9 @@ body.page-search--result .page-header__phone .uk-button {
     padding-bottom: 20px;
 }
 
+.font-size-30px{
+    font-size: 30px;
+}
 
 
 /*Custom CSS END*/

@@ -6,8 +6,10 @@ import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
+import com.tripweaver.models.Feedback;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.TravelDto;
 import com.tripweaver.models.dtos.TravelFilterOptionsDto;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
@@ -170,8 +172,8 @@ public class TravelMvcController {
     public String showSingleTravel(@PathVariable int id,
                                    Model model,
                                    HttpSession session) {
-
         try {
+
             User loggedUser = authenticationHelper.tryGetUserFromSession(session);
             Travel travel = travelService.getTravelById(id);
             model.addAttribute("travel", travel);
@@ -186,6 +188,7 @@ public class TravelMvcController {
                     userService.getTotalTravelsAsPassengerHashMap(listOfApprovedAndAppliedPassengers));
             model.addAttribute("isLoggedUserApprovedPassenger",
                     listOfApprovedAndAppliedPassengers.contains(loggedUser));
+            model.addAttribute("feedbackForm", new FeedbackDto());
             return "SingleTravel";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -345,6 +348,51 @@ public class TravelMvcController {
             return "Error";
         } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
+    @PostMapping("/{travelId}/driver/{driverId}/feedback-for-driver")
+    public String leaveFeedbackForDriver(@PathVariable int driverId,
+                                         @PathVariable int travelId,
+                                         Model model,
+                                         HttpSession session,
+                                         HttpServletRequest servletRequest,
+                                         @Valid @ModelAttribute("feedbackForm") FeedbackDto feedbackDto,
+                                         BindingResult errors) {
+
+
+        try {
+            if (errors.hasErrors()) {
+                return "redirect:/travels/{travelId}";
+            }
+
+            User passenger = authenticationHelper.tryGetUserFromSession(session);
+            User driver = userService.getUserById(driverId);
+            Travel travel = travelService.getTravelById(travelId);
+            Feedback feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto);
+            userService.leaveFeedbackForDriver(feedbackForDriver, travel, passenger, driver);
+
+            return "redirect:/travels/{travelId}";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (AuthenticationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.CONFLICT.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";
         } catch (Exception e) {

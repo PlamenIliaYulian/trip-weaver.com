@@ -5,10 +5,13 @@ import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
+import com.tripweaver.models.Feedback;
 import com.tripweaver.models.Role;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.TravelFilterOptionsDto;
 import com.tripweaver.models.dtos.UserFilterOptionsDto;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
@@ -19,14 +22,16 @@ import com.tripweaver.services.contracts.TravelService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -213,6 +218,43 @@ public class UserMvcController {
             return "Error";
         }
     }
+
+//    @PostMapping("/travels/{travelId}/driver/{driverId}/feedback-for-driver")
+//    public String leaveFeedbackForDriver(@PathVariable int driverId,
+//                                         @PathVariable int travelId,
+//                                         Model model,
+//                                         HttpSession session,
+//                                         HttpServletRequest servletRequest,
+//                                         @Valid @ModelAttribute("feedbackForm") FeedbackDto feedbackDto,
+//                                         BindingResult errors) {
+//
+//
+//        try {
+//            if (errors.hasErrors()) {
+//                return "SingleTravel";
+//            }
+//
+//            User passenger = authenticationHelper.tryGetUserFromSession(session);
+//            User driver = userService.getUserById(driverId);
+//            Travel travel = travelService.getTravelById(travelId);
+//            Feedback feedbackForDriver = modelsMapper.feedbackForDriverFromDto(feedbackDto);
+//            userService.leaveFeedbackForDriver(feedbackForDriver, travel, passenger, driver);
+//
+//            return "SingleTravel";
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        } catch (AuthenticationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        } catch (UnauthorizedOperationException e) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+//        } catch (InvalidOperationException e) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+//        } catch (Exception e) {
+//            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+//            model.addAttribute("error", e.getMessage());
+//            return "Error";
+//        }
+//    }
 
 
 }

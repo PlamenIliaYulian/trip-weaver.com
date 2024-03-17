@@ -408,7 +408,7 @@
                             <div class="search-result-item" th:each="travel : ${userTravels}">
                                 <div class="search-result-item__car">
                                     <div class="user-box__avatar" id="single-user-box-avatar">
-                                        <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
+                                        <a th:href="@{/travels/{id}(id=${travel.getTravelId()})}">
 
                                             <img src="../static/assets/img/unsplash-just-some-car.jpg"
                                                  th:src="@{/assets/img/unsplash-just-some-car.jpg}"

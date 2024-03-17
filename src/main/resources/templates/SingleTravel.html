@@ -39,7 +39,7 @@
                     <div class="search-result-item">
                         <div class="search-result-item__car">
                             <div class="user-box__avatar" id="single-travel-box-avatar-car">
-                                <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
+                                <a th:href="@{/travels/{id}(id=${travel.getTravelId()})}">
 
                                     <img src="../static/assets/img/unsplash-just-some-car.jpg"
                                          th:src="@{/assets/img/unsplash-just-some-car.jpg}"
@@ -126,12 +126,12 @@
                                     </a>
                                     <a th:if="${travel.getDriver().getUserId() == loggedUser.getUserId()} and
                                     ${travel.getStatus().getTravelStatusId() == 1 }"
-                                       class="uk-button button-approve margin-top-10px" type="button"
+                                       class="uk-button button-approve white-color margin-top-10px" type="button"
                                        th:href="@{/travels/__${travel.getTravelId()}__/complete-travel}">Complete
                                     </a>
                                     <a th:if="${isLoggedUserApprovedPassenger
                                     and travel.getStatus().getTravelStatusId() == 1}"
-                                       class="uk-button button-decline margin-top-10px"
+                                       class="uk-button button-decline white-color margin-top-10px"
                                        type="button"
                                        th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">Unsubscribe
                                     </a>
@@ -139,7 +139,50 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="search-result__list">
+                    <div class="search-result-item__info">
+                        <div class="add-reviews-form" id="add-reviews">
+                            <div class="uk-h2">Leave A Review For The Driver:</div>
+                            <p>Share your thoughts on the driver.</p>
+                            <form
+                                    action="#"
+                                    th:object="${feedbackForm}"
+                                    method="post"
+                                    th:action="@{/travels/__${travel.getTravelId()}__/driver/__${travel.getDriver().getUserId()}__/feedback-for-driver}">
 
+                                <div class="uk-grid uk-grid-medium uk-child-width-1-2@s" data-uk-grid>
+                                    <div class="uk-width-1-1">
+                                        <select th:field="*{rating}" class="input-place uk-input font-size-30px">
+                                            <option value="5">⭐⭐⭐⭐⭐</option>
+                                            <option value="4">⭐⭐⭐⭐</option>
+                                            <option value="3">⭐⭐⭐</option>
+                                            <option value="2">⭐⭐</option>
+                                            <option value="1">⭐</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="uk-width-1-1">
+                                        <textarea
+                                                pattern="^.{0,200}$"
+                                                title="Content must be maximum 200 symbols long."
+                                                th:field="*{content}"
+                                                class="uk-textarea"
+                                                name="comment"
+                                                placeholder="Comment (Optional)">
+
+                                        </textarea>
+                                    </div>
+                                    </br>
+
+                                    <div class="uk-width-1-1">
+                                        <button class="uk-button uk-button-danger" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -195,12 +238,18 @@
                                                                th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${approvedUser.getUserId()}__/decline}">
                                                                 Decline
                                                             </a>
-                                                            <a th:if="${loggedUser.getUserId() == approvedUser.getUserId()}
-                                                            and ${travel.getStatus().getTravelStatusId() == 1}"
-                                                               class="uk-button button-cancel" type="button"
-                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${approvedUser.getUserId()}__/decline}">
-                                                                Cancel
+                                                            <a th:if="${isLoggedUserApprovedPassenger
+                                                               and travel.getStatus().getTravelStatusId() == 1}"
+                                                               class="uk-button button-decline"
+                                                               type="button"
+                                                               th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">Unsubscribe
                                                             </a>
+                                                            <!--                                                            <a th:if="${loggedUser.getUserId() == approvedUser.getUserId()}-->
+                                                            <!--                                                            and ${travel.getStatus().getTravelStatusId() == 1}"-->
+                                                            <!--                                                               class="uk-button button-cancel" type="button"-->
+                                                            <!--                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${approvedUser.getUserId()}__/decline}">-->
+                                                            <!--                                                                Cancel-->
+                                                            <!--                                                            </a>-->
                                                             <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId() }
                                                             and ${travel.getStatus().getTravelStatusId() == 1}"
                                                                class="uk-button uk-button-danger" type="button"
@@ -302,21 +351,24 @@
 
                                                         <div class="blog-card__title">
                                                             <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}"
-                                                               class="uk-button button-approve" type="button"
+                                                               class="uk-button button-approve white-color"
+                                                               type="button"
                                                                th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/approve}">
                                                                 Approve
                                                             </a>
                                                             <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}"
-                                                               class="uk-button button-decline" type="button"
+                                                               class="uk-button button-decline white-color"
+                                                               type="button"
                                                                th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/decline}">
                                                                 Decline
                                                             </a>
                                                             <a th:if="${loggedUser.getUserId() == appliedPassanger.getUserId()}
                                                                 and ${travel.getStatus().getTravelStatusId() == 1}"
-                                                               class="uk-button button-cancel" type="button"
-                                                               th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/decline}">
-                                                                Cancel
+                                                               class="uk-button button-decline white-color"
+                                                               type="button"
+                                                               th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">Unsubscribe
                                                             </a>
+
                                                         </div>
 
                                                         <div class="blog-card__intro">
