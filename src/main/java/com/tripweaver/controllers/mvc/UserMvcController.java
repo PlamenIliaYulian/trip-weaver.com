@@ -3,16 +3,14 @@ package com.tripweaver.controllers.mvc;
 
 import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
-import com.tripweaver.exceptions.AuthenticationException;
-import com.tripweaver.exceptions.EntityNotFoundException;
-import com.tripweaver.exceptions.InvalidOperationException;
-import com.tripweaver.exceptions.UnauthorizedOperationException;
+import com.tripweaver.exceptions.*;
 import com.tripweaver.models.Feedback;
 import com.tripweaver.models.Role;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.TravelFilterOptionsDto;
+import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.models.dtos.UserFilterOptionsDto;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
@@ -37,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
+import static com.tripweaver.services.helpers.ConstantHelper.CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD;
 
 
 @Controller
@@ -218,6 +217,74 @@ public class UserMvcController {
             model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";
+        }
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditPage(@PathVariable int id,
+                               Model model,
+                               HttpSession session) {
+        try {
+            User userLoggedIn = authenticationHelper.tryGetUserFromSession(session);
+            User userById = userService.getUserById(id);
+            if (!userLoggedIn.equals(userById)) {
+                model.addAttribute("error", HttpStatus.FORBIDDEN.getReasonPhrase());
+                return "Error";
+            }
+            UserDto userDto = modelsMapper.userDtoFromUser(userById);
+            model.addAttribute("userDto", userDto);
+            model.addAttribute("userById", userById);
+            return "UserEdit";
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
+    @PostMapping("/{id}/edit")
+    public String handleEditUser(@PathVariable int id,
+                                 @Valid @ModelAttribute("userDto") UserDto userDto,
+                                 BindingResult errors,
+                                 HttpSession session,
+                                 Model model) {
+
+        User userById = null;
+        try {
+            userById = userService.getUserById(id);
+            model.addAttribute("userById", userById);
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+
+        if (errors.hasErrors()) {
+            return "UserEdit";
+        }
+
+        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+            errors.rejectValue("confirmPassword", "password_error", CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD);
+            return "UserEdit";
+        }
+        try {
+            User userLoggedIn = authenticationHelper.tryGetUserFromSession(session);
+            if (!userLoggedIn.equals(userById)) {
+                model.addAttribute("error", HttpStatus.FORBIDDEN.getReasonPhrase());
+                return "Error";
+            }
+
+            User userUpdated = modelsMapper.userFromDto(userDto, id);
+            userService.updateUser(userUpdated, userLoggedIn);
+            return "redirect:/users/{id}";
+        } catch (AuthenticationException e) {
+            model.addAttribute("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            return "Error";
+        } catch (DuplicateEntityException e) {
+            errors.rejectValue("email", "email_exists", e.getMessage());
+            return "UserEdit";
         }
     }
 

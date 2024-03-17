@@ -86,6 +86,10 @@
                                        th:href="@{/users/{userId}/unblock(userId=${userById.getUserId()})}">
                                         Unblock
                                     </a>
+                                    <a th:if="${userById == loggedUser}" class="uk-button button-edit" type="button"
+                                       th:href="@{/users/{userId}/edit(userId=${userById.getUserId()})}">
+                                        Update
+                                    </a>
                                 </div>
                             </div>
                         </div>

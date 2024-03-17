@@ -15,7 +15,7 @@ public class UserDto {
     private String password;
 
     @NotNull
-    @Size(min = 8, max = 25, message = "Password must be between 8 and 25 symbols.")
+    @Size(min = 8, max = 25, message = "Confirm password must be between 8 and 25 symbols.")
     private String confirmPassword;
 
     @NotNull
@@ -37,6 +37,20 @@ public class UserDto {
     private String phoneNumber;
 
     public UserDto() {
+    }
+
+    public UserDto(String password,
+                   String confirmPassword,
+                   String firstName,
+                   String lastName,
+                   String email,
+                   String phoneNumber) {
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPassword() {

@@ -5301,7 +5301,9 @@ body.page-search--result .page-header__phone .uk-button {
     background-color: #762317;
 }
 
-.button-cancel:hover {
+.button-cancel:hover,
+.button-edit:hover,
+.button-edit {
     color: white;
 }
 
@@ -5355,6 +5357,11 @@ body.page-search--result .page-header__phone .uk-button {
 .font-size-30px{
     font-size: 30px;
 }
+
+.button-edit {
+    background-color : rgba(65,77,205,0.99)
+}
+
 
 
 /*Custom CSS END*/

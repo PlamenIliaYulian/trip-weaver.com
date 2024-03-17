@@ -21,4 +21,6 @@ public interface ModelsMapper {
     TravelFilterOptions travelFilterOptionsFromDto(TravelFilterOptionsDto travelFilterOptionsDto);
 
     UserFilterOptions userFilterOptionsFromDto(UserFilterOptionsDto userFilterOptionsDto);
+
+    UserDto userDtoFromUser(User userById);
 }

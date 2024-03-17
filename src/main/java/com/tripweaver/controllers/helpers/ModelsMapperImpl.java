@@ -94,6 +94,18 @@ public class ModelsMapperImpl implements ModelsMapper {
     }
 
     @Override
+    public UserDto userDtoFromUser(User userById) {
+        return new UserDto(
+                userById.getPassword(),
+                userById.getPassword(),
+                userById.getFirstName(),
+                userById.getLastName(),
+                userById.getEmail(),
+                userById.getPhoneNumber()
+        );
+    }
+
+    @Override
     public User userFromDtoCreate(UserDtoCreate userDtoCreate) {
         User user = new User();
         user.setUsername(userDtoCreate.getUsername());

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{Fragments.html :: head('Trip-Weaver | Update')}"></head>
+<body class="page-contacts">
+
+<!-- Loader-->
+<div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
+<!-- Loader end-->
+
+
+<div class="page-wrapper">
+    <header th:replace="~{Fragments.html :: page-header}"></header>
+    <main class="page-main">
+        <div class="section-banner">
+            <div class="section-banner__bg">
+                <div class="uk-cover-container"><img src="../static/assets/img/img-banner-contacts.jpg"
+                                                     th:src="@{/assets/img/img-banner-contacts.jpg}" alt="img-banner"
+                                                     data-uk-cover>
+                    <canvas></canvas>
+                </div>
+            </div>
+            <div class="section-banner__content">
+                <div class="uk-overlay uk-position-center-left uk-width-1-1">
+                    <div class="uk-container uk-width-1-1">
+                        <div class="section-banner__title">
+                            <h1>Update your personal information</h1>
+                        </div>
+                        <div class="section-banner__text decor-bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contacts-info">
+        </div>
+        <div class="contacts-info-map-and-form">
+            <div class="uk-grid uk-child-width-1-2@m uk-grid-collapse" data-uk-grid>
+                <div>
+                    <div class="contacts-info-form">
+                        <div class="contacts-info-form__title">Update</div>
+                        <div class="contacts-info-form__text">Fill in your details below:</div>
+                        <form action="#" th:object="${userDto}" method="post" th:action="@{/users/__${userById.getUserId()}__/edit}">
+                            <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
+                                <div><input class="uk-input" type="password" name="Password" placeholder="Password"
+                                            th:field="*{password}">
+                                </div>
+                                <div>
+                                    <label class="error" th:errors="*{password}">Password error placeholder. </label>
+                                </div>
+                                <div>
+                                    <input class="uk-input"
+                                           type="password"
+                                           name="Confirm password"
+                                           placeholder="Confirm password"
+                                           th:field="*{confirmPassword}">
+                                </div>
+                                <div>
+                                    <label class="error" th:errors="*{confirmPassword}">Confirm password error placeholder. </label>
+                                </div>
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="First_Name"
+                                            placeholder="First Name"
+                                            th:field="*{firstName}">
+                                </div>
+                                <div>
+                                    <label class="error" th:errors="*{firstName}">First name error placeholder. </label>
+                                </div>
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="Last_Name"
+                                            placeholder="Last Name"
+                                            th:field="*{lastName}">
+                                </div>
+                                <div>
+                                    <label class="error" th:errors="*{lastName}">Password error placeholder. </label>
+                                </div>
+                                <div>
+                                    <input class="uk-input"
+                                           type="text"
+                                           name="Your_Email"
+                                           placeholder="Your Email"
+                                           th:field="*{email}">
+                                </div>
+                                <div>
+                                    <label class="error" th:errors="*{email}">Email error placeholder. </label>
+                                </div>
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="Phone_No"
+                                            placeholder="Phone No."
+                                            th:field="*{phoneNumber}">
+                                </div>
+                                <div>
+                                    <label class="error" th:errors="*{phoneNumber}">Phone number error placeholder. </label>
+                                </div>
+                                <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
+                                            value="Update"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="uk-flex-first@m">
+                    <div class="contacts-info-map" id="register-page-background">
+                        <img src="https://images.unsplash.com/photo-1505744386214-51dba16a26fc?q=80&w=2012&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Register logo">
+                        <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60528.56969257363!2d23.321867055435926!3d42.69770860399648!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa857dc1e8fbc5%3A0x303b05a62e4af4aa!2sSofia%2C%20Bulgaria!5e0!3m2!1sen!2sbg"
+                                loading="lazy"></iframe>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Additional blocks-->
+    <div th:replace="~{Fragments.html :: additional-blocks}"></div>
+    <!--Footer-->
+    <footer th:replace="~{Fragments.html :: footer}"></footer>
+</div>
+<div th:replace="~{Fragments.html::script}"></div>
+</body>
+
+</html>
