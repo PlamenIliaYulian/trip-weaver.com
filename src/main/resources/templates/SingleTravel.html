@@ -142,7 +142,8 @@
                         </div>
                     </div>
                 </div>
-                <div th:if="${!hasLoggedUserAlreadyLeftFeedback} and ${travel.getStatus().getTravelStatusId() == 3}" class="search-result__list">
+                <div th:if="${!hasLoggedUserAlreadyLeftFeedback} and ${travel.getStatus().getTravelStatusId() == 3}
+                            and ${travel.getDriver().getUserId() != loggedUser.getUserId()}" class="search-result__list">
                     <div class="search-result-item__info">
                         <div class="add-reviews-form" id="add-reviews">
                             <div class="uk-h2">Leave A Review For The Driver:</div>

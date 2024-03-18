@@ -186,6 +186,7 @@ public class UserMvcController {
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
             User user = userService.getUserById(id);
+
             List<Travel> allTravels = new ArrayList<>();
             TravelFilterOptions travelFilterOptions = modelsMapper.travelFilterOptionsFromSingleUserDto(dto);
             TravelFilterOptions travelFilterOptions2 = modelsMapper.travelFilterOptionsFromSingleUserDto(dto);
@@ -207,6 +208,7 @@ public class UserMvcController {
                     .getTotalTravelsAsDriverHashMap(Collections.singletonList(user)));
             model.addAttribute("userTotalTravelsAsPassenger", userService
                     .getTotalTravelsAsPassengerHashMap(Collections.singletonList(user)));
+            model.addAttribute("openTravelsUserAppliedFor", travelService.getTravelsAsAppliedPassenger(loggedInUser, user));
 
             return "SingleUser";
         } catch (AuthenticationException e) {

@@ -964,4 +964,6 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
+
+    /*ToDo Add Method for searching all travels that a certain user applied for.*/
 }

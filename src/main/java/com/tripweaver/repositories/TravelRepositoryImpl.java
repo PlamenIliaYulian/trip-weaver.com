@@ -2,6 +2,7 @@ package com.tripweaver.repositories;
 
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.Travel;
+import com.tripweaver.models.User;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.repositories.contracts.TravelRepository;
 import org.hibernate.Session;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
 
 @Repository
 public class TravelRepositoryImpl implements TravelRepository {
@@ -56,6 +59,17 @@ public class TravelRepositoryImpl implements TravelRepository {
                 throw new EntityNotFoundException("Travel", travelId);
             }
             return query.list().get(0);
+        }
+    }
+
+    @Override
+    public List<Travel> getTravelsAsAppliedPassenger(User appliedPassenger) {
+        try (Session session = sessionFactory.openSession();) {
+            Query<Travel> query = session.createQuery("FROM Travel t JOIN t.usersAppliedForTheTravel p WHERE p.username = :username " +
+                    "AND t.status.id = :status", Travel.class);
+            query.setParameter("username", appliedPassenger.getUsername());
+            query.setParameter("status", TRAVEL_STATUS_CREATED_ID);
+            return query.list();
         }
     }
 
@@ -121,25 +135,6 @@ public class TravelRepositoryImpl implements TravelRepository {
                 queryString = new StringBuilder("FROM Travel AS travel JOIN travel.usersApprovedForTheTravel passengers ");
                 queryString.append(" WHERE ")
                         .append(String.join(" AND ", filters));
-
-                /*ToDo To Discuss this filtering.*/
-
-                /* travelFilterOptions.getPassengerId().ifPresent(value -> {
-                    filters.add(" (passengers.userId = :userId OR applicants.userId = :userId) ");
-                    parameters.put("userId", value);
-                });
-
-                queryString = new StringBuilder("FROM Travel AS travel ");
-                queryString.append("LEFT JOIN travel.usersApprovedForTheTravel AS passengers ")
-                        .append("LEFT JOIN travel.usersAppliedForTheTravel AS applicants ");
-                queryString.append(" WHERE ")
-                        .append(String.join(" AND ", filters));
-
-                queryString.append(generateOrderBy(travelFilterOptions));
-
-                Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
-                query.setProperties(parameters);
-                return query.list();*/
 
 
             } else {

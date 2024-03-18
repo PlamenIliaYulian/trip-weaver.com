@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TravelService {
 
-    Travel createTravel(Travel travel,User creator);
+    Travel createTravel(Travel travel, User creator);
 
     Travel cancelTravel(Travel travel, User loggedUser);
 
@@ -16,9 +16,11 @@ public interface TravelService {
 
     List<Travel> getTravelsByDriver(User driver, User loggedUser, TravelFilterOptions travelFilterOptions);
 
-    List<Travel> getTravelsByPassenger(User passenger, User loggedUser,TravelFilterOptions travelFilterOptions);
+    List<Travel> getTravelsByPassenger(User passenger, User loggedUser, TravelFilterOptions travelFilterOptions);
 
     Travel getTravelById(int travelId);
+
+    List<Travel> getTravelsAsAppliedPassenger(User loggedUser, User passengerAppliedToTravels);
 
     List<Travel> getAllTravels(TravelFilterOptions travelFilterOptions);
 

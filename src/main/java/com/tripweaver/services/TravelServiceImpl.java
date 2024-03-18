@@ -108,6 +108,13 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.getTravelById(travelId);
     }
 
+    /*ToDo Test*/
+    @Override
+    public List<Travel> getTravelsAsAppliedPassenger(User loggedUser, User passengerAppliedToTravels) {
+        ValidationHelper.isSameUser(passengerAppliedToTravels, loggedUser, UNAUTHORIZED_OPERATION);
+        return travelRepository.getTravelsAsAppliedPassenger(passengerAppliedToTravels);
+    }
+
     @Override
     public List<Travel> getAllTravels(TravelFilterOptions travelFilterOptions) {
         return travelRepository.getAllTravels(travelFilterOptions);

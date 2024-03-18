@@ -16,8 +16,14 @@
             <div>
                 <div class="main-search-section main-search-section--left">
 
+                    <div class="search-result-item">
+                        <div id="section-title uk-text-center">
+                            <img th:src="@{/assets/img/unsplash-just-some-car.jpg}" alt="car">
+                        </div>
+                    </div>
                     <!--User Information-->
                     <div class="uk-section uk-container single-user-section-uk-container">
+
                         <div class="section-title uk-text-center single-user-divider">
                             <div class="uk-h2">User Information:</div>
                         </div>
@@ -303,6 +309,109 @@
             <div class="uk-background-muted" th:if="${loggedUser.getUserId() == userById.getUserId()}">
                 <div class="main-search-section">
                     <div class="search-result">
+
+                        <!--Applied Travels-->
+                        <div class="uk-section uk-container single-user-section-uk-container">
+                            <div class="section-title uk-text-center single-user-divider">
+                                <div class="uk-h2">Applications:</div>
+                            </div>
+                        </div>
+                        <div class="search-result__list">
+                            <div class="search-result-item" th:each="travelApplied : ${openTravelsUserAppliedFor}">
+                                <div class="search-result-item__car">
+                                    <div class="user-box__avatar" id="single-user-box-avatar-applied-travels">
+                                        <a th:href="@{/travels/{id}(id=${travelApplied.getTravelId()})}">
+
+                                            <img src="../static/assets/img/unsplash-just-some-car.jpg"
+                                                 th:src="@{/assets/img/unsplash-just-some-car.jpg}"
+                                                 alt="car">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="search-result-item__info">
+                                    <div class="user-box">
+                                        <div class="user-box__avatar">
+                                            <a th:href="@{/users/{id}(id=${travelApplied.getDriver().getUserId()})}">
+                                                <img th:src="${travelApplied.getDriver().getAvatar().getAvatarUrl()}"
+                                                     alt="driver-pic">
+                                            </a>
+                                        </div>
+                                        <div class="user-box__info">
+                                            <a th:href="@{/users/{id}(id=${travelApplied.getDriver().getUserId()})}">
+                                                <div class="user-box__name"
+                                                     th:text="${travelApplied.getDriver().getFirstName()} + ' ' + ${travelApplied.getDriver().getLastName()}">
+                                                </div>
+                                            </a>
+                                            <div class="user-box__rating"><i class="fas fa-star"></i>
+                                                <b th:text="${travelApplied.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="list-info">
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/driver_icon.svg}"
+                                                 alt="driver-service">
+                                            <span th:if="${travelApplied.getDriver().getUserId() == userById.getUserId()}">As Driver</span>
+                                            <span th:unless="${travelApplied.getDriver().getUserId() == userById.getUserId()}">As Applied Passenger</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/capacity.svg}"
+                                                 alt="driver-service">
+                                            <span th:text="'Max. ' + ${travelApplied.getFreeSeats()} + ' seats available.'">Max. 2 passengers in back seats</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/status.svg}"
+                                                 alt="driver-service">
+                                            <span th:text="${travelApplied.getStatus().getStatusName()}">Status</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-1.png"
+                                                 th:src="@{/assets/img/free_seats.svg}"
+                                                 alt="driver-service">
+                                            <span th:text="${travelApplied.getFreeSeats() - travelApplied.getUsersApprovedForTheTravel().size()} + ' free seats available.'">Max. 2 passengers in back seats</span>
+                                        </li>
+                                        <li><img src="../static/assets/img/driver-service-2.png"
+                                                 th:src="@{/assets/img/comments.svg}"
+                                                 alt="driver-service">
+                                            <span th:unless="${travelApplied.getComment()==null}"
+                                                  th:text="${travelApplied.getComment()}">Pets are not allowed in the Car</span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                <div class="search-result-item__price">
+                                    <div class="price-box">
+                                        <div class="price-box__time"
+                                             th:text="${#temporals.format(travelApplied.getDepartureTime(), 'yyyy-MMM-dd hh:mm a')}">
+                                            2:00 PM
+                                        </div>
+                                        <div class="price-box__price">
+                                            <div class="current-price"
+                                                 th:text="${travelApplied.getStartingPointCity() + ' - '+ travelApplied.getEndingPointCity()}">
+                                                $19.50
+                                            </div>
+                                            <a class="uk-button uk-button-danger" type="button"
+                                               th:href="@{/travels/{id}(id=${travelApplied.getTravelId()})}">View
+                                            </a>
+                                            <a th:unless="${travelApplied.getDriver().getUserId() == loggedUser.getUserId()}"
+                                               th:if="${travelApplied.getStatus().getTravelStatusId() == 1}"
+                                               class="uk-button button-decline margin-top-10px"
+                                               type="button"
+                                               th:href="@{/travels/__${travelApplied.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">
+                                                Unsubscribe
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Filtering for All Travels-->
+                        <div class="uk-section uk-container single-user-section-uk-container">
+                            <div class="section-title uk-text-center single-user-divider">
+                                <div class="uk-h2">Travels As Driver or Passenger:</div>
+                            </div>
+                        </div>
                         <div class="search-result__info">
                             <div class="search-box">
                                 <form action="#" th:object="${travelFilterOptions}">
@@ -426,6 +535,8 @@
                                                              th:src="@{/assets/img/ico-car.png}" alt="icon">
                             <span th:text="'Participated in ' + ${userTravels.size()} + ' trips.'">23 rides available for you.</span>
                         </div>
+
+                        <!--All Travels List-->
                         <div class="search-result__list">
                             <div class="search-result-item" th:each="travel : ${userTravels}">
                                 <div class="search-result-item__car">
@@ -517,13 +628,14 @@
                                                th:if="${travel.getStatus().getTravelStatusId() == 1}"
                                                class="uk-button button-decline margin-top-10px"
                                                type="button"
-                                               th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">Unsubscribe
+                                               th:href="@{/travels/__${travel.getTravelId()}__/passengers/__${loggedUser.getUserId()}__/cancel-participation}">
+                                                Unsubscribe
                                             </a>
                                             <a th:unless="${travel.getDriver().getUserId() == loggedUser.getUserId()}"
                                                th:if="${travel.getStatus().getTravelStatusId() == 3}"
                                                class="uk-button uk-button-danger margin-top-10px"
                                                type="button"
-                                               th:href="@{__${requestURI}__}">Feedback
+                                               th:href="@{/travels/{id}(id=${travel.getTravelId()})}">Feedback
                                             </a>
                                         </div>
                                     </div>
