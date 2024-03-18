@@ -7,6 +7,7 @@ import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.LoginDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
+import com.tripweaver.services.contracts.MailSenderService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,15 +30,18 @@ public class AuthenticationMvcController {
     private final AuthenticationHelper authenticationHelper;
     private final UserService userService;
     private final RoleService roleService;
+    private final MailSenderService mailSenderService;
 
     public AuthenticationMvcController(ModelsMapper modelsMapper,
                                        AuthenticationHelper authenticationHelper,
                                        UserService userService,
-                                       RoleService roleService) {
+                                       RoleService roleService,
+                                       MailSenderService mailSenderService) {
         this.modelsMapper = modelsMapper;
         this.authenticationHelper = authenticationHelper;
         this.userService = userService;
         this.roleService = roleService;
+        this.mailSenderService = mailSenderService;
     }
 
     @ModelAttribute("isBlocked")
@@ -106,6 +110,7 @@ public class AuthenticationMvcController {
         try {
             User user = modelsMapper.userFromDtoCreate(userDtoCreate);
             userService.createUser(user);
+            mailSenderService.sendEmail(user);
             return "redirect:/auth/login";
         } catch (DuplicateEntityException e) {
             errors.rejectValue("username", "duplication_error", e.getMessage());

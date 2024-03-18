@@ -58,7 +58,7 @@
                                             title="Username must be between 2 and 20 symbols.">
                                 </div>
                                 <div><input class="uk-input" type="password" name="Password" placeholder="Password"
-                                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
+                                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*^])[A-Za-z\d@$!%*^]{8,25}$"
                                             title="Password must be between 8 and 25 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character."
                                             th:field="*{password}">
                                 </div>
@@ -98,7 +98,7 @@
                                             name="Phone_No"
                                             placeholder="Phone No."
                                             th:field="*{phoneNumber}"
-                                            pattern="^08\\d{8}$"
+                                            pattern="^08\d{8}$"
                                             title="Phone number must be 10 digits starting with '08'."></div>
                                 <div><label class="error uk-input" th:errors="*{confirmPassword}"> User error
                                     placeholder. </label></div>

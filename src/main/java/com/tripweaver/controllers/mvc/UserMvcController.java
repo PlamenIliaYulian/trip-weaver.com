@@ -47,7 +47,6 @@ public class UserMvcController {
     private final RoleService roleService;
     private final TravelService travelService;
     private final AvatarService avatarService;
-
     private final CarPictureService carPictureService;
 
     public UserMvcController(AuthenticationHelper authenticationHelper,
