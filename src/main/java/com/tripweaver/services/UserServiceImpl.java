@@ -142,13 +142,14 @@ public class UserServiceImpl implements UserService {
         ValidationHelper.checkNotToBeDriver(travel, loggedUser, INVALID_OPERATION_DRIVER);
         ValidationHelper.isTheUserInTheApprovedListOfTheTravel(loggedUser, travel, USER_NOT_IN_APPROVED_LIST);
         ValidationHelper.isUserTheDriver(travel, driver, INVALID_OPERATION_NOT_DRIVER);
+        
+        Set<Feedback> feedbackForDriverSet = driver.getFeedback();
+        ValidationHelper.hasUserAlreadyLeftFeedbackForThisTravel(travel, loggedUser, driver, feedbackForDriverSet);
+
         feedbackForDriver.setReceiver(driver);
         feedbackForDriver.setAuthor(loggedUser);
         feedbackForDriver.setTravel(travel);
         feedbackForDriver = feedbackService.createFeedback(feedbackForDriver);
-        Set<Feedback> feedbackForDriverSet = driver.getFeedback();
-
-        ValidationHelper.hasUserAlreadyLeftFeedbackForThisTravel(travel, loggedUser, driver, feedbackForDriverSet);
 
         feedbackForDriverSet.add(feedbackForDriver);
         driver.setAverageDriverRating(feedbackForDriverSet
@@ -169,13 +170,14 @@ public class UserServiceImpl implements UserService {
         ValidationHelper.isTravelCompleted(travel, TRAVEL_NOT_COMPLETED_CANNOT_LEAVE_FEEDBACK);
         ValidationHelper.isUserTheDriver(travel, loggedUser, UNAUTHORIZED_OPERATION_NOT_DRIVER);
         ValidationHelper.isTheUserInTheApprovedListOfTheTravel(passenger, travel, USER_NOT_IN_APPROVED_LIST);
+
+        Set<Feedback> feedbackForPassengerSet = passenger.getFeedback();
+        ValidationHelper.hasUserAlreadyLeftFeedbackForThisTravel(travel, loggedUser, passenger, feedbackForPassengerSet);
+
         feedbackForPassenger.setReceiver(passenger);
         feedbackForPassenger.setAuthor(loggedUser);
         feedbackForPassenger.setTravel(travel);
         feedbackForPassenger = feedbackService.createFeedback(feedbackForPassenger);
-        Set<Feedback> feedbackForPassengerSet = passenger.getFeedback();
-
-        ValidationHelper.hasUserAlreadyLeftFeedbackForThisTravel(travel, loggedUser, passenger, feedbackForPassengerSet);
 
         feedbackForPassengerSet.add(feedbackForPassenger);
         passenger.setAveragePassengerRating(feedbackForPassengerSet

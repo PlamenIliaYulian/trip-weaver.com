@@ -29,10 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tripweaver.services.helpers.ConstantHelper.*;
@@ -194,6 +191,18 @@ public class TravelMvcController {
                     .filter(feedback -> feedback.getTravel().equals(travel))
                     .filter(feedback -> feedback.getReceiver().equals(travel.getDriver()))
                     .collect(Collectors.toList()).isEmpty());
+
+            HashMap<String, Boolean> hasDriverLeftReviewForPassengers = new HashMap<>();
+            for (User user : travel.getUsersApprovedForTheTravel()) {
+                hasDriverLeftReviewForPassengers.put(user.getUsername(), user.getFeedback()
+                        .stream()
+                        .filter(feedback -> feedback.getTravel().equals(travel))
+                        .filter(feedback -> feedback.getReceiver().equals(user))
+                        .filter(feedback -> feedback.getAuthor().equals(travel.getDriver()))
+                        .collect(Collectors.toList()).isEmpty());
+            }
+            model.addAttribute("hasLoggedDriverAlreadyLeftFeedbackHashMap", hasDriverLeftReviewForPassengers);
+
             return "SingleTravel";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -366,7 +375,6 @@ public class TravelMvcController {
                                          @PathVariable int travelId,
                                          Model model,
                                          HttpSession session,
-                                         HttpServletRequest servletRequest,
                                          @Valid @ModelAttribute("feedbackForm") FeedbackDto feedbackDto,
                                          BindingResult errors) {
 
@@ -399,8 +407,44 @@ public class TravelMvcController {
             model.addAttribute("statusCode", HttpStatus.CONFLICT.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";
-        } catch (Exception e) {
-            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        }
+    }
+
+    @PostMapping("/{travelId}/passengers/{passengerId}/feedback-for-passenger")
+    public String leaveFeedbackForPassenger(@PathVariable int passengerId,
+                                            @PathVariable int travelId,
+                                            Model model,
+                                            HttpSession session,
+                                            @Valid @ModelAttribute("feedbackForm") FeedbackDto feedbackDto,
+                                            BindingResult errors) {
+
+
+        try {
+            if (errors.hasErrors()) {
+                return "redirect:/travels/{travelId}";
+            }
+
+            User driver = authenticationHelper.tryGetUserFromSession(session);
+            User passenger = userService.getUserById(passengerId);
+            Travel travel = travelService.getTravelById(travelId);
+            Feedback feedbackForPassenger = modelsMapper.feedbackForPassengerFromDto(feedbackDto);
+            userService.leaveFeedbackForPassenger(feedbackForPassenger, travel, driver, passenger);
+
+            return "redirect:/travels/{travelId}";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (AuthenticationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.CONFLICT.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";
         }

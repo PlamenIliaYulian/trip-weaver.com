@@ -143,7 +143,8 @@
                     </div>
                 </div>
                 <div th:if="${!hasLoggedUserAlreadyLeftFeedback} and ${travel.getStatus().getTravelStatusId() == 3}
-                            and ${travel.getDriver().getUserId() != loggedUser.getUserId()}" class="search-result__list">
+                            and ${travel.getDriver().getUserId() != loggedUser.getUserId()}"
+                     class="search-result__list">
                     <div class="search-result-item__info">
                         <div class="add-reviews-form" id="add-reviews">
                             <div class="uk-h2">Leave A Review For The Driver:</div>
@@ -167,12 +168,12 @@
 
                                     <div class="uk-width-1-1">
                                         <input type="text"
-                                                pattern="^.{0,200}$"
-                                                title="Content must be maximum 200 symbols long."
-                                                th:field="*{content}"
-                                                class="uk-textarea"
-                                                name="comment"
-                                                placeholder="Comment (Optional)">
+                                               pattern="^.{0,200}$"
+                                               title="Content must be maximum 200 symbols long."
+                                               th:field="*{content}"
+                                               class="uk-textarea"
+                                               name="comment"
+                                               placeholder="Comment (Optional)">
                                     </div>
                                     </br>
                                     <div class="uk-width-1-1">
@@ -275,19 +276,26 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="max-height-100percent">
+
+                                                    <div th:if="${hasLoggedDriverAlreadyLeftFeedbackHashMap.get(approvedUser.getUsername())}
+                                                                and ${travel.getStatus().getTravelStatusId() == 3}
+                                                                and ${travel.getDriver().getUserId() == loggedUser.getUserId()}"
+                                                         class="max-height-100percent">
                                                         <div class="add-reviews-form" id="add-reviews">
-                                                            <div class="uk-h2">Leave A Review For The Driver:</div>
-                                                            <p>Share your thoughts on the driver. Comment should be no longer than 200 symbols.</p>
+                                                            <div class="uk-h2">Leave A Review For The Passenger:</div>
+                                                            <p>Share your thoughts on the passenger. Comment should be
+                                                                no longer than 200 symbols.</p>
                                                             <form
                                                                     action="#"
                                                                     th:object="${feedbackForm}"
                                                                     method="post"
-                                                                    th:action="@{/travels/__${travel.getTravelId()}__/driver/__${travel.getDriver().getUserId()}__/feedback-for-driver}">
+                                                                    th:action="@{/travels/__${travel.getTravelId()}__/passengers/__${approvedUser.getUserId()}__/feedback-for-passenger}">
 
-                                                                <div class="uk-grid uk-grid-medium uk-child-width-1-2@s" data-uk-grid>
+                                                                <div class="uk-grid uk-grid-medium uk-child-width-1-2@s"
+                                                                     data-uk-grid>
                                                                     <div class="uk-width-1-1">
-                                                                        <select th:field="*{rating}" class="input-place uk-input font-size-30px">
+                                                                        <select th:field="*{rating}"
+                                                                                class="input-place uk-input font-size-30px">
                                                                             <option value="5">⭐⭐⭐⭐⭐</option>
                                                                             <option value="4">⭐⭐⭐⭐</option>
                                                                             <option value="3">⭐⭐⭐</option>
@@ -307,7 +315,9 @@
                                                                     </div>
                                                                     </br>
                                                                     <div class="uk-width-1-1">
-                                                                        <button class="uk-button uk-button-danger" type="submit">Submit</button>
+                                                                        <button class="uk-button uk-button-danger"
+                                                                                type="submit">Submit
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </form>
