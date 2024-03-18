@@ -965,5 +965,22 @@ public class UserRestController {
         }
     }
 
-    /*ToDo Add Method for searching all travels that a certain user applied for.*/
+    /*Ilia*/
+    @GetMapping("/{userId}/travels-for-applied-passenger")
+    public List<Travel> getOpenTravelsUserAppliedFor(@PathVariable int userId,
+                                           @RequestHeader HttpHeaders headers) {
+        try {
+            User user = userService.getUserById(userId);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
+
+            return travelService.getTravelsAsAppliedPassenger(loggedUser, user);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
 }
