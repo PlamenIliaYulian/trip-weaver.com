@@ -357,6 +357,22 @@
                                             </div>
                                             <div>
                                                 <div class="uk-inline uk-width-1-1">
+                                                    <div class="input-place uk-input">
+                                                        <input type="checkbox" id="allBox" onchange="uncheckDriverAndPassenger()">
+                                                        <label for="allBox">All</label>
+
+                                                        <input type="checkbox" id="driverCheckbox" onchange="uncheckAllAndPassenger()"
+                                                               th:field="*{driverId}" th:value="${userById.getUserId()}">
+                                                        <label for="driverCheckbox">As Driver</label>
+
+                                                        <input type="checkbox" id="passengerCheckbox" onchange="uncheckAllAndDriver()"
+                                                               th:field="*{passengerId}" th:value="${userById.getUserId()}">
+                                                        <label for="passengerCheckbox">As Passenger</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="uk-inline uk-width-1-1">
                                                     <select class="input-place uk-input" id="browse-posts-input-sortBy"
                                                             th:field="*{sortBy}">
                                                         <option value="">Sort By</option>

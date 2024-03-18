@@ -13,6 +13,8 @@ import com.tripweaver.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static com.tripweaver.services.helpers.ConstantHelper.CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD;
 
 @Component
@@ -80,6 +82,18 @@ public class ModelsMapperImpl implements ModelsMapper {
                 dto.getSortBy(),
                 dto.getSortOrder()
         );
+    }
+
+    @Override
+    public TravelFilterOptions travelFilterOptionsFromSingleUserDto(SingleUserTravelFilterOptionsDto dto) {
+        TravelFilterOptions filterOptions = travelFilterOptionsFromDto(dto);
+        if (dto.getDriverId() != null) {
+            filterOptions.setDriverId(Optional.of(dto.getDriverId()));
+        }
+        if (dto.getPassengerId() != null) {
+            filterOptions.setPassengerId(Optional.of(dto.getPassengerId()));
+        }
+        return filterOptions;
     }
 
     @Override

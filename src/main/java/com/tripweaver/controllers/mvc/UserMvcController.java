@@ -9,6 +9,7 @@ import com.tripweaver.models.Role;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.FeedbackDto;
+import com.tripweaver.models.dtos.SingleUserTravelFilterOptionsDto;
 import com.tripweaver.models.dtos.TravelFilterOptionsDto;
 import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.models.dtos.UserFilterOptionsDto;
@@ -179,15 +180,15 @@ public class UserMvcController {
 
     @GetMapping("/{id}")
     public String showSingleUserPage(@PathVariable int id,
-                                     @ModelAttribute("travelFilterOptions") TravelFilterOptionsDto dto,
+                                     @ModelAttribute("travelFilterOptions") SingleUserTravelFilterOptionsDto dto,
                                      Model model,
                                      HttpSession session) {
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
             User user = userService.getUserById(id);
             List<Travel> allTravels = new ArrayList<>();
-            TravelFilterOptions travelFilterOptions = modelsMapper.travelFilterOptionsFromDto(dto);
-            TravelFilterOptions travelFilterOptions2 = modelsMapper.travelFilterOptionsFromDto(dto);
+            TravelFilterOptions travelFilterOptions = modelsMapper.travelFilterOptionsFromSingleUserDto(dto);
+            TravelFilterOptions travelFilterOptions2 = modelsMapper.travelFilterOptionsFromSingleUserDto(dto);
             if(loggedInUser.getUserId() == id){
                 allTravels.addAll(travelService.getTravelsByDriver(user, loggedInUser, travelFilterOptions));
                 allTravels.addAll(travelService.getTravelsByPassenger(user, loggedInUser, travelFilterOptions2));
