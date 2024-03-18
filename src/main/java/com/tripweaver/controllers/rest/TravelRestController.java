@@ -130,7 +130,68 @@ public class TravelRestController {
         }
     }
 
-    /*Plamen*/
+
+    @Operation(
+            summary = "Cancel a travel.",
+            description = "Cancel a created travel. Authentication needed.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "ID must be numeric.",
+                            example = "/api/v1/travels/3")
+
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response",
+                            content = @Content(
+                                    schema = @Schema(implementation = Travel.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to create a Travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "User is blocked",
+                                                    value = "Unauthorized operation.",
+                                                    description = "A blocked user is not able to create travels."),
+                                            @ExampleObject(
+                                                    name = "User is not verified",
+                                                    value = "Unauthorized operation.",
+                                                    description = "Before verifying their email, users cannot participate in rides.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing travel",
+                                                    value = "Travel with ID '200' not found.",
+                                                    description = "There is no such travel with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @PutMapping("/{travelId}/status-cancelled")
     public Travel cancelTravel(@PathVariable int travelId,
                                @RequestHeader HttpHeaders httpHeaders) {
@@ -281,6 +342,65 @@ public class TravelRestController {
     }
 
     /*Plamen*/
+    @Operation(
+            summary = "View all travels created in the application with the option to filter and sort them.",
+            description = "Get a list of all travels. Also you can filter out travels and sort them.",
+            parameters = {
+                    @Parameter(
+                            name = "startingPointCity",
+                            description = "Gets the starting city of your travel",
+                            example = "Sofia"),
+                    @Parameter(
+                            name = "endingPointCity",
+                            description = "Gets the ending city of your travel",
+                            example = "Sofia"),
+                    @Parameter(
+                            name = "departureBefore",
+                            description = "Chooses the time before a current travel is created",
+                            example = "2025-05-15 23:56"),
+                    @Parameter(
+                            name = "departureAfter",
+                            description = "Chooses the time after a current travel is created.",
+                            example = "2025-05-15 23:56"),
+                    @Parameter(
+                            name = "minFreeSeats",
+                            description = "Get the travel with the minimum amount of free seats.",
+                            example = "5"),
+                    @Parameter(
+                            name = "driverUsername",
+                            description = "Get the travel with the driver username provided as a parameter",
+                            example = "John_doe"),
+                    @Parameter(
+                            name = "commentContains",
+                            description = "Get the travel that contains comment that is listed in the parameter 'commentContains'.",
+                            example = "desc"),
+                    @Parameter(
+                            name = "sortBy",
+                            description = "You can choose to sort the travel list by 'likes', 'dislikes', 'title', 'content', 'createdOn' or 'createdBy'.",
+                            example = "desc"),
+                    @Parameter(
+                            name = "sortOrder",
+                            description = "You can choose to sort the travel list in descending order by typing 'desc'. The default is an ascending order.",
+                            example = "desc"),
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to view the list of all posts.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            })
+    @SecurityRequirement(name = "Authorization")
     @GetMapping("/search")
     public List<Travel> getAllTravels(@RequestHeader HttpHeaders headers,
                                       @RequestParam(required = false) String startingPointCity,
@@ -510,7 +630,81 @@ public class TravelRestController {
         }
     }
 
+
     /*Plamen*/
+    @Operation(
+            summary = "Driver declines applied passenger for a certain travel.",
+            description = "Decline a passenger that has applied to join a specific travel providing the travel numeric ID " +
+                    "in the endpoint as well as the applied passenger numeric ID.",
+            parameters = {
+                    @Parameter(
+                            name = "travelId",
+                            description = "Travel ID must be numeric.",
+                            example = "3"
+                    ),
+                    @Parameter(
+                            name = "userId",
+                            description = "User ID must be numeric.",
+                            example = "6"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response",
+                            content = @Content(
+                                    schema = @Schema(implementation = Travel.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing travel", value = "Travel with ID '200' not found.",
+                                                    description = "There is no such travel with the provided ID."),
+                                            @ExampleObject(
+                                                    name = "Missing user", value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to decline a passenger.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "User to be approved is blocked",
+                                                    value = "Unauthorized operation.",
+                                                    description = "A blocked user is not able to be approved in travels."),
+                                            @ExampleObject(
+                                                    name = "User to approve is blocked",
+                                                    value = "Unauthorized operation.",
+                                                    description = "A blocked user is not able to approve any passengers."),
+                                            @ExampleObject(
+                                                    name = "User to approve is not the driver",
+                                                    value = "Unauthorized operation.",
+                                                    description = "A user who is not the driver of the travel is not able to approve any passengers."),
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @DeleteMapping("/{travelId}/applications/{userId}")
     public Travel declinePassenger(@PathVariable int travelId,
                                    @PathVariable int userId,
