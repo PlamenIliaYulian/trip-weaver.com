@@ -46,4 +46,6 @@ https://github.com/PlamenIliaYulian/trip-weaver.com
 - Configure the application properties file with database connection details.
 - Build and deploy the application using your preferred development environment or server.
 
-## Images of the database relations: 
+## Images of the database relations:
+![db diagram](https://github.com/PlamenIliaYulian/trip-weaver.com/assets/147754994/bdd6164b-8aa2-4ae2-b803-ef7dbca4083b)
+
