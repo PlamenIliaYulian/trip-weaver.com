@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.Avatar;
 import com.tripweaver.repositories.contracts.AvatarRepository;
+import com.tripweaver.repositories.contracts.Uploadable;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -19,9 +20,8 @@ import java.util.Map;
 import static com.tripweaver.services.helpers.ConstantHelper.DEFAULT_AVATAR_ID;
 
 @Repository
-public class AvatarRepositoryImpl implements AvatarRepository {
+public class AvatarRepositoryImpl extends UploadableImpl implements AvatarRepository {
 
-    private final String CLOUDINARY_URL = "cloudinary://242857587276945:B5ODyO381gN-4aFLKDNVcrAFzxM@dol3hflxs";
     private final SessionFactory sessionFactory;
 
     @Autowired
@@ -52,26 +52,7 @@ public class AvatarRepositoryImpl implements AvatarRepository {
         }
     }
 
-    @Override
-    public String uploadPictureToCloudinary(MultipartFile multipartFile) {
-        Cloudinary cloudinary = new Cloudinary(CLOUDINARY_URL);
-        cloudinary.config.secure = true;
-        try {
-            Map params1 = ObjectUtils.asMap(
-                    "use_filename", true,
-                    "unique_filename", true,
-                    "overwrite", false
-            );
 
-            return cloudinary
-                    .uploader()
-                    .upload(multipartFile.getBytes(), params1)
-                    .get("secure_url")
-                    .toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
 
     @Override
     public Avatar getAvatarById(int id) {

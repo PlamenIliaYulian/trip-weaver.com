@@ -11,10 +11,7 @@ import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
-import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.services.contracts.MailSenderService;
-import com.tripweaver.services.contracts.TravelService;
-import com.tripweaver.services.contracts.UserService;
+import com.tripweaver.services.contracts.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,19 +44,22 @@ public class UserRestController {
     private final AuthenticationHelper authenticationHelper;
     private final ModelsMapper modelsMapper;
     private final AvatarService avatarService;
+    private final CarPictureService carPictureService;
 
     @Autowired
     public UserRestController(UserService userService, MailSenderService mailService,
                               AuthenticationHelper authenticationHelper,
                               ModelsMapper modelsMapper,
                               AvatarService avatarService,
-                              TravelService travelService) {
+                              TravelService travelService,
+                              CarPictureService carPictureService) {
         this.userService = userService;
         this.mailService = mailService;
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
         this.travelService = travelService;
         this.avatarService = avatarService;
+        this.carPictureService = carPictureService;
     }
 
     /*TODO to check whether password and passwordConfirm matches*/
@@ -968,7 +968,7 @@ public class UserRestController {
     /*Ilia*/
     @GetMapping("/{userId}/travels-for-applied-passenger")
     public List<Travel> getOpenTravelsUserAppliedFor(@PathVariable int userId,
-                                           @RequestHeader HttpHeaders headers) {
+                                                     @RequestHeader HttpHeaders headers) {
         try {
             User user = userService.getUserById(userId);
             User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
@@ -980,6 +980,44 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PutMapping("/{userId}/car-picture")
+    public User addCarPicture(@PathVariable int userId,
+                              @RequestParam("car_picture") MultipartFile multipartFile,
+                              @RequestHeader HttpHeaders headers) {
+        try {
+            User user = userService.getUserById(userId);
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
+            String avatarUrl = carPictureService.uploadPictureToCloudinary(multipartFile);
+            return userService.addCarPicture(user, avatarUrl, loggedUser);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+
+    /*Plamen*/
+    @DeleteMapping("/{userId}/car-picture")
+    public User deleteCarPicture(@PathVariable int userId,
+                                 @RequestHeader HttpHeaders headers) {
+        try {
+            User loggedUser = authenticationHelper.tryGetUserFromHeaders(headers);
+            User userToBeRemovedCarPictureFrom = userService.getUserById(userId);
+            return userService.deleteCarPicture(userToBeRemovedCarPictureFrom, loggedUser);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 

@@ -56,4 +56,8 @@ public interface UserService {
 
     HashMap<String, Integer> getTotalDistanceAsDriverHashMap(List<User> drivers);
 
+    User addCarPicture(User userToBeUpdated, String carPictureUrl, User loggedUser);
+
+    User deleteCarPicture(User userToBeUpdated, User loggedUser);
+
 }

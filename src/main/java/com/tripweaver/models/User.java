@@ -53,6 +53,11 @@ public class User implements Comparable<User> {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "car_picture_id")
+    private CarPicture carPicture;
+
     @JsonIgnore
     @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
     private Set<Feedback> feedback;
@@ -186,6 +191,14 @@ public class User implements Comparable<User> {
 
     public void setFeedback(Set<Feedback> feedback) {
         this.feedback = feedback;
+    }
+
+    public CarPicture getCarPicture() {
+        return carPicture;
+    }
+
+    public void setCarPicture(CarPicture carPicture) {
+        this.carPicture = carPicture;
     }
 
     @Override

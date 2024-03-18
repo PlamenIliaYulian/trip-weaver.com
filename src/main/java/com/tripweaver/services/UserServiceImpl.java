@@ -26,17 +26,21 @@ public class UserServiceImpl implements UserService {
     private final FeedbackService feedbackService;
     private final TravelService travelService;
 
+    private final CarPictureService carPictureService;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            AvatarService avatarService,
                            RoleService roleService,
                            FeedbackService feedbackService,
-                           TravelService travelService) {
+                           TravelService travelService,
+                           CarPictureService carPictureService) {
         this.userRepository = userRepository;
         this.avatarService = avatarService;
         this.roleService = roleService;
         this.feedbackService = feedbackService;
         this.travelService = travelService;
+        this.carPictureService = carPictureService;
     }
 
     @Override
@@ -46,6 +50,7 @@ public class UserServiceImpl implements UserService {
         checkIfPhoneNumberUnique(user);
         user.setCreated(LocalDateTime.now());
         user.setAvatar(avatarService.getDefaultAvatar());
+        user.setCarPicture(carPictureService.getDefaultCarPicture());
         HashSet<Role> roles = new HashSet<>();
         roles.add(roleService.getRoleById(2));
         user.setRoles(roles);
@@ -274,6 +279,24 @@ public class UserServiceImpl implements UserService {
             totalDistancAsDrivereHashMap.put(driver.getUsername(), totalDistance);
         }
         return totalDistancAsDrivereHashMap;
+    }
+
+    @Override
+    public User addCarPicture(User userToBeUpdated, String carPictureUrl, User loggedUser) {
+        ValidationHelper.isSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION_NOT_SAME_USER);
+        CarPicture carPictureToAdd = new CarPicture();
+        carPictureToAdd.setCarPictureUrl(carPictureUrl);
+        carPictureToAdd = carPictureService.createCarPicture(carPictureToAdd);
+
+        userToBeUpdated.setCarPicture(carPictureToAdd);
+        return userRepository.updateUser(userToBeUpdated);
+    }
+
+    @Override
+    public User deleteCarPicture(User userToBeUpdated, User loggedUser) {
+        ValidationHelper.isAdminOrSameUser(userToBeUpdated, loggedUser, UNAUTHORIZED_OPERATION);
+        userToBeUpdated.setCarPicture(carPictureService.getDefaultCarPicture());
+        return userRepository.updateUser(userToBeUpdated);
     }
 
     private void checkForUniqueUsername(User user) {
