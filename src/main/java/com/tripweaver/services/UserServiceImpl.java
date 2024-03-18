@@ -219,7 +219,6 @@ public class UserServiceImpl implements UserService {
         userRepository.updateUser(userToBeDeleted);
     }
 
-    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalTravelsAsPassengerHashMap(List<User> passengers) {
         HashMap<String, Integer> totalTravelsAsPassengerHashMap = new HashMap<>();
@@ -235,11 +234,10 @@ public class UserServiceImpl implements UserService {
         return totalTravelsAsPassengerHashMap;
     }
 
-    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalDistanceAsPassengerHashMap(List<User> passengers) {
         HashMap<String, Integer> totalDistanceAsPassengerHashMap = new HashMap<>();
-        for (User passenger : userRepository.getTopTwelveTravelPassengersByRating()) {
+        for (User passenger : passengers) {
             int totalDistance = travelService.getTravelsByPassenger(passenger, passenger, new TravelFilterOptions())
                     .stream()
                     .filter(travel -> travel.getStatus().getTravelStatusId() == TRAVEL_STATUS_COMPLETED)
@@ -250,7 +248,6 @@ public class UserServiceImpl implements UserService {
         return totalDistanceAsPassengerHashMap;
     }
 
-    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalTravelsAsDriverHashMap(List<User> drivers) {
         HashMap<String, Integer> totalTravelsAsDriverHashMap = new HashMap<>();
@@ -266,7 +263,6 @@ public class UserServiceImpl implements UserService {
         return totalTravelsAsDriverHashMap;
     }
 
-    /*ToDo Add test to increase coverage.*/
     @Override
     public HashMap<String, Integer> getTotalDistanceAsDriverHashMap(List<User> drivers) {
         HashMap<String, Integer> totalDistancAsDrivereHashMap = new HashMap<>();

@@ -6,12 +6,10 @@ import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.helpers.TestHelpers;
 import com.tripweaver.models.*;
+import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
-import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.services.contracts.CarPictureService;
-import com.tripweaver.services.contracts.FeedbackService;
-import com.tripweaver.services.contracts.RoleService;
+import com.tripweaver.services.contracts.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +32,8 @@ public class UserServiceTests {
     UserRepository userRepository;
     @Mock
     FeedbackService feedbackService;
+    @Mock
+    TravelService travelService;
     @Mock
     AvatarService avatarService;
     @Mock
@@ -517,7 +518,7 @@ public class UserServiceTests {
         User nonAdminUser = TestHelpers.createMockNonAdminUser2();
 
         Assertions.assertThrows(UnauthorizedOperationException.class,
-                () -> userService.deleteUser(userTobeUpdated, nonAdminUser));
+                () -> userService.deleteAvatar(userTobeUpdated, nonAdminUser));
     }
 
     @Test
@@ -544,4 +545,86 @@ public class UserServiceTests {
         Assertions.assertEquals(feedbackSet.size(), feedbackList.size());
     }
 
+    @Test
+    public void getTotalTravelsAsPassengerHashMap_Should_Pass() {
+        User user2 = TestHelpers.createMockNonAdminUser2();
+        List<User> userList = new ArrayList<>();
+        userList.add(user2);
+
+        HashMap<String, Integer> hashMap = userService.getTotalTravelsAsPassengerHashMap(userList);
+
+        Assertions.assertEquals(userList.size(), hashMap.size());
+    }
+    @Test
+    public void getTotalDistanceAsPassengerHashMap_Should_Pass() {
+        User user2 = TestHelpers.createMockNonAdminUser2();
+        List<User> userList = new ArrayList<>();
+        userList.add(user2);
+
+        HashMap<String, Integer> hashMap = userService.getTotalDistanceAsPassengerHashMap(userList);
+
+        Assertions.assertEquals(userList.size(), hashMap.size());
+    }
+    @Test
+    public void getTotalTravelsAsDriverHashMap_Should_Pass() {
+        User user2 = TestHelpers.createMockNonAdminUser2();
+        List<User> userList = new ArrayList<>();
+        userList.add(user2);
+
+        HashMap<String, Integer> hashMap = userService.getTotalTravelsAsDriverHashMap(userList);
+
+        Assertions.assertEquals(userList.size(), hashMap.size());
+    }
+    @Test
+    public void getTotalDistanceAsDriverHashMap_Should_Pass() {
+        User user2 = TestHelpers.createMockNonAdminUser2();
+        List<User> userList = new ArrayList<>();
+        userList.add(user2);
+
+        HashMap<String, Integer> hashMap = userService.getTotalDistanceAsDriverHashMap(userList);
+
+        Assertions.assertEquals(userList.size(), hashMap.size());
+    }
+
+    @Test
+    public void addCarPicture_Should_Throw_When_UserIsSameUser() {
+        User userToBeUpdated = TestHelpers.createMockNonAdminUser1();
+        User userToDoChanges = TestHelpers.createMockNonAdminUser1();
+        userToDoChanges.setUserId(2);
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> userService.addCarPicture(userToBeUpdated, "URL", userToDoChanges));
+    }
+
+    @Test
+    public void addCarPicture_Should_CallRepository() {
+        User userToBeUpdated = TestHelpers.createMockNonAdminUser1();
+        User userToDoChanges = TestHelpers.createMockNonAdminUser1();
+
+        userService.addCarPicture(userToBeUpdated, "avatarUrl", userToDoChanges);
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .updateUser(userToBeUpdated);
+    }
+    @Test
+    public void deleteCarPicture_Should_Throw_When_NotSameUserAndNotAdmin() {
+        User userTobeUpdated = TestHelpers.createMockNonAdminUser1();
+        User nonAdminUser = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> userService.deleteCarPicture(userTobeUpdated, nonAdminUser));
+    }
+
+    @Test
+    public void deleteCarPicture_Should_CallRepository() {
+        User userTobeUpdated = TestHelpers.createMockNonAdminUser1();
+
+        Mockito.when(userRepository.updateUser(userTobeUpdated))
+                .thenReturn(userTobeUpdated);
+
+        userService.deleteCarPicture(userTobeUpdated, userTobeUpdated);
+
+        Mockito.verify(userRepository, Mockito.times(1))
+                .updateUser(userTobeUpdated);
+    }
 }

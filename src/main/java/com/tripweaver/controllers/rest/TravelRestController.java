@@ -404,17 +404,17 @@ public class TravelRestController {
     }
 
 
-    /*ToDo Test endpoint.*/
-    @GetMapping("/getLocation")
+    /* Endpoints helping work with Bing Map API.*/
+
+    /*    @GetMapping("/getLocation")
     public HashMap<String, String> getCoordinatesAndValidCityName(@RequestParam("q") String address) {
         return bingMapService.getCoordinatesAndValidCityName(address);
     }
 
-    /*ToDo Test endpoint.*/
     @GetMapping("/getDistanceAndDuration")
     public HashMap<String, Integer> calculateDistanceAndDuration(@RequestParam("startingPoint") String startingPoint,
                                                                  @RequestParam("endingPoint") String endingPoint) {
         return bingMapService.calculateDistanceAndDuration(startingPoint, endingPoint);
-    }
+    }*/
 
 }

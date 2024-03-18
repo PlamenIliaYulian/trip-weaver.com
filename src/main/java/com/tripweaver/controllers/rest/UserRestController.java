@@ -62,7 +62,6 @@ public class UserRestController {
         this.carPictureService = carPictureService;
     }
 
-    /*TODO to check whether password and passwordConfirm matches*/
     /*Yuli*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -175,7 +174,6 @@ public class UserRestController {
             },
             security = {@SecurityRequirement(name = "Authorization")}
     )
-    /*TODO to check whether password and passwordConfirm matches*/
     @PutMapping("/{userId}")
     User updateUser(@PathVariable int userId,
                     @Valid @RequestBody UserDto userDto,
