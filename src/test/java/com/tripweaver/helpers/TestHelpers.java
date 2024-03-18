@@ -19,6 +19,12 @@ public class TestHelpers {
         return new MockMultipartFile("String", new byte[10]);
     }
 
+    public static CarPicture createMockCarPicture() {
+        CarPicture mockCarPicture = new CarPicture();
+        mockCarPicture.setCarPictureId(DEFAULT_CAR_PICTURE_ID);
+        mockCarPicture.setCarPictureUrl("URL");
+        return mockCarPicture;
+    }
     public static Avatar createMockAvatar() {
         Avatar mockAvatar = new Avatar();
         mockAvatar.setAvatarId(DEFAULT_AVATAR_ID);
@@ -144,6 +150,7 @@ public class TestHelpers {
         mockNonAdminUser.setAveragePassengerRating(3.5);
         mockNonAdminUser.setAverageDriverRating(4.2);
         mockNonAdminUser.setAvatar(createMockAvatar());
+        mockNonAdminUser.setCarPicture(createMockCarPicture());
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(createMockRoleMember());
         mockNonAdminUser.setRoles(roleSet);
@@ -178,6 +185,7 @@ public class TestHelpers {
         User user = new User();
         user.setUserId(1);
         user.setAvatar(createMockAvatar());
+        user.setCarPicture(createMockCarPicture());
         user.setBlocked(false);
         user.setDeleted(false);
         user.setVerified(true);

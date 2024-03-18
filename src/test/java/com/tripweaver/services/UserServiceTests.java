@@ -9,6 +9,7 @@ import com.tripweaver.models.*;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.repositories.contracts.UserRepository;
 import com.tripweaver.services.contracts.AvatarService;
+import com.tripweaver.services.contracts.CarPictureService;
 import com.tripweaver.services.contracts.FeedbackService;
 import com.tripweaver.services.contracts.RoleService;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +35,8 @@ public class UserServiceTests {
     FeedbackService feedbackService;
     @Mock
     AvatarService avatarService;
+    @Mock
+    CarPictureService carPictureService;
     @Mock
     RoleService roleService;
     @InjectMocks
@@ -240,6 +243,9 @@ public class UserServiceTests {
 
         Mockito.when(avatarService.getDefaultAvatar())
                 .thenReturn(new Avatar());
+
+        Mockito.when(carPictureService.getDefaultCarPicture())
+                .thenReturn(new CarPicture());
 
         Mockito.when(roleService.getRoleById(Mockito.anyInt()))
                 .thenReturn(new Role());

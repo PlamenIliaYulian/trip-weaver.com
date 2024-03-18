@@ -428,4 +428,24 @@ public class TravelServiceTests {
                 .updateTravel(travel);
     }
 
+    @Test
+    public void getTravelsAsAppliedPassenger_Should_Throw_When_LoggedUserIsNotTheSame() {
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
+        User applicant = TestHelpers.createMockNonAdminUser2();
+
+        Assertions.assertThrows(UnauthorizedOperationException.class,
+                () -> travelService.getTravelsAsAppliedPassenger(mockLoggedUser, applicant));
+    }
+
+    @Test
+    public void getTravelsAsAppliedPassenger_Should_CallRepository_When_WhenValidArgumentsPassed() {
+        User mockLoggedUser = TestHelpers.createMockNonAdminUser1();
+
+        travelService.getTravelsAsAppliedPassenger(mockLoggedUser, mockLoggedUser);
+
+        Mockito.verify(travelRepository, Mockito.times(1))
+                .getTravelsAsAppliedPassenger(mockLoggedUser);
+
+    }
+
 }

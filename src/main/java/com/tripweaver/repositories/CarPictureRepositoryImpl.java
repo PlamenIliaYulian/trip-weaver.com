@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.tripweaver.services.helpers.ConstantHelper.DEFAULT_AVATAR_ID;
+import static com.tripweaver.services.helpers.ConstantHelper.DEFAULT_CAR_PICTURE_ID;
 
 @Repository
 public class CarPictureRepositoryImpl extends UploadableImpl implements CarPictureRepository {
@@ -37,10 +37,10 @@ public class CarPictureRepositoryImpl extends UploadableImpl implements CarPictu
     public CarPicture getDefaultCarPicture() {
         try (Session session = sessionFactory.openSession()) {
             Query<CarPicture> query = session.createQuery("FROM CarPicture WHERE carPictureId = :id", CarPicture.class);
-            query.setParameter("id", DEFAULT_AVATAR_ID);
+            query.setParameter("id", DEFAULT_CAR_PICTURE_ID);
             List<CarPicture> result = query.list();
             if (result.isEmpty()) {
-                throw new EntityNotFoundException("CarPicture", "carPicture ID", String.valueOf(DEFAULT_AVATAR_ID));
+                throw new EntityNotFoundException("CarPicture", "carPicture ID", String.valueOf(DEFAULT_CAR_PICTURE_ID));
             }
             return result.get(0);
         }

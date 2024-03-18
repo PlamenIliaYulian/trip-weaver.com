@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.trip-weaver.com.trip-weaver' is invalid and this project uses 'com.tripweaver.com.tripweaver' instead.
+* The original package name 'com.trip-weaver' is invalid and this project uses 'com.tripweaver' instead.
 
 # Getting Started
 
