@@ -18,7 +18,7 @@
 
                     <div class="search-result-item">
                         <div id="section-title uk-text-center">
-                            <img th:src="@{/assets/img/unsplash-just-some-car.jpg}" alt="car">
+                            <img th:src="${userById.getCarPicture().getCarPictureUrl()}" alt="car">
                         </div>
                     </div>
                     <!--User Information-->
@@ -323,7 +323,7 @@
                                         <a th:href="@{/travels/{id}(id=${travelApplied.getTravelId()})}">
 
                                             <img src="../static/assets/img/unsplash-just-some-car.jpg"
-                                                 th:src="@{/assets/img/unsplash-just-some-car.jpg}"
+                                                 th:src="${travelApplied.getDriver().getCarPicture().getCarPictureUrl()}"
                                                  alt="car">
                                         </a>
                                     </div>
@@ -544,7 +544,7 @@
                                         <a th:href="@{/travels/{id}(id=${travel.getTravelId()})}">
 
                                             <img src="../static/assets/img/unsplash-just-some-car.jpg"
-                                                 th:src="@{/assets/img/unsplash-just-some-car.jpg}"
+                                                 th:src="${travel.getDriver().getCarPicture().getCarPictureUrl()}"
                                                  alt="car">
                                         </a>
                                     </div>

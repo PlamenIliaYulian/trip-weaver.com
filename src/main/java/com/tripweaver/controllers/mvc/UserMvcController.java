@@ -15,10 +15,7 @@ import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.models.dtos.UserFilterOptionsDto;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
-import com.tripweaver.services.contracts.AvatarService;
-import com.tripweaver.services.contracts.RoleService;
-import com.tripweaver.services.contracts.TravelService;
-import com.tripweaver.services.contracts.UserService;
+import com.tripweaver.services.contracts.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -51,18 +48,22 @@ public class UserMvcController {
     private final TravelService travelService;
     private final AvatarService avatarService;
 
+    private final CarPictureService carPictureService;
+
     public UserMvcController(AuthenticationHelper authenticationHelper,
                              ModelsMapper modelsMapper,
                              UserService userService,
                              RoleService roleService,
                              TravelService travelService,
-                             AvatarService avatarService) {
+                             AvatarService avatarService,
+                             CarPictureService carPictureService) {
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
         this.userService = userService;
         this.roleService = roleService;
         this.travelService = travelService;
         this.avatarService = avatarService;
+        this.carPictureService = carPictureService;
     }
 
     @ModelAttribute("requestURI")
@@ -306,6 +307,34 @@ public class UserMvcController {
             User userById = userService.getUserById(id);
             User loggedUser = authenticationHelper.tryGetUserFromSession(session);
             userService.addAvatar(userById, newAvatar, loggedUser);
+            message = "Uploaded the file successfully: " + file.getOriginalFilename();
+            model.addAttribute("message", message);
+            return "redirect:/users/{id}";
+        } catch (AuthenticationException e) {
+            model.addAttribute("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (RuntimeException e) {
+            model.addAttribute("message", e.getMessage());
+            return "Error";
+        }
+    }
+
+    @PostMapping("/{id}/edit/car-photo/upload")
+    public String uploadCarPhoto(@PathVariable int id,
+                               Model model,
+                               @RequestParam("file") MultipartFile file,
+                               HttpSession session) {
+        String message = "";
+
+        try {
+            String newAvatar = carPictureService.uploadPictureToCloudinary(file);
+            User userById = userService.getUserById(id);
+            User loggedUser = authenticationHelper.tryGetUserFromSession(session);
+            userService.addCarPicture(userById, newAvatar, loggedUser);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             model.addAttribute("message", message);
             return "redirect:/users/{id}";

@@ -142,7 +142,7 @@
                                         <a th:href="@{/travels/{id}(id=${travel.getTravelId()})}">
 
                                             <img src="../static/assets/img/unsplash-just-some-car.jpg"
-                                                 th:src="@{/assets/img/unsplash-just-some-car.jpg}"
+                                                 th:src="${travel.getDriver().getCarPicture().getCarPictureUrl()}"
                                                  alt="car">
                                         </a>
                                     </div>

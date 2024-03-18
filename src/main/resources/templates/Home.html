@@ -97,14 +97,14 @@
                 <div class="uk-section uk-container">
                     <div class="section-title uk-text-center">
                         <div class="uk-h2">Our Best Drivers</div>
-                        <p>Check out our top ten travel organizers</p>
+                        <p>Check out our top twelve travel organizers</p>
                     </div>
                     <div class="section-content">
                         <div class="uk-grid uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m" data-uk-grid>
                             <div th:each="driver : ${topTenTravelOrganizers}">
                                 <div class="driver-card">
                                     <div class="driver-card__media"><img src="../static/assets/img/car-1.jpg"
-                                                                         th:src="@{/assets/img/car-1.jpg}" alt="car">
+                                                                         th:src="${driver.getCarPicture().getCarPictureUrl()}">
                                     </div>
                                     <div class="driver-card__body">
                                         <div class="driver-card__user"><img
@@ -152,19 +152,24 @@
                 <div class="uk-section uk-container">
                     <div class="section-title uk-text-center">
                         <div class="uk-h2">Highest Rated Passengers</div>
-                        <p>Check out our top ten passengers</p>
+                        <p>Check out our top twelve passengers</p>
                     </div>
                     <div class="section-content">
                         <div class="uk-grid uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m" data-uk-grid>
                             <div th:each="passenger : ${topTenPassengers}">
                                 <div class="driver-card">
-                                    <div class="driver-card__media"><img src="../static/assets/img/blog-thumb-2.jpg"
-                                                                         th:src="@{/assets/img/blog-thumb-2.jpg}"
-                                                                         alt="car">
+                                    <div class="driver-card__media">
+                                        <div class="user-box__avatar" id="all-travels-box-avatar-car-home">
+                                            <a th:href="@{/users/{id}(id=${passenger.getUserId()})}">
+                                                <img th:src="${passenger.getAvatar().getAvatarUrl()}"
+                                                     alt="driver-pic">
+                                            </a>
+                                        </div>
                                     </div>
                                     <div class="driver-card__body">
-                                        <div class="driver-card__user"><img
-                                                th:src="${passenger.getAvatar().getAvatarUrl()}" alt="driver-pic"><span
+                                        <div class="driver-card__user"><!--<img
+                                                th:src="${passenger.getAvatar().getAvatarUrl()}" alt="driver-pic">-->
+                                            <span
                                                 th:text="${passenger.getUsername()}">Username</span></div>
                                         <div class="driver-card__info">
                                             <div class="driver-card__date"

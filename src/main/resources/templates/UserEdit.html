@@ -98,8 +98,18 @@
                                             value="Update"></div>
                             </div>
                         </form>
-                        <div class="contacts-info-form__title margin-top-50px">Upload Photo</div>
-                        <form class="margin-top-10px" action="#" th:action="@{__${requestURI}__/photos/upload}" enctype="multipart/form-data">
+                        <div class="contacts-info-form__title margin-top-50px">Upload Profile Picture</div>
+                        <form class="margin-top-10px" action="#" method="post" th:action="@{__${requestURI}__/photos/upload}" enctype="multipart/form-data">
+                            <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
+                                <div class="flex-box-center-items"><input class="uk-input" type="file" name="file" placeholder="Choose a file">
+                                </div>
+                                <div></div>
+                                <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
+                                            value="Upload"></div>
+                            </div>
+                        </form>
+                        <div class="contacts-info-form__title margin-top-50px">Upload Car Photo</div>
+                        <form class="margin-top-10px" action="#" method="post" th:action="@{__${requestURI}__/car-photo/upload}" enctype="multipart/form-data">
                             <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
                                 <div class="flex-box-center-items"><input class="uk-input" type="file" name="file" placeholder="Choose a file">
                                 </div>

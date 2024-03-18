@@ -5322,7 +5322,8 @@ body.page-search--result .page-header__phone .uk-button {
 #single-user-box-avatar,
 #single-user-box-avatar-applied-travels,
 #single-travel-box-avatar-car,
-#all-travels-box-avatar-car{
+#all-travels-box-avatar-car,
+#all-travels-box-avatar-car-home{
     width: 200px;
     height: 200px;
 }
