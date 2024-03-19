@@ -47,5 +47,4 @@ https://github.com/PlamenIliaYulian/trip-weaver.com
 - Build and deploy the application using your preferred development environment or server.
 
 ## Images of the database relations:
-![db diagram](https://github.com/PlamenIliaYulian/trip-weaver.com/assets/147754994/bdd6164b-8aa2-4ae2-b803-ef7dbca4083b)
-
+![image](https://github.com/PlamenIliaYulian/trip-weaver.com/assets/140453324/79c3394a-5f31-4729-a13d-3dd78008ebb2)
