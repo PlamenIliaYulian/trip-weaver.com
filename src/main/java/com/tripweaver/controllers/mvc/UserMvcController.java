@@ -36,7 +36,6 @@ import java.util.List;
 import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
 import static com.tripweaver.services.helpers.ConstantHelper.CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD;
 
-
 @Controller
 @RequestMapping("/users")
 public class UserMvcController {
@@ -208,7 +207,7 @@ public class UserMvcController {
                     .getTotalTravelsAsDriverHashMap(Collections.singletonList(user)));
             model.addAttribute("userTotalTravelsAsPassenger", userService
                     .getTotalTravelsAsPassengerHashMap(Collections.singletonList(user)));
-            model.addAttribute("openTravelsUserAppliedFor", travelService.getTravelsAsAppliedPassenger(loggedInUser, user));
+            model.addAttribute("openTravelsUserAppliedFor", travelService.getTravelsAsAppliedPassenger(user, user));
 
             return "SingleUser";
         } catch (AuthenticationException e) {

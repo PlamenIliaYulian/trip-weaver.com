@@ -91,7 +91,8 @@
                                        th:href="@{/users/{userId}/block(userId=${userById.getUserId()})}">
                                         Block
                                     </a>
-                                    <a th:if="${userById.isBlocked} and ${isAdmin}" class="uk-button button-approve" type="button"
+                                    <a th:if="${userById.isBlocked} and ${isAdmin}" class="uk-button button-approve"
+                                       type="button"
                                        th:href="@{/users/{userId}/unblock(userId=${userById.getUserId()})}">
                                         Unblock
                                     </a>
@@ -121,31 +122,60 @@
 
                                                     <div class="blog-card single-travel-blog-card">
                                                         <div class="blog-card__body single-travel-user-box-avatar">
-                                                            <div class="user-box__avatar">
+                                                            <div th:unless="${driverFeedback.getAuthor().isDeleted()}"
+                                                                 class="user-box__avatar">
                                                                 <a th:href="@{/users/__${driverFeedback.getAuthor().getUserId()}__}"><img
                                                                         class="uk-width-1-1"
                                                                         th:src="${driverFeedback.getAuthor().getAvatar().getAvatarUrl()}"
                                                                         alt="img-slider-blog">
                                                                 </a>
                                                             </div>
+                                                            <div th:if="${driverFeedback.getAuthor().isDeleted()}"
+                                                                 class="user-box__avatar">
+                                                                <i><img
+                                                                        class="uk-width-1-1"
+                                                                        th:src="${driverFeedback.getAuthor().getAvatar().getAvatarUrl()}"
+                                                                        alt="img-slider-blog">
+                                                                </i>
+                                                            </div>
                                                         </div>
                                                         <div class="blog-card__body">
                                                             <div class="blog-card__info">
-                                                                <div class="blog-card__author"><i
+                                                                <div th:unless="${driverFeedback.getAuthor().isDeleted()}"
+                                                                     class="blog-card__author"><i
                                                                         class="fas fa-user"></i>
                                                                     <a th:href="@{/users/__${driverFeedback.getAuthor().getUserId()}__}">
-                                                                <span th:text="${driverFeedback.getAuthor().getFirstName()} + ' ' + ${driverFeedback.getAuthor().getLastName()}">
-                                                                </span>
+                                                                        <span th:text="${driverFeedback.getAuthor().getFirstName()} + ' ' + ${driverFeedback.getAuthor().getLastName()}">
+                                                                        </span>
                                                                     </a>
                                                                 </div>
-                                                                <div class="blog-card__category">
+                                                                <div th:if="${driverFeedback.getAuthor().isDeleted()}"
+                                                                     class="blog-card__author"><i
+                                                                        class="fas fa-user"></i>
+                                                                    <div>
+                                                                        <span th:text="${driverFeedback.getAuthor().getFirstName()} + ' ' + ${driverFeedback.getAuthor().getLastName()}">
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div th:unless="${driverFeedback.getAuthor().isDeleted()}"
+                                                                     class="blog-card__category">
                                                                     <img src="../static/assets/img/badge.svg"
                                                                          th:src="@{/assets/img/badge.svg}"
                                                                          alt="car">
                                                                     <a th:href="@{/users/__${driverFeedback.getAuthor().getUserId()}__}">
-                                                                <span th:text="${driverFeedback.getAuthor().getUsername()}">
-                                                                </span>
+                                                                        <span th:text="${driverFeedback.getAuthor().getUsername()}">
+                                                                        </span>
                                                                     </a>
+                                                                </div>
+                                                                <div th:if="${driverFeedback.getAuthor().isDeleted()}"
+                                                                     class="blog-card__category">
+                                                                    <img src="../static/assets/img/badge.svg"
+                                                                         th:src="@{/assets/img/badge.svg}"
+                                                                         alt="car">
+                                                                    <div>
+                                                                        <span th:text="${driverFeedback.getAuthor().getUsername()}">
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <b th:if="${driverFeedback.getAuthor().isDeleted()}">(Inactive)</b>
@@ -179,9 +209,10 @@
                                                                             <span th:text="'Created on: ' + ${#temporals.format(driverFeedback.getCreated(), 'yyyy-MMM-dd hh:mm a')}">
                                                                                         10</span>
                                                                         </li>
-                                                                        <li><img src="../static/assets/img/history_edu.svg"
-                                                                                 th:src="@{/assets/img/history_edu.svg}"
-                                                                                 alt="driver-service">
+                                                                        <li><img
+                                                                                src="../static/assets/img/history_edu.svg"
+                                                                                th:src="@{/assets/img/history_edu.svg}"
+                                                                                alt="driver-service">
                                                                             <span th:text="${driverFeedback.getContent()}">
                                                                                         10</span>
                                                                         </li>
@@ -222,31 +253,58 @@
 
                                                     <div class="blog-card single-travel-blog-card">
                                                         <div class="blog-card__body single-travel-user-box-avatar">
-                                                            <div class="user-box__avatar">
+                                                            <div th:unless="${passengerFeedback.getAuthor().isDeleted()}"
+                                                                 class="user-box__avatar">
                                                                 <a th:href="@{/users/__${passengerFeedback.getAuthor().getUserId()}__}"><img
                                                                         class="uk-width-1-1"
                                                                         th:src="${passengerFeedback.getAuthor().getAvatar().getAvatarUrl()}"
                                                                         alt="img-slider-blog">
                                                                 </a>
                                                             </div>
+                                                            <div th:if="${passengerFeedback.getAuthor().isDeleted()}"
+                                                                 class="user-box__avatar">
+                                                                <i><img
+                                                                        class="uk-width-1-1"
+                                                                        th:src="${passengerFeedback.getAuthor().getAvatar().getAvatarUrl()}"
+                                                                        alt="img-slider-blog">
+                                                                </i>
+                                                            </div>
                                                         </div>
                                                         <div class="blog-card__body">
                                                             <div class="blog-card__info">
-                                                                <div class="blog-card__author"><i
+                                                                <div th:unless="${passengerFeedback.getAuthor().isDeleted()}"
+                                                                     class="blog-card__author"><i
                                                                         class="fas fa-user"></i>
                                                                     <a th:href="@{/users/__${passengerFeedback.getAuthor().getUserId()}__}">
-                                                                <span th:text="${passengerFeedback.getAuthor().getFirstName()} + ' ' + ${passengerFeedback.getAuthor().getLastName()}">
-                                                                </span>
+                                                                        <span th:text="${passengerFeedback.getAuthor().getFirstName()} + ' ' + ${passengerFeedback.getAuthor().getLastName()}">
+                                                                        </span>
                                                                     </a>
                                                                 </div>
-                                                                <div class="blog-card__category">
+                                                                <div th:if="${passengerFeedback.getAuthor().isDeleted()}"
+                                                                     class="blog-card__author"><i
+                                                                        class="fas fa-user"></i>
+                                                                    <div>
+                                                                        <span th:text="${passengerFeedback.getAuthor().getFirstName()} + ' ' + ${passengerFeedback.getAuthor().getLastName()}">
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div th:unless="${passengerFeedback.getAuthor().isDeleted()}" class="blog-card__category">
                                                                     <img src="../static/assets/img/badge.svg"
                                                                          th:src="@{/assets/img/badge.svg}"
                                                                          alt="car">
                                                                     <a th:href="@{/users/__${passengerFeedback.getAuthor().getUserId()}__}">
-                                                                <span th:text="${passengerFeedback.getAuthor().getUsername()}">
-                                                                </span>
+                                                                        <span th:text="${passengerFeedback.getAuthor().getUsername()}">
+                                                                        </span>
                                                                     </a>
+                                                                </div>
+                                                                <div th:if="${passengerFeedback.getAuthor().isDeleted()}" class="blog-card__category">
+                                                                    <img src="../static/assets/img/badge.svg"
+                                                                         th:src="@{/assets/img/badge.svg}"
+                                                                         alt="car">
+                                                                    <div>
+                                                                        <span th:text="${passengerFeedback.getAuthor().getUsername()}">
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <b th:if="${passengerFeedback.getAuthor().isDeleted()}">(Inactive)</b>
@@ -280,9 +338,10 @@
                                                                             <span th:text="'Created on: ' + ${#temporals.format(passengerFeedback.getCreated(), 'yyyy-MMM-dd hh:mm a')}">
                                                                                         10</span>
                                                                         </li>
-                                                                        <li><img src="../static/assets/img/history_edu.svg"
-                                                                                 th:src="@{/assets/img/history_edu.svg}"
-                                                                                 alt="driver-service">
+                                                                        <li><img
+                                                                                src="../static/assets/img/history_edu.svg"
+                                                                                th:src="@{/assets/img/history_edu.svg}"
+                                                                                alt="driver-service">
                                                                             <span th:text="${passengerFeedback.getContent()}">
                                                                                         10</span>
                                                                         </li>
@@ -333,18 +392,29 @@
                                 </div>
                                 <div class="search-result-item__info">
                                     <div class="user-box">
-                                        <div class="user-box__avatar">
+                                        <div th:unless="${travelApplied.getDriver().isDeleted()}" class="user-box__avatar">
                                             <a th:href="@{/users/{id}(id=${travelApplied.getDriver().getUserId()})}">
                                                 <img th:src="${travelApplied.getDriver().getAvatar().getAvatarUrl()}"
                                                      alt="driver-pic">
                                             </a>
                                         </div>
+                                        <div th:if="${travelApplied.getDriver().isDeleted()}" class="user-box__avatar">
+                                            <i>
+                                                <img th:src="${travelApplied.getDriver().getAvatar().getAvatarUrl()}"
+                                                     alt="driver-pic">
+                                            </i>
+                                        </div>
                                         <div class="user-box__info">
-                                            <a th:href="@{/users/{id}(id=${travelApplied.getDriver().getUserId()})}">
+                                            <a th:unless="${travelApplied.getDriver().isDeleted()}" th:href="@{/users/{id}(id=${travelApplied.getDriver().getUserId()})}">
                                                 <div class="user-box__name"
                                                      th:text="${travelApplied.getDriver().getFirstName()} + ' ' + ${travelApplied.getDriver().getLastName()}">
                                                 </div>
                                             </a>
+                                            <div th:if="${travelApplied.getDriver().isDeleted()}">
+                                                <div class="user-box__name"
+                                                     th:text="${travelApplied.getDriver().getFirstName()} + ' ' + ${travelApplied.getDriver().getLastName()}">
+                                                </div>
+                                            </div>
                                             <b th:if="${travelApplied.getDriver().isDeleted()}">(Inactive)</b>
                                             <div class="user-box__rating"><i class="fas fa-star"></i>
                                                 <b th:text="${travelApplied.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
@@ -471,15 +541,20 @@
                                             <div>
                                                 <div class="uk-inline uk-width-1-1">
                                                     <div class="input-place uk-input">
-                                                        <input type="checkbox" id="allBox" onchange="uncheckDriverAndPassenger()">
+                                                        <input type="checkbox" id="allBox"
+                                                               onchange="uncheckDriverAndPassenger()">
                                                         <label for="allBox">All</label>
 
-                                                        <input type="checkbox" id="driverCheckbox" onchange="uncheckAllAndPassenger()"
-                                                               th:field="*{driverId}" th:value="${userById.getUserId()}">
+                                                        <input type="checkbox" id="driverCheckbox"
+                                                               onchange="uncheckAllAndPassenger()"
+                                                               th:field="*{driverId}"
+                                                               th:value="${userById.getUserId()}">
                                                         <label for="driverCheckbox">As Driver</label>
 
-                                                        <input type="checkbox" id="passengerCheckbox" onchange="uncheckAllAndDriver()"
-                                                               th:field="*{passengerId}" th:value="${userById.getUserId()}">
+                                                        <input type="checkbox" id="passengerCheckbox"
+                                                               onchange="uncheckAllAndDriver()"
+                                                               th:field="*{passengerId}"
+                                                               th:value="${userById.getUserId()}">
                                                         <label for="passengerCheckbox">As Passenger</label>
                                                     </div>
                                                 </div>
@@ -555,18 +630,29 @@
                                 </div>
                                 <div class="search-result-item__info">
                                     <div class="user-box">
-                                        <div class="user-box__avatar">
+                                        <div th:unless="${travel.getDriver().isDeleted()}" class="user-box__avatar">
                                             <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
-                                            <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
-                                                 alt="driver-pic">
+                                                <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
+                                                     alt="driver-pic">
                                             </a>
                                         </div>
+                                        <div th:if="${travel.getDriver().isDeleted()}" class="user-box__avatar">
+                                            <i>
+                                                <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
+                                                     alt="driver-pic">
+                                            </i>
+                                        </div>
                                         <div class="user-box__info">
-                                            <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
-                                            <div class="user-box__name"
-                                                 th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
-                                            </div>
+                                            <a th:unless="${travel.getDriver().isDeleted()}" th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
+                                                <div class="user-box__name"
+                                                     th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
+                                                </div>
                                             </a>
+                                            <div th:if="${travel.getDriver().isDeleted()}">
+                                                <div class="user-box__name"
+                                                     th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
+                                                </div>
+                                            </div>
                                             <b th:if="${travel.getDriver().isDeleted()}">(Inactive)</b>
                                             <div class="user-box__rating"><i class="fas fa-star"></i>
                                                 <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>

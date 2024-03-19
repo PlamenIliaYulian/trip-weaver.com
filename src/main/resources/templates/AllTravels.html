@@ -138,23 +138,36 @@
                                 </div>
                                 <div class="search-result-item__info">
                                     <div class="user-box">
-                                        <div class="user-box__avatar">
+                                        <div th:unless="${travel.getDriver().isDeleted()}" class="user-box__avatar">
                                             <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
                                                 <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
                                                      alt="driver-pic">
                                             </a>
                                         </div>
+                                        <div th:if="${travel.getDriver().isDeleted()}" class="user-box__avatar">
+                                            <i>
+                                                <img th:src="${travel.getDriver().getAvatar().getAvatarUrl()}"
+                                                     alt="driver-pic">
+                                            </i>
+                                        </div>
                                         <div class="user-box__info">
-                                            <a th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
+                                            <a th:unless="${travel.getDriver().isDeleted()}"
+                                               th:href="@{/users/{id}(id=${travel.getDriver().getUserId()})}">
                                                 <div class="user-box__name"
                                                      th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
                                                 </div>
                                             </a>
+                                            <div th:if="${travel.getDriver().isDeleted()}">
+                                                <div class="user-box__name"
+                                                     th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
+                                                </div>
+                                            </div>
                                             <b th:if="${travel.getDriver().isDeleted()}">(Inactive)</b>
                                             <div class="user-box__rating"><i class="fas fa-star"></i>
                                                 <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
                                             </div>
                                         </div>
+
                                     </div>
                                     <ul class="list-info">
                                         <li><img src="../static/assets/img/driver-service-1.png"
