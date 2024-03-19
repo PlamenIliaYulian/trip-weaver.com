@@ -62,6 +62,55 @@ public class UserRestController {
         this.carPictureService = carPictureService;
     }
 
+    @Operation(
+            summary = "Create new user.",
+            description = "This endpoint is used for the creation / registration of new users in the system.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = """
+                            The body of the request consists of the following fields:
+                                'username',
+                                'password',
+                                'confirmPassword',
+                                'firstName',
+                                'lastName',
+                                'email',
+                                'phoneNumber',
+                            """),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = @Content(
+                                    schema = @Schema(implementation = User.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Bad request",
+                                                    value = "Bad request",
+                                                    description = "Confirm password should match password.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Conflict",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Conflict",
+                                                    value = "Conflict",
+                                                    description = "A user with the same username, email or phone number already exists in the system.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     /*Yuli*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
