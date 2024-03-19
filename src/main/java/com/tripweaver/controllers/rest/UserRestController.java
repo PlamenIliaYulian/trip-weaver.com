@@ -9,6 +9,7 @@ import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.FeedbackDto;
 import com.tripweaver.models.dtos.UserDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
+import com.tripweaver.models.enums.EmailVerificationType;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.*;
@@ -121,7 +122,7 @@ public class UserRestController {
             }
             User user = modelsMapper.userFromDtoCreate(userDtoCreate);
             user = userService.createUser(user);
-            mailService.sendEmail(user);
+            mailService.sendEmail(user, EmailVerificationType.REST);
             return user;
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

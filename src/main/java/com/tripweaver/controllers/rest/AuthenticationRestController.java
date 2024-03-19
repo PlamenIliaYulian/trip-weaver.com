@@ -40,7 +40,7 @@ public class AuthenticationRestController {
     public User verifyEmail(@RequestParam("email") String email) {
         try {
             User userToBeVerified = userService.getUserByEmail(email);
-            return userService.verifyEmail(userToBeVerified, EmailVerificationType.REST);
+            return userService.verifyEmail(userToBeVerified);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -50,7 +50,7 @@ public class AuthenticationRestController {
     public User sendNewVerificationEmail(@RequestHeader HttpHeaders headers) {
         try {
             User userToBeVerified = authenticationHelper.tryGetUserFromHeaders(headers);
-            mailSenderService.sendEmail(userToBeVerified);
+            mailSenderService.sendEmail(userToBeVerified, EmailVerificationType.REST);
             return userToBeVerified;
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

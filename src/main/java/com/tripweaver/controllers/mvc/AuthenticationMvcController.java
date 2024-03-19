@@ -93,13 +93,22 @@ public class AuthenticationMvcController {
     }
 
     @GetMapping("/email-verification")
-    public User verifyEmail(@RequestParam("email") String email) {
+    public String verifyEmail(@RequestParam("email") String email,
+                              Model model) {
         try {
             User userToBeVerified = userService.getUserByEmail(email);
-            return userService.verifyEmail(userToBeVerified, EmailVerificationType.MVC);
+            userService.verifyEmail(userToBeVerified);
+            return "redirect:/";
+        } catch (AuthenticationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
         } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
         }
+
     }
 
     @GetMapping("/login")
@@ -138,7 +147,7 @@ public class AuthenticationMvcController {
                                            HttpServletRequest servletRequest) {
         try {
             User userToBeVerified = authenticationHelper.tryGetUserFromSession(session);
-            mailSenderService.sendEmail(userToBeVerified);
+            mailSenderService.sendEmail(userToBeVerified, EmailVerificationType.MVC);
             String referer = servletRequest.getHeader("Referer");
             URI refererUri = new URI(referer);
             return "redirect:" + refererUri.getPath();
@@ -178,7 +187,7 @@ public class AuthenticationMvcController {
         try {
             User user = modelsMapper.userFromDtoCreate(userDtoCreate);
             userService.createUser(user);
-            mailSenderService.sendEmail(user);
+            mailSenderService.sendEmail(user, EmailVerificationType.MVC);
             return "redirect:/auth/login";
         } catch (DuplicateEntityException e) {
             errors.rejectValue("username", "duplication_error", e.getMessage());

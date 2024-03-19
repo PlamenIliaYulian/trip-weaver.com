@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User verifyEmail(User userToBeVerified, EmailVerificationType emailVerificationType) {
+    public User verifyEmail(User userToBeVerified) {
         userToBeVerified.setVerified(true);
         return userRepository.updateUser(userToBeVerified);
     }

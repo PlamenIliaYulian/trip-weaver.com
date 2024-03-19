@@ -45,7 +45,7 @@ public interface UserService {
 
     List<Feedback> getAllFeedbackForPassenger(User user);
 
-    User verifyEmail(User userToBeVerified, EmailVerificationType emailVerificationType);
+    User verifyEmail(User userToBeVerified);
 
     void deleteUser(User userToBeDeleted, User loggedUser);
 

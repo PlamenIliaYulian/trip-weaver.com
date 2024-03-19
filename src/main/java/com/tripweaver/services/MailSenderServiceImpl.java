@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailSenderServiceImpl implements MailSenderService {
 
+    public static final String API_DOMAIN = "http://localhost:8081";
     private final JavaMailSender mailSender;
     private final String mailSubject = "www.trip-weaver.com - Please Verify Your Email Address";
     private String mailbody = """
@@ -26,10 +27,7 @@ public class MailSenderServiceImpl implements MailSenderService {
             Trip Weavers
             """;
 
-
-    /*TODO don't forget to update the verificationLink*/
-    private String restVerificationLink = "http://localhost:8081/api/v1/auth/email-verification?email=%s";
-    private String mvcVerificationLink = "http://localhost:8081/auth/email-verification?email=%s"
+    private final String endpoint = "/email-verification?email=%s";
 
     @Value("${spring.mail.username}")
     private String senderMail;
@@ -41,15 +39,12 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Override
     public void sendEmail(User recipient, EmailVerificationType emailVerificationType) {
-        String verificationFullLink = "";
-
-        switch (emailVerificationType){
-            case MVC -> verificationFullLink = mvcVerificationLink;
-            case REST -> verificationFullLink = restVerificationLink;
-        }
-
         SimpleMailMessage message = new SimpleMailMessage();
-        String verificationFullLink = String.format(verificationLink, recipient.getEmail());
+        /*TODO don't forget to update the verificationLink*/
+        String domain = API_DOMAIN;
+        StringBuilder staticPartOfTheLink = new StringBuilder();
+        staticPartOfTheLink.append(domain).append(emailVerificationType.getText()).append(endpoint);
+        String verificationFullLink = String.format(staticPartOfTheLink.toString(), recipient.getEmail());
         message.setFrom(senderMail);
         message.setTo(recipient.getEmail());
         message.setText(String.format(mailbody, recipient.getUsername(), verificationFullLink));
