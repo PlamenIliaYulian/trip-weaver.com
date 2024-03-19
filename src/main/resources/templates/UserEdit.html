@@ -42,7 +42,8 @@
                     <div class="contacts-info-form">
                         <div class="contacts-info-form__title">Update</div>
                         <div class="contacts-info-form__text">Fill in your details below:</div>
-                        <form action="#" th:object="${userDto}" method="post" th:action="@{/users/__${userById.getUserId()}__/edit}">
+                        <form action="#" th:object="${userDto}" method="post"
+                              th:action="@{/users/__${userById.getUserId()}__/edit}">
                             <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
                                 <div><input class="uk-input" type="password" name="Password" placeholder="Password"
                                             th:field="*{password}">
@@ -58,7 +59,8 @@
                                            th:field="*{confirmPassword}">
                                 </div>
                                 <div>
-                                    <label class="error" th:errors="*{confirmPassword}">Confirm password error placeholder. </label>
+                                    <label class="error" th:errors="*{confirmPassword}">Confirm password error
+                                        placeholder. </label>
                                 </div>
                                 <div><input class="uk-input"
                                             type="text"
@@ -95,16 +97,19 @@
                                             th:field="*{phoneNumber}">
                                 </div>
                                 <div>
-                                    <label class="error" th:errors="*{phoneNumber}">Phone number error placeholder. </label>
+                                    <label class="error" th:errors="*{phoneNumber}">Phone number error
+                                        placeholder. </label>
                                 </div>
                                 <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
                                             value="Update"></div>
                             </div>
                         </form>
                         <div class="contacts-info-form__title margin-top-50px">Upload Profile Picture</div>
-                        <form class="margin-top-10px" action="#" method="post" th:action="@{__${requestURI}__/photos/upload}" enctype="multipart/form-data">
+                        <form class="margin-top-10px" action="#" method="post"
+                              th:action="@{__${requestURI}__/photos/upload}" enctype="multipart/form-data">
                             <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
-                                <div class="flex-box-center-items"><input class="uk-input" type="file" name="file" placeholder="Choose a file">
+                                <div class="flex-box-center-items"><input class="uk-input" type="file" name="file"
+                                                                          placeholder="Choose a file">
                                 </div>
                                 <div></div>
                                 <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
@@ -112,13 +117,23 @@
                             </div>
                         </form>
                         <div class="contacts-info-form__title margin-top-50px">Upload Car Photo</div>
-                        <form class="margin-top-10px" action="#" method="post" th:action="@{__${requestURI}__/car-photo/upload}" enctype="multipart/form-data">
+                        <form class="margin-top-10px" action="#" method="post"
+                              th:action="@{__${requestURI}__/car-photo/upload}" enctype="multipart/form-data">
                             <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
-                                <div class="flex-box-center-items"><input class="uk-input" type="file" name="file" placeholder="Choose a file">
+                                <div class="flex-box-center-items"><input class="uk-input" type="file" name="file"
+                                                                          placeholder="Choose a file">
                                 </div>
                                 <div></div>
                                 <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
                                             value="Upload"></div>
+                            </div>
+                        </form>
+                        <div class="contacts-info-form__title margin-top-50px">Inactivate Account</div>
+                        <form class="margin-top-10px" action="#" method="post"
+                              th:action="@{/users/__${userById.getUserId()}__/delete-account}">
+                            <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
+                                <div><input class="uk-button button-cancel uk-button-large" type="submit"
+                                            value="Inactivate"></div>
                             </div>
                         </form>
                     </div>
@@ -126,7 +141,7 @@
                 <div class="uk-flex-first@m">
                     <div class="contacts-info-map" id="register-page-background">
                         <div id="update-user-avatar">
-                        <img th:src="${userById.getAvatar().getAvatarUrl()}" alt="avatar">
+                            <img th:src="${userById.getAvatar().getAvatarUrl()}" alt="avatar">
                         </div>
                     </div>
                 </div>

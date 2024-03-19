@@ -190,7 +190,7 @@ public class UserMvcController {
             List<Travel> allTravels = new ArrayList<>();
             TravelFilterOptions travelFilterOptions = modelsMapper.travelFilterOptionsFromSingleUserDto(dto);
             TravelFilterOptions travelFilterOptions2 = modelsMapper.travelFilterOptionsFromSingleUserDto(dto);
-            if(loggedInUser.getUserId() == id){
+            if (loggedInUser.getUserId() == id) {
                 allTravels.addAll(travelService.getTravelsByDriver(user, loggedInUser, travelFilterOptions));
                 allTravels.addAll(travelService.getTravelsByPassenger(user, loggedInUser, travelFilterOptions2));
             }
@@ -324,9 +324,9 @@ public class UserMvcController {
 
     @PostMapping("/{id}/edit/car-photo/upload")
     public String uploadCarPhoto(@PathVariable int id,
-                               Model model,
-                               @RequestParam("file") MultipartFile file,
-                               HttpSession session) {
+                                 Model model,
+                                 @RequestParam("file") MultipartFile file,
+                                 HttpSession session) {
         String message = "";
 
         try {
@@ -350,7 +350,29 @@ public class UserMvcController {
         }
     }
 
-
+    @PostMapping("/{userId}/delete-account")
+    public String deleteUser(HttpSession session,
+                             @PathVariable int userId,
+                             Model model) {
+        try {
+            User userToBeDeleted = userService.getUserById(userId);
+            User userLogged = authenticationHelper.tryGetUserFromSession(session);
+            session.removeAttribute("currentUser");
+            userService.deleteUser(userToBeDeleted, userLogged);
+            return "redirect:/";
+        } catch (AuthenticationException e) {
+            model.addAttribute("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.FORBIDDEN.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
 
 
 }

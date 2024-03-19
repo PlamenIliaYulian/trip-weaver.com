@@ -150,6 +150,7 @@
                                                      th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
                                                 </div>
                                             </a>
+                                            <b th:if="${travel.getDriver().isDeleted()}">Inactive</b>
                                             <div class="user-box__rating"><i class="fas fa-star"></i>
                                                 <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
                                             </div>

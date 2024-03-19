@@ -40,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.merge(user);
             session.getTransaction().commit();
         }
-        return getUserById(user.getUserId());
+        return user;
     }
 
     @Override
