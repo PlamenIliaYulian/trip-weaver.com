@@ -4,6 +4,7 @@ import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.User;
+import com.tripweaver.models.enums.EmailVerificationType;
 import com.tripweaver.services.contracts.MailSenderService;
 import com.tripweaver.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,7 +40,7 @@ public class AuthenticationRestController {
     public User verifyEmail(@RequestParam("email") String email) {
         try {
             User userToBeVerified = userService.getUserByEmail(email);
-            return userService.verifyEmail(userToBeVerified);
+            return userService.verifyEmail(userToBeVerified, EmailVerificationType.REST);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

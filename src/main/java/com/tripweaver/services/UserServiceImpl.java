@@ -3,6 +3,7 @@ package com.tripweaver.services;
 import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.*;
+import com.tripweaver.models.enums.EmailVerificationType;
 import com.tripweaver.models.enums.FeedbackType;
 import com.tripweaver.models.filterOptions.TravelFilterOptions;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
@@ -209,7 +210,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User verifyEmail(User userToBeVerified) {
+    public User verifyEmail(User userToBeVerified, EmailVerificationType emailVerificationType) {
         userToBeVerified.setVerified(true);
         return userRepository.updateUser(userToBeVerified);
     }

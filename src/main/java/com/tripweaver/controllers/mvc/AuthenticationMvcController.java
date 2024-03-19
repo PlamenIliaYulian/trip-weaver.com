@@ -8,6 +8,7 @@ import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.LoginDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
+import com.tripweaver.models.enums.EmailVerificationType;
 import com.tripweaver.services.contracts.MailSenderService;
 import com.tripweaver.services.contracts.RoleService;
 import com.tripweaver.services.contracts.UserService;
@@ -18,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
@@ -92,6 +90,16 @@ public class AuthenticationMvcController {
                 !authenticationHelper
                         .tryGetUserFromSession(httpSession)
                         .isBlocked());
+    }
+
+    @GetMapping("/email-verification")
+    public User verifyEmail(@RequestParam("email") String email) {
+        try {
+            User userToBeVerified = userService.getUserByEmail(email);
+            return userService.verifyEmail(userToBeVerified, EmailVerificationType.MVC);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping("/login")

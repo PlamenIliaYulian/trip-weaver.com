@@ -3,6 +3,7 @@ package com.tripweaver.services.contracts;
 import com.tripweaver.models.Feedback;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
+import com.tripweaver.models.enums.EmailVerificationType;
 import com.tripweaver.models.filterOptions.UserFilterOptions;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public interface UserService {
 
     List<Feedback> getAllFeedbackForPassenger(User user);
 
-    User verifyEmail(User userToBeVerified);
+    User verifyEmail(User userToBeVerified, EmailVerificationType emailVerificationType);
 
     void deleteUser(User userToBeDeleted, User loggedUser);
 

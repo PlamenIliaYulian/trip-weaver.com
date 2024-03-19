@@ -1,6 +1,7 @@
 package com.tripweaver.services;
 
 import com.tripweaver.models.User;
+import com.tripweaver.models.enums.EmailVerificationType;
 import com.tripweaver.services.contracts.MailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +26,10 @@ public class MailSenderServiceImpl implements MailSenderService {
             Trip Weavers
             """;
 
+
     /*TODO don't forget to update the verificationLink*/
-    private String verificationLink = "http://localhost:8081/api/v1/auth/email-verification?email=%s";
+    private String restVerificationLink = "http://localhost:8081/api/v1/auth/email-verification?email=%s";
+    private String mvcVerificationLink = "http://localhost:8081/auth/email-verification?email=%s"
 
     @Value("${spring.mail.username}")
     private String senderMail;
@@ -37,7 +40,14 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     @Override
-    public void sendEmail(User recipient) {
+    public void sendEmail(User recipient, EmailVerificationType emailVerificationType) {
+        String verificationFullLink = "";
+
+        switch (emailVerificationType){
+            case MVC -> verificationFullLink = mvcVerificationLink;
+            case REST -> verificationFullLink = restVerificationLink;
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         String verificationFullLink = String.format(verificationLink, recipient.getEmail());
         message.setFrom(senderMail);
