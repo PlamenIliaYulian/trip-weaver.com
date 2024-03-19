@@ -14,6 +14,7 @@ import com.tripweaver.models.filterOptions.UserFilterOptions;
 import com.tripweaver.services.contracts.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -436,6 +437,18 @@ public class UserRestController {
         return userService.getTopTwelveTravelOrganizersByRating();
     }
 
+    @Operation(
+            summary = "Get the 12 highest rated passengers.",
+            description = "Retrieves information related to the top 12 highest rated (highest passenger rating) passengers in the system.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Created",
+                            content = @Content(array = @ArraySchema(
+                                    schema = @Schema(implementation = User.class)))
+                    )
+            }
+    )
     /*Yuli*/
     @GetMapping("/top-12-passengers")
     public List<User> getTopTwelveTravelPassengersByRating() {
