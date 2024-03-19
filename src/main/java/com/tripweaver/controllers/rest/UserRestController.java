@@ -815,8 +815,8 @@ public class UserRestController {
     }
 
     @Operation(
-            summary = "Leaves a feedback / review for a passenger.",
-            description = "Being the driver of a trip which the specific passenger attended - this endpoint is used to leave feedback / review on passenger's profile related to their behaviour during the trip. ",
+            summary = "Retrieves the feedback left on user's profile.",
+            description = "This endpoint is retrieved to retrieve all feedback / reviews which drivers of different trips have left for this user, when they were a passenger. ",
             parameters = {
                     @Parameter(
                             name = "userId",
