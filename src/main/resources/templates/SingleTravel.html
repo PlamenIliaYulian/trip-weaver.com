@@ -64,6 +64,7 @@
                                              th:text="${travel.getDriver().getFirstName()} + ' ' + ${travel.getDriver().getLastName()}">
                                         </div>
                                     </a>
+                                    <b th:if="${travel.getDriver().isDeleted()}">(Inactive)</b>
                                     <div class="user-box__rating"><i class="fas fa-star"></i>
                                         <b th:text="${travel.getDriver().getAverageDriverRating()} + ' / 5'">4.8/5 </b>
                                     </div>
@@ -233,7 +234,7 @@
                                                                 </a>
                                                             </div>
                                                         </div>
-
+                                                        <b th:if="${appliedPassanger.isDeleted()}">(Inactive)</b>
                                                         <div class="blog-card__title">
                                                             <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId() }
                                                             and ${travel.getStatus().getTravelStatusId() == 1}"
@@ -378,6 +379,7 @@
                                                                 </span>
                                                                 </a>
                                                             </div>
+                                                            <b th:if="${appliedPassanger.isDeleted()}">(Inactive)</b>
                                                             <div class="blog-card__category"><i
                                                                     class="fas fa-folder-open"></i>
                                                                 <a th:href="@{/users/__${appliedPassanger.getUserId()}__}">
@@ -386,7 +388,6 @@
                                                                 </a>
                                                             </div>
                                                         </div>
-
                                                         <div class="blog-card__title">
                                                             <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId() and travel.getStatus().getTravelStatusId() ==1}"
                                                                class="uk-button button-approve white-color"
