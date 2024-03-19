@@ -97,6 +97,13 @@
         </div>
     </div>
 </header>
+<div th:if="${isAuthenticated} and ${!loggedUser.isVerified()}"th:fragment="email-verification-message" class="email-verification-warning">
+                <span class="padding-30px text-color-white">"Please verify your email address to complete the registration process and unlock full access to our platform.
+                        Check your inbox for a verification link.
+            If you haven't received the email, please check your spam folder or request a new verification email."</span>
+    <a class="uk-button uk-button-default"
+       href="#" th:href="@{/auth/send-new-email-verification}">Send new email</a>
+</div>
 <footer th:fragment="footer" class="page-footer">
     <div class="uk-container">
         <div class="page-footer__inner">
@@ -181,20 +188,6 @@
                                      alt="help2">Register
                             </a>
                         </li>
-                        <!--<li><a href="#" th:href="@{/travels/search}"> <img
-                                src="../static/assets/img/search.svg"
-                                th:src="@{/assets/img/search.svg}" data-uk-svg
-                                alt="search">Find a Ride</a>
-                        </li>
-                        <li><a th:href="@{/travels/new}"> <img src="../static/assets/img/car.svg"
-                                                               th:src="@{/assets/img/car.svg}" data-uk-svg
-                                                               alt="car">Create Trip</a>
-                        </li>
-                        <li th:if="${isAdmin}"><a href="#" th:href="@{/users/search}"> <img
-                                src="../static/assets/img/capacity.svg"
-                                th:src="@{/assets/img/capacity.svg}" data-uk-svg
-                                alt="search">Users</a>
-                        </li>-->
                     </ul>
                 </div>
             </div>

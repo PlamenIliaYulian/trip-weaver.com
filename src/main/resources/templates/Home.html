@@ -14,6 +14,9 @@
     <header th:replace="~{Fragments.html :: page-header}"></header>
     <main class="page-main">
         <div class="section-banner">
+            <div th:replace="~{Fragments.html :: email-verification-message}"></div>
+        </div>
+        <div class="section-banner">
             <div class="section-banner__bg">
                 <div class="uk-cover-container"><img src="../static/assets/img/img-banner.jpg"
                                                      th:src="@{/assets/img/img-banner.jpg}" alt="img-banner"

@@ -12,6 +12,9 @@
 <div class="page-wrapper">
     <header th:replace="~{Fragments.html :: page-header}"></header>
     <main class="page-main">
+        <div class="section-banner">
+            <div th:replace="~{Fragments.html :: email-verification-message}"></div>
+        </div>
         <div class="main-search-grid uk-grid uk-child-width-1-2@xl uk-grid-match uk-grid-collapse" data-uk-grid>
             <div>
                 <div class="main-search-section main-search-section--left">

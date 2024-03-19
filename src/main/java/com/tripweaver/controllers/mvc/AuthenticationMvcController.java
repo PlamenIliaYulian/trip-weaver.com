@@ -4,6 +4,7 @@ import com.tripweaver.controllers.helpers.AuthenticationHelper;
 import com.tripweaver.controllers.helpers.contracts.ModelsMapper;
 import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.DuplicateEntityException;
+import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.User;
 import com.tripweaver.models.dtos.LoginDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
@@ -13,6 +14,7 @@ import com.tripweaver.services.contracts.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static com.tripweaver.services.helpers.ConstantHelper.ADMIN_ID;
 
@@ -58,6 +64,35 @@ public class AuthenticationMvcController {
         return request.getRequestURI();
     }
 
+    @ModelAttribute("isAuthenticated")
+    public boolean populateIsAuthenticated(HttpSession httpSession) {
+        return httpSession.getAttribute("currentUser") != null;
+    }
+
+    @ModelAttribute("loggedUser")
+    public User populateLoggedUser(HttpSession httpSession) {
+        if (httpSession.getAttribute("currentUser") != null) {
+            return authenticationHelper.tryGetUserFromSession(httpSession);
+        }
+        return new User();
+    }
+
+    @ModelAttribute("isAdmin")
+    public boolean populateIsLoggedAndAdmin(HttpSession httpSession) {
+        return (httpSession.getAttribute("currentUser") != null &&
+                authenticationHelper
+                        .tryGetUserFromSession(httpSession)
+                        .getRoles()
+                        .contains(roleService.getRoleById(ADMIN_ID)));
+    }
+
+    @ModelAttribute("isNotBlocked")
+    public boolean populateIsLoggedAndNotBlocked(HttpSession httpSession) {
+        return (httpSession.getAttribute("currentUser") != null &&
+                !authenticationHelper
+                        .tryGetUserFromSession(httpSession)
+                        .isBlocked());
+    }
 
     @GetMapping("/login")
     public String showLoginPage(Model model) {
@@ -89,6 +124,31 @@ public class AuthenticationMvcController {
         return "redirect:/";
     }
 
+    @GetMapping("/send-new-email-verification")
+    public String sendNewVerificationEmail(HttpSession session,
+                                           Model model,
+                                           HttpServletRequest servletRequest) {
+        try {
+            User userToBeVerified = authenticationHelper.tryGetUserFromSession(session);
+            mailSenderService.sendEmail(userToBeVerified);
+            String referer = servletRequest.getHeader("Referer");
+            URI refererUri = new URI(referer);
+            return "redirect:" + refererUri.getPath();
+        } catch (AuthenticationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("register", new UserDtoCreate());
@@ -117,36 +177,5 @@ public class AuthenticationMvcController {
             return "Register";
         }
     }
-
-    @ModelAttribute("isAuthenticated")
-    public boolean populateIsAuthenticated(HttpSession httpSession) {
-        return httpSession.getAttribute("currentUser") != null;
-    }
-
-    @ModelAttribute("loggedUser")
-    public User populateLoggedUser(HttpSession httpSession) {
-        if (httpSession.getAttribute("currentUser") != null) {
-            return authenticationHelper.tryGetUserFromSession(httpSession);
-        }
-        return new User();
-    }
-
-    @ModelAttribute("isAdmin")
-    public boolean populateIsLoggedAndAdmin(HttpSession httpSession) {
-        return (httpSession.getAttribute("currentUser") != null &&
-                authenticationHelper
-                        .tryGetUserFromSession(httpSession)
-                        .getRoles()
-                        .contains(roleService.getRoleById(ADMIN_ID)));
-    }
-
-    @ModelAttribute("isNotBlocked")
-    public boolean populateIsLoggedAndNotBlocked(HttpSession httpSession) {
-        return (httpSession.getAttribute("currentUser") != null &&
-                !authenticationHelper
-                        .tryGetUserFromSession(httpSession)
-                        .isBlocked());
-    }
-
 
 }

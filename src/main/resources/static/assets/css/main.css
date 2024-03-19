@@ -5379,4 +5379,28 @@ body.page-search--result .page-header__phone .uk-button {
 .height-500px{
     height: 500px;
 }
+
+.email-verification-warning{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 100%;
+    min-height: 50px;
+    background-color: orangered;
+    padding: 15px;
+    text-align: center;
+    color: white;
+}
+.padding-30px{
+    padding: 10px 10px 10px 10px;
+}
+.email-verification-warning a{
+    color: white;
+}
+
+.font-size-10px{
+    font-size: 10px;
+}
+
 /*Custom CSS END*/
