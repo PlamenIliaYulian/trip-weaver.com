@@ -196,25 +196,30 @@ public class AuthenticationMvcController {
         }
     }
 
+    @GetMapping("/send-forgotten-password-email")
+    public String forgottenPasswordEmailShow(Model model) {
+
+        try {
+            model.addAttribute("forgottenPassword", new ForgottenPasswordDto());
+            return "ForgottenPassword";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        }
+    }
+
     @PostMapping("/send-forgotten-password-email")
     public String sendForgottenPasswordEmail(Model model,
-                                             HttpServletRequest servletRequest,
                                              @ModelAttribute("forgottenPassword") ForgottenPasswordDto dto) {
 
         try {
             User userToBeSentEmailTo = userService.getUserByEmail(dto.getEmail());
             mailSenderService.sendForgottenPasswordEmail(userToBeSentEmailTo, EmailVerificationType.MVC);
-            String referer = servletRequest.getHeader("Referer");
-            URI refererUri = new URI(referer);
-            return "redirect:" + refererUri.getPath();
+            return "redirect:/auth/login";
         } catch (EntityNotFoundException e) {
-            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
-            return "Error";
-        } catch (Exception e) {
-            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "Error";
+            return "ForgottenPassword";
         }
     }
 
