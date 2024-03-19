@@ -148,7 +148,7 @@
                             and ${travel.getDriver().getUserId() != loggedUser.getUserId()}"
                      class="search-result__list">
                     <div class="search-result-item__info">
-                        <div class="add-reviews-form" id="add-reviews">
+                        <div class="add-reviews-form">
                             <div class="uk-h2">Leave A Review For The Driver:</div>
                             <p>Share your thoughts on the driver. Comment should be no longer than 200 symbols.</p>
                             <form
@@ -283,7 +283,7 @@
                                                                 and ${travel.getStatus().getTravelStatusId() == 3}
                                                                 and ${travel.getDriver().getUserId() == loggedUser.getUserId()}"
                                                          class="max-height-100percent">
-                                                        <div class="add-reviews-form" id="add-reviews">
+                                                        <div class="add-reviews-form">
                                                             <div class="uk-h2">Leave A Review For The Passenger:</div>
                                                             <p>Share your thoughts on the passenger. Comment should be
                                                                 no longer than 200 symbols.</p>
@@ -388,13 +388,13 @@
                                                         </div>
 
                                                         <div class="blog-card__title">
-                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}"
+                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId() and travel.getStatus().getTravelStatusId() ==1}"
                                                                class="uk-button button-approve white-color"
                                                                type="button"
                                                                th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/approve}">
                                                                 Approve
                                                             </a>
-                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId()}"
+                                                            <a th:if="${loggedUser.getUserId() == travel.getDriver().getUserId() and travel.getStatus().getTravelStatusId() ==1}"
                                                                class="uk-button button-decline white-color"
                                                                type="button"
                                                                th:href="@{/travels/__${travel.getTravelId()}__/applications/user/__${appliedPassanger.getUserId()}__/decline}">
