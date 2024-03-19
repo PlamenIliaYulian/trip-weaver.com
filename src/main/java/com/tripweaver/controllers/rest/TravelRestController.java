@@ -147,6 +147,66 @@ public class TravelRestController {
         }
     }
 
+    @Operation(
+            summary = "Completes a travel.",
+            description = "The driver of the travel can use this endpoint to mark a specific travel they have completed as 'Completed' in the system.",
+            parameters = {
+                    @Parameter(
+                            name = "travelId",
+                            description = "Travel ID must be numeric.",
+                            example = "3"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "The request has successfully been completed by the server.",
+                            content = @Content(
+                                    schema = @Schema(implementation = Travel.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Bad request.",
+                                                    value = "Invalid operation.",
+                                                    description = "Unauthorized operation. User not driver of the travel."),
+                                            @ExampleObject(
+                                                    name = "Bad request.",
+                                                    value = "Invalid operation.",
+                                                    description = "Travel not available.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
+                                                    description = "Completing a travel requires from its driver to first log into the system.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing travel", value = "Travel with ID '{travelId}' not found.",
+                                                    description = "There is no travel that corresponds to the provided travel ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     /*Yuli*/
     @PutMapping("/{travelId}/status-completed")
     public Travel completeTravel(@RequestHeader HttpHeaders headers, @PathVariable int travelId) {
@@ -155,11 +215,11 @@ public class TravelRestController {
             Travel travelToMarkAsCompleted = travelService.getTravelById(travelId);
             return travelService.completeTravel(travelToMarkAsCompleted, loggedInUser);
         } catch (AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedOperationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
