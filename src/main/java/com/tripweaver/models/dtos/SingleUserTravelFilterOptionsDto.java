@@ -1,7 +1,5 @@
 package com.tripweaver.models.dtos;
 
-import java.util.Optional;
-
 public class SingleUserTravelFilterOptionsDto extends TravelFilterOptionsDto {
     private Integer driverId;
     private Integer passengerId;

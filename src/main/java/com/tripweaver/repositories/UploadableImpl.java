@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class UploadableImpl implements Uploadable {
 
-
     private final String CLOUDINARY_URL = "cloudinary://242857587276945:B5ODyO381gN-4aFLKDNVcrAFzxM@dol3hflxs";
 
     @Override

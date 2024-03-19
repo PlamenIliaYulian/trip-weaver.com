@@ -19,7 +19,6 @@ public class ConstantHelper {
     public static final String INVALID_OPERATION = "User has not applied for this travel";
     public static final String INVALID_OPERATION_DRIVER = "User is the driver, so could not leaver Driver's feedback";
     public static final String INVALID_OPERATION_TRAVEL_DRIVER = "The driver cannot apply for their own travels.";
-
     public static final String INVALID_DEPARTURE_TIME = "Departure time cannot be before current moment.";
     public static final String UNAUTHORIZED_OPERATION_NOT_ADMIN = "Unauthorized operation. User not admin.";
     public static final String UNAUTHORIZED_OPERATION_NOT_SAME_USER = "Unauthorized operation. Not same user.";
@@ -35,5 +34,7 @@ public class ConstantHelper {
     public static final int DEFAULT_AVATAR_ID = 1;
     public static final int ROLE_MEMBER_ID = 2;
     public static final int DEFAULT_CAR_PICTURE_ID = 1;
+    public static final String API_DOMAIN = "http://localhost:8081";
+
 
 }

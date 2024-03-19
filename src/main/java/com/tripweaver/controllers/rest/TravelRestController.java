@@ -28,7 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static com.tripweaver.services.helpers.ConstantHelper.TRAVEL_STATUS_CREATED_ID;
@@ -41,7 +40,6 @@ public class TravelRestController {
     private final AuthenticationHelper authenticationHelper;
     private final TravelService travelService;
     private final UserService userService;
-    private final BingMapService bingMapService;
 
     public TravelRestController(ModelsMapper modelsMapper,
                                 AuthenticationHelper authenticationHelper,
@@ -52,7 +50,6 @@ public class TravelRestController {
         this.authenticationHelper = authenticationHelper;
         this.travelService = travelService;
         this.userService = userService;
-        this.bingMapService = bingMapService;
     }
 
     @Operation(
@@ -268,7 +265,6 @@ public class TravelRestController {
             },
             security = {@SecurityRequirement(name = "Authorization")}
     )
-    /*Yuli*/
     @PutMapping("/{travelId}/status-completed")
     public Travel completeTravel(@RequestHeader HttpHeaders headers, @PathVariable int travelId) {
         try {
@@ -341,7 +337,6 @@ public class TravelRestController {
         }
     }
 
-    /*Plamen*/
     @Operation(
             summary = "View all travels created in the application with the option to filter and sort them.",
             description = "Get a list of all travels. Also you can filter out travels and sort them.",
@@ -503,7 +498,6 @@ public class TravelRestController {
             },
             security = {@SecurityRequirement(name = "Authorization")}
     )
-    /*Yuli*/
     @PutMapping("/{travelId}/applications")
     public Travel applyForATrip(@RequestHeader HttpHeaders headers, @PathVariable int travelId) {
         try {
@@ -630,8 +624,6 @@ public class TravelRestController {
         }
     }
 
-
-    /*Plamen*/
     @Operation(
             summary = "Driver declines applied passenger for a certain travel.",
             description = "Decline a passenger that has applied to join a specific travel providing the travel numeric ID " +

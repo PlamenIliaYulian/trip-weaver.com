@@ -30,9 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
-
 import static com.tripweaver.services.helpers.ConstantHelper.CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD;
 
 @RestController
@@ -112,7 +110,6 @@ public class UserRestController {
                     )
             }
     )
-    /*Yuli*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public User createUser(@RequestBody @Valid UserDtoCreate userDtoCreate) {
@@ -246,7 +243,6 @@ public class UserRestController {
         }
     }
 
-    /*Plamen*/
     @Operation(
             summary = "View all users registered in the application with the option to filter and sort them.",
             description = "Get a list of all users. Also you can filter and sort them.",
@@ -353,7 +349,6 @@ public class UserRestController {
             },
             security = {@SecurityRequirement(name = "Authorization")}
     )
-    /*Yuli*/
     @GetMapping("/{userId}")
     public User getUserById(@RequestHeader HttpHeaders headers,
                             @PathVariable int userId) {
@@ -444,7 +439,6 @@ public class UserRestController {
         }
     }
 
-    /*Plamen*/
     @Operation(
             summary = "Unblocks a user found by the numeric ID.",
             description = "Used from admin of the system to unblock a certain user by his/her numeric ID.",
@@ -532,14 +526,13 @@ public class UserRestController {
         return userService.getAllUsersCount();
     }
 
-    /*Plamen*/
     @Operation(
             summary = "Pulls from the database the top twelve travel organizers of all created users in the system.",
             description = "Used to obtain the top twelve travel organizers registered in the system.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Success Response"
+                            description = ""
                     )
             })
     @GetMapping("/top-12-travel-organizers")
@@ -553,13 +546,12 @@ public class UserRestController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Created",
+                            description = "Success Response",
                             content = @Content(array = @ArraySchema(
                                     schema = @Schema(implementation = User.class)))
                     )
             }
     )
-    /*Yuli*/
     @GetMapping("/top-12-passengers")
     public List<User> getTopTwelveTravelPassengersByRating() {
         return userService.getTopTwelveTravelPassengersByRating();
@@ -656,7 +648,6 @@ public class UserRestController {
         }
     }
 
-    /*Plamen*/
     @Operation(
             summary = "Deletes an avatar / profile picture from user's profile.",
             description = "Used to update user's profile by deleting his/her avatar / profile picture.",
@@ -966,7 +957,6 @@ public class UserRestController {
         }
     }
 
-    /*Plamen*/
     @Operation(
             summary = "Used to get all feedback for a specific driver.",
             description = "Retrieve all the feedback a specific user received as a driver.",
@@ -1070,7 +1060,6 @@ public class UserRestController {
             },
             security = {@SecurityRequirement(name = "Authorization")}
     )
-    /*Yuli*/
     @GetMapping("/{userId}/feedback-for-passenger")
     public List<Feedback> getAllFeedbackForPassenger(@PathVariable int userId,
                                                      @RequestHeader HttpHeaders httpHeaders) {
@@ -1214,7 +1203,6 @@ public class UserRestController {
         }
     }
 
-    /*Plamen*/
     @Operation(
             summary = "User viewing all his/her travels as passenger of the travel.",
             description = "Get a list of all his/her travels as passenger of the travel no matter the status of the" +
@@ -1425,7 +1413,6 @@ public class UserRestController {
         }
     }
 
-    /*Ilia*/
     @GetMapping("/{userId}/travels-for-applied-passenger")
     public List<Travel> getOpenTravelsUserAppliedFor(@PathVariable int userId,
                                                      @RequestHeader HttpHeaders headers) {
@@ -1443,6 +1430,77 @@ public class UserRestController {
         }
     }
 
+    @Operation(
+            summary = "Uploads a new car picture from user's profile.",
+            description = "Used to update user's profile by changing his/her car picture.",
+            parameters = {
+                    @Parameter(name = "userId",
+                            description = "ID of the user whose profile will be updated.",
+                            example = "/api/v1/users/3/car-picture"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success response.",
+                            content = @Content(
+                                    schema = @Schema(implementation = User.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Logged user not the same",
+                                                    value = "Unauthorized operation.",
+                                                    description = "The logged user who is adding the car picture is not the same" +
+                                                            "as the one who will be updated.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to update a User information.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Bad request",
+                                                    value = "Bad request",
+                                                    description = "The provided picture failed to be uploaded " +
+                                                    "because the size is too large.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     @PutMapping("/{userId}/car-picture")
     public User addCarPicture(@PathVariable int userId,
                               @RequestParam("car_picture") MultipartFile multipartFile,
@@ -1463,8 +1521,6 @@ public class UserRestController {
         }
     }
 
-
-    /*Plamen*/
     @Operation(
             summary = "Deletes a car picture from user's profile.",
             description = "Used to update user's profile by deleting his/her car picture.",

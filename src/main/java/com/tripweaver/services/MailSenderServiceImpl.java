@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import static com.tripweaver.services.helpers.ConstantHelper.API_DOMAIN;
 
 @Service
 public class MailSenderServiceImpl implements MailSenderService {
 
-    public static final String API_DOMAIN = "http://localhost:8081";
     private final JavaMailSender mailSender;
     private final String mailSubject = "www.trip-weaver.com - Please Verify Your Email Address";
     private String mailbody = """
@@ -40,11 +40,12 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Override
     public void sendEmail(User recipient, EmailVerificationType emailVerificationType) {
         SimpleMailMessage message = new SimpleMailMessage();
+
         /*TODO don't forget to update the verificationLink*/
-        String domain = API_DOMAIN;
         StringBuilder staticPartOfTheLink = new StringBuilder();
-        staticPartOfTheLink.append(domain).append(emailVerificationType.getText()).append(endpoint);
+        staticPartOfTheLink.append(API_DOMAIN).append(emailVerificationType.getText()).append(endpoint);
         String verificationFullLink = String.format(staticPartOfTheLink.toString(), recipient.getEmail());
+
         message.setFrom(senderMail);
         message.setTo(recipient.getEmail());
         message.setText(String.format(mailbody, recipient.getUsername(), verificationFullLink));
