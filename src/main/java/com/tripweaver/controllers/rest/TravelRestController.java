@@ -160,7 +160,7 @@ public class TravelRestController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "The request has successfully been completed by the server.",
+                            description = "The request has been completed successfully by the server.",
                             content = @Content(
                                     schema = @Schema(implementation = Travel.class),
                                     mediaType = MediaType.APPLICATION_JSON_VALUE)
@@ -303,6 +303,86 @@ public class TravelRestController {
         }
     }
 
+    @Operation(
+            summary = "Apply (as a passenger) for an existing trip.",
+            description = "Using this endpoint a user that has logged into the system can apply for an existing travel that has a status of 'Created'.",
+            parameters = {
+                    @Parameter(
+                            name = "travelId",
+                            description = "Travel ID must be numeric.",
+                            example = "3"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "The request has been completed successfully by the server.",
+                            content = @Content(
+                                    schema = @Schema(implementation = Travel.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "User has already applied for the travel. Cannot apply multiple times.",
+                                                    value = "Unauthorized operation.",
+                                                    description = "Unauthorized operation. User already in waiting list."),
+                                            @ExampleObject(
+                                                    name = "Travel needs to be open for applications.",
+                                                    value = "Unauthorized operation.",
+                                                    description = "Travel not available."),
+                                            @ExampleObject(
+                                                    name = "The user trying to apply for the travel is its driver.",
+                                                    value = "Unauthorized operation.",
+                                                    description = "The driver cannot apply for their own travels.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "User is not verified",
+                                                    value = "Unauthorized operation.",
+                                                    description = "Unauthorized operation. User not verified."),
+                                            @ExampleObject(
+                                                    name = "User is blocked",
+                                                    value = "Unauthorized operation.",
+                                                    description = "Unauthorized operation. User blocked."),
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
+                                                    description = "You need to log into the system in order to be able to apply for a travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing travel", value = "Travel with ID '{travelId}' not found.",
+                                                    description = "There is no travel that corresponds to the provided travel ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     /*Yuli*/
     @PutMapping("/{travelId}/applications")
     public Travel applyForATrip(@RequestHeader HttpHeaders headers, @PathVariable int travelId) {

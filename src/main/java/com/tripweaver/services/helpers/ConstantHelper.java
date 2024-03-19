@@ -18,6 +18,8 @@ public class ConstantHelper {
     public static final String TRAVEL_NOT_AVAILABLE = "Travel not available";
     public static final String INVALID_OPERATION = "User has not applied for this travel";
     public static final String INVALID_OPERATION_DRIVER = "User is the driver, so could not leaver Driver's feedback";
+    public static final String INVALID_OPERATION_TRAVEL_DRIVER = "The driver cannot apply for their own travels.";
+
     public static final String INVALID_DEPARTURE_TIME = "Departure time cannot be before current moment.";
     public static final String UNAUTHORIZED_OPERATION_NOT_ADMIN = "Unauthorized operation. User not admin.";
     public static final String UNAUTHORIZED_OPERATION_NOT_SAME_USER = "Unauthorized operation. Not same user.";

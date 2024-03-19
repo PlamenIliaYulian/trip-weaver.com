@@ -125,7 +125,7 @@ public class TravelServiceImpl implements TravelService {
         ValidationHelper.isUserBlocked(userToApply, UNAUTHORIZED_OPERATION_BLOCKED);
         ValidationHelper.hasYetToApply(userToApply, travelToApplyFor, UNAUTHORIZED_OPERATION_ALREADY_APPLIED);
         ValidationHelper.isTravelOpenForApplication(travelToApplyFor, TRAVEL_NOT_AVAILABLE);
-        ValidationHelper.checkNotToBeDriver(travelToApplyFor, userToApply, INVALID_OPERATION_DRIVER);
+        ValidationHelper.checkNotToBeDriver(travelToApplyFor, userToApply, INVALID_OPERATION_TRAVEL_DRIVER);
         travelToApplyFor.getUsersAppliedForTheTravel().add(userToApply);
         return travelRepository.updateTravel(travelToApplyFor);
     }
