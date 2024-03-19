@@ -15,6 +15,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     private final JavaMailSender mailSender;
     private final String mailSubject = "www.trip-weaver.com - Please Verify Your Email Address";
+    private final String mailForgottenPasswordSubject = "www.trip-weaver.com - Forgotten password request";
     private String mailbody = """
             Dear %s,
                         
@@ -27,7 +28,20 @@ public class MailSenderServiceImpl implements MailSenderService {
             Trip Weavers
             """;
 
-    private final String endpoint = "/email-verification?email=%s";
+    private String forgottenPasswordBody = """
+            Dear %s,
+                        
+            You recently requested to receive an email with your password for www.trip-weavers.com. To complete the process, please copy the password below:
+            
+            %s
+            
+            If you did not request a password reset, please ignore this email. This link is valid for 24 hours.
+            Thank you,
+            Trip Weavers
+            """;
+
+    private final String emailEndpoint = "/email-verification?email=%s";
+    private final String forgottenPasswordEndpoint = "/send-forgotten-password-email";
 
     @Value("${spring.mail.username}")
     private String senderMail;
@@ -43,13 +57,28 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         /*TODO don't forget to update the verificationLink*/
         StringBuilder staticPartOfTheLink = new StringBuilder();
-        staticPartOfTheLink.append(API_DOMAIN).append(emailVerificationType.getText()).append(endpoint);
+        staticPartOfTheLink.append(API_DOMAIN).append(emailVerificationType.getText()).append(emailEndpoint);
         String verificationFullLink = String.format(staticPartOfTheLink.toString(), recipient.getEmail());
 
         message.setFrom(senderMail);
         message.setTo(recipient.getEmail());
-        message.setText(String.format(mailbody, recipient.getUsername(), verificationFullLink));
+        message.setText(String.format(mailbody, recipient.getFirstName(), verificationFullLink));
         message.setSubject(mailSubject);
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendForgottenPasswordEmail(User recipient, EmailVerificationType emailVerificationType) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        /*TODO don't forget to update the verificationLink*/
+        StringBuilder staticPartOfTheLink = new StringBuilder();
+        staticPartOfTheLink.append(API_DOMAIN).append(emailVerificationType.getText()).append(forgottenPasswordEndpoint);
+
+        message.setFrom(senderMail);
+        message.setTo(recipient.getEmail());
+        message.setText(String.format(forgottenPasswordBody, recipient.getFirstName(), recipient.getPassword()));
+        message.setSubject(mailForgottenPasswordSubject);
         mailSender.send(message);
     }
 }

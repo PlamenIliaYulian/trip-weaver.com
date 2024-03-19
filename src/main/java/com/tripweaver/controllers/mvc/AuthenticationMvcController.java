@@ -6,6 +6,7 @@ import com.tripweaver.exceptions.AuthenticationException;
 import com.tripweaver.exceptions.DuplicateEntityException;
 import com.tripweaver.exceptions.EntityNotFoundException;
 import com.tripweaver.models.User;
+import com.tripweaver.models.dtos.ForgottenPasswordDto;
 import com.tripweaver.models.dtos.LoginDto;
 import com.tripweaver.models.dtos.UserDtoCreate;
 import com.tripweaver.models.enums.EmailVerificationType;
@@ -108,12 +109,12 @@ public class AuthenticationMvcController {
             model.addAttribute("error", e.getMessage());
             return "Error";
         }
-
     }
 
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("login", new LoginDto());
+        model.addAttribute("forgottenPassword", new ForgottenPasswordDto());
         return "Login";
     }
 
@@ -128,7 +129,7 @@ public class AuthenticationMvcController {
         try {
             authenticationHelper.verifyAuthentication(loginDto.getUsername(), loginDto.getPassword());
             session.setAttribute("currentUser", loginDto.getUsername());
-            return "redirect:/users/2/edit";
+            return "redirect:/";
         } catch (AuthenticationException e) {
             errors.rejectValue("username", "auth_error", e.getMessage());
             return "Login";
@@ -192,6 +193,28 @@ public class AuthenticationMvcController {
         } catch (DuplicateEntityException e) {
             errors.rejectValue("username", "duplication_error", e.getMessage());
             return "Register";
+        }
+    }
+
+    @PostMapping("/send-forgotten-password-email")
+    public String sendForgottenPasswordEmail(Model model,
+                                             HttpServletRequest servletRequest,
+                                             @ModelAttribute("forgottenPassword") ForgottenPasswordDto dto) {
+
+        try {
+            User userToBeSentEmailTo = userService.getUserByEmail(dto.getEmail());
+            mailSenderService.sendForgottenPasswordEmail(userToBeSentEmailTo, EmailVerificationType.MVC);
+            String referer = servletRequest.getHeader("Referer");
+            URI refererUri = new URI(referer);
+            return "redirect:" + refererUri.getPath();
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (Exception e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
         }
     }
 

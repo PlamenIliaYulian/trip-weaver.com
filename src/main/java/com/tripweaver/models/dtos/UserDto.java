@@ -29,7 +29,6 @@ public class UserDto {
     @Pattern(
             regexp = "^(?!.*[?:{}])[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message = "Email must be a valid email. It cannot contain '?', ':', '!', '}', '{'.")
-
     private String email;
     @NotNull
     @Size(min = 10, max = 10, message = "Phone number must be 10 digits starting with 08.")

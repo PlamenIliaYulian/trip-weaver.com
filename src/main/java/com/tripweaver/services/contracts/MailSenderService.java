@@ -6,4 +6,5 @@ import jakarta.validation.constraints.Email;
 
 public interface MailSenderService {
     void sendEmail(User recipient, EmailVerificationType emailVerificationType);
+    void sendForgottenPasswordEmail(User recipient, EmailVerificationType emailVerificationType);
 }

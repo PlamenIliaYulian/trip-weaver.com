@@ -26,7 +26,8 @@
                         <div class="section-banner__title">
                             <h1>Login to start using our platform</h1>
                         </div>
-                        <div class="section-banner__text decor-bottom">We're excited to see you again. Let's continue this journey together!
+                        <div class="section-banner__text decor-bottom">We're excited to see you again. Let's continue
+                            this journey together!
                         </div>
                     </div>
                 </div>
@@ -49,14 +50,31 @@
                                             name="Username"
                                             placeholder="Username"
                                             th:field="*{username}"></div>
-                                <div><label class="error uk-input" th:errors="*{username}"> User error placeholder. </label></div>
+                                <div><label class="error uk-input" th:errors="*{username}"> User error
+                                    placeholder. </label></div>
                                 <div><input class="uk-input" type="password" name="Password" placeholder="Password"
                                             th:field="*{password}">
                                 </div>
-                                <div><label class="error uk-input" th:errors="*{password}"> User error placeholder. </label></div>
+                                <div><label class="error uk-input" th:errors="*{password}"> User error
+                                    placeholder. </label></div>
                                 </br></br>
                                 <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
-                                    value="Login" th:value="Login"></div>
+                                            value="Login" th:value="Login"></div>
+                            </div>
+                        </form>
+                        </br></br>
+                        <span class="padding-30px text-color-white">Forgot your password? Insert your email, click 'Send' to request a forgotten password email.</span>
+                        <form action="#" th:object="${forgottenPassword}" method="post"
+                              th:action="@{/auth/send-forgotten-password-email}">
+                            <div class="uk-grid uk-grid-small uk-child-width-1-2@s" data-uk-grid>
+                                <div><input class="uk-input"
+                                            type="text"
+                                            name="Email"
+                                            placeholder="Email"
+                                            th:field="*{email}"></div>
+                                </br></br>
+                                <div><input class="uk-button uk-button-danger uk-button-large" type="submit"
+                                            value="Send" th:value="Send"></div>
                             </div>
                         </form>
                     </div>
