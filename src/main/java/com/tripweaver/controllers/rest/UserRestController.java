@@ -30,7 +30,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
+
 import static com.tripweaver.services.helpers.ConstantHelper.CONFIRM_PASSWORD_SHOULD_MATCH_PASSWORD;
 
 @RestController
@@ -280,7 +282,7 @@ public class UserRestController {
                                     examples = {
                                             @ExampleObject(
                                                     name = "Not authenticated", value = "The requested resource requires authentication.",
-                                                    description = "You need to be authenticated to view the list of all posts.")
+                                                    description = "You need to be authenticated to view the list of all users.")
                                     },
                                     mediaType = "Plain text")
                     )
@@ -1091,12 +1093,12 @@ public class UserRestController {
                             example = "Sofia"),
                     @Parameter(
                             name = "departureBefore",
-                            description = "Get posts that departures before a certain date provided in the " +
+                            description = "Get all travels that departures before a certain date provided in the " +
                                     "'departureBefore' parameter.",
                             example = "2024-05-16 22:00:00"),
                     @Parameter(
                             name = "departureAfter",
-                            description = "Get posts that departures after a certain date provided in the " +
+                            description = "Get all travels that departures after a certain date provided in the " +
                                     "'departureAfter' parameter.",
                             example = "2024-04-16 12:00:00"),
                     @Parameter(
@@ -1220,12 +1222,12 @@ public class UserRestController {
                             example = "Sofia"),
                     @Parameter(
                             name = "departureBefore",
-                            description = "Get posts that departures before a certain date provided in the " +
+                            description = "Get all travels that departures before a certain date provided in the " +
                                     "'departureBefore' parameter.",
                             example = "2024-05-16 22:00:00"),
                     @Parameter(
                             name = "departureAfter",
-                            description = "Get posts that departures after a certain date provided in the " +
+                            description = "Get all travels that departures after a certain date provided in the " +
                                     "'departureAfter' parameter.",
                             example = "2024-04-16 12:00:00"),
                     @Parameter(
@@ -1394,7 +1396,8 @@ public class UserRestController {
                                     mediaType = "Plain text")
                     )
             },
-            security = {@SecurityRequirement(name = "Authorization")}
+            security = {@SecurityRequirement(name = "Authorization")
+            }
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
@@ -1413,6 +1416,59 @@ public class UserRestController {
         }
     }
 
+
+    @Operation(
+            summary = "View all travels that a user has already applied for.",
+            description = "Get a list of all travels that specific user has applied for.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "ID must be numeric.",
+                            example = "api/v1/users/4/travels-for-applied-passenger"),
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success Response"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated", value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to view the list of all travels that the user has applied for.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user",
+                                                    value = "User with ID '100' not found.",
+                                                    description = "There is no such user with the provided ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Not authorized.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Logged user not the same",
+                                                    value = "Unauthorized operation.",
+                                                    description = "The logged user who is trying to view his travels is not the same" +
+                                                            "as the one who is being searched.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            })
+    @SecurityRequirement(name = "Authorization")
     @GetMapping("/{userId}/travels-for-applied-passenger")
     public List<Travel> getOpenTravelsUserAppliedFor(@PathVariable int userId,
                                                      @RequestHeader HttpHeaders headers) {
@@ -1493,7 +1549,7 @@ public class UserRestController {
                                                     name = "Bad request",
                                                     value = "Bad request",
                                                     description = "The provided picture failed to be uploaded " +
-                                                    "because the size is too large.")
+                                                            "because the size is too large.")
                                     },
                                     mediaType = "Plain text")
                     )

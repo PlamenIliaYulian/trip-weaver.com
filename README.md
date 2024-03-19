@@ -40,7 +40,7 @@ https://github.com/PlamenIliaYulian/trip-weaver.com
 ## Link to the hosted project: 
 - http://www.trip-weaver.com/
 
-## Instructions on how to setup and run the project locally: 
+## Instructions on how to set up and run the project locally: 
 - Clone the repository from GitHub.
 - Set up the database by executing the provided database creation script.
 - Configure the application properties file with database connection details.

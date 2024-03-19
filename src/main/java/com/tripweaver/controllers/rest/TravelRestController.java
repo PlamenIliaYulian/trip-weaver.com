@@ -390,7 +390,7 @@ public class TravelRestController {
                                     examples = {
                                             @ExampleObject(
                                                     name = "Not authenticated", value = "The requested resource requires authentication.",
-                                                    description = "You need to be authenticated to view the list of all posts.")
+                                                    description = "You need to be authenticated to view the list of all travels.")
                                     },
                                     mediaType = "Plain text")
                     )
