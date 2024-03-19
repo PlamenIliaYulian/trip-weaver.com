@@ -814,6 +814,52 @@ public class UserRestController {
         }
     }
 
+    @Operation(
+            summary = "Leaves a feedback / review for a passenger.",
+            description = "Being the driver of a trip which the specific passenger attended - this endpoint is used to leave feedback / review on passenger's profile related to their behaviour during the trip. ",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            description = "user ID must be numeric.",
+                            example = "3"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "The server has successfully completed the request.",
+                            content = @Content(
+                                    schema = @Schema(implementation = Feedback.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to create a Travel.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user",
+                                                    value = "User with ID '{userId}' not found.",
+                                                    description = "There is no such user with the provided user ID.")
+
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     /*Yuli*/
     @GetMapping("/{userId}/feedback-for-passenger")
     public List<Feedback> getAllFeedbackForPassenger(@PathVariable int userId,
