@@ -108,8 +108,7 @@ public class UserRestController {
                                     },
                                     mediaType = "Plain text")
                     )
-            },
-            security = {@SecurityRequirement(name = "Authorization")}
+            }
     )
     /*Yuli*/
     @ResponseStatus(HttpStatus.CREATED)
@@ -264,6 +263,51 @@ public class UserRestController {
         }
     }
 
+    @Operation(
+            summary = "Retrieves the information of a specific user.",
+            description = "This endpoint is used for retrieving the details of a specific user registered in the system.",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            description = "user ID must be numeric.",
+                            example = "3"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "The request has been completed successfully by the server.",
+                            content = @Content(
+                                    schema = @Schema(implementation = User.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Missing Authentication.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Not authenticated",
+                                                    value = "The requested resource requires authentication.",
+                                                    description = "You need to be authenticated to retrieve the information of an existing user.")
+                                    },
+                                    mediaType = "Plain text")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found status.",
+                            content = @Content(
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Missing user",
+                                                    value = "User with ID '{userId}' not found.",
+                                                    description = "There is no user that corresponds to the provided user ID.")
+                                    },
+                                    mediaType = "Plain text")
+                    )
+            },
+            security = {@SecurityRequirement(name = "Authorization")}
+    )
     /*Yuli*/
     @GetMapping("/{userId}")
     public User getUserById(@RequestHeader HttpHeaders headers,
