@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(
         info = @Info(title = "www.trip-weaver.com REST API", version = "1.0.0"),
         servers = {
-                @Server(url = "http://localhost:8080"),
+                @Server(url = "http://localhost:8081"),
                 @Server(url = "http://www.trip-weaver.com")
         },
         tags = {
@@ -24,11 +24,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 )
 @SecurityScheme(
         name = "Authorization",
-        /*Това се прави по този начин само, за да работи в нашия проект, защото
-        * нашата Basic authentication имплементация не отговаря на 100% на стандарта. Пример
-        * не encode-ваме.*/
         type = SecuritySchemeType.APIKEY,
-        /*scheme = "basic",*/
         description = "'Basic Authentication' header used in the project.",
         in = SecuritySchemeIn.HEADER)
 @SpringBootApplication

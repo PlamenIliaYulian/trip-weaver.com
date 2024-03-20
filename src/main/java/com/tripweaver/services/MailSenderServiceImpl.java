@@ -55,7 +55,6 @@ public class MailSenderServiceImpl implements MailSenderService {
     public void sendEmail(User recipient, EmailVerificationType emailVerificationType) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        /*TODO don't forget to update the verificationLink*/
         StringBuilder staticPartOfTheLink = new StringBuilder();
         staticPartOfTheLink.append(API_DOMAIN).append(emailVerificationType.getText()).append(emailEndpoint);
         String verificationFullLink = String.format(staticPartOfTheLink.toString(), recipient.getEmail());
@@ -71,7 +70,6 @@ public class MailSenderServiceImpl implements MailSenderService {
     public void sendForgottenPasswordEmail(User recipient, EmailVerificationType emailVerificationType) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        /*TODO don't forget to update the verificationLink*/
         StringBuilder staticPartOfTheLink = new StringBuilder();
         staticPartOfTheLink.append(API_DOMAIN).append(emailVerificationType.getText()).append(forgottenPasswordEndpoint);
 

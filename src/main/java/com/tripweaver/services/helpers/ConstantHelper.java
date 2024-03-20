@@ -34,7 +34,7 @@ public class ConstantHelper {
     public static final int DEFAULT_AVATAR_ID = 1;
     public static final int ROLE_MEMBER_ID = 2;
     public static final int DEFAULT_CAR_PICTURE_ID = 1;
-    public static final String API_DOMAIN = "http://localhost:8081";
+    public static final String API_DOMAIN = "http://trip-weaver.com";
 
 
 }
