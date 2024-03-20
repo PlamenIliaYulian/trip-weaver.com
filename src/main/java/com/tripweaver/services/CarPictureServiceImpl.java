@@ -32,6 +32,7 @@ public class CarPictureServiceImpl implements CarPictureService {
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
         ValidationHelper.checkPictureFileSize(multipartFile);
+        ValidationHelper.checkFileExtension(multipartFile);
         return carPictureRepository.uploadPictureToCloudinary(multipartFile);
     }
 

@@ -32,6 +32,7 @@ public class AvatarServiceImpl implements AvatarService {
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
         ValidationHelper.checkPictureFileSize(multipartFile);
+        ValidationHelper.checkFileExtension(multipartFile);
         return avatarRepository.uploadPictureToCloudinary(multipartFile);
     }
 

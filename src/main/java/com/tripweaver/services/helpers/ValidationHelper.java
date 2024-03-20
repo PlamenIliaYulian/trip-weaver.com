@@ -10,12 +10,16 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tripweaver.services.helpers.ConstantHelper.*;
 
 public class ValidationHelper {
+
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif");
 
     public static void hasAlreadyApplied(User userToBeChecked, Travel travelToApplyFor, String message) {
         if (!travelToApplyFor.getUsersAppliedForTheTravel().contains(userToBeChecked)) {
@@ -143,10 +147,19 @@ public class ValidationHelper {
 
     public static void checkPictureFileSize(MultipartFile multipartFile) {
         if (multipartFile.getSize() <= 0) {
-            throw new InvalidOperationException("Please select a picture to upload.");
+            throw new InvalidOperationException(NO_PICTURE_UPLOADED_ERROR_MESSAGE);
         }
-        if (multipartFile.getSize() > 1000000L) {
-            throw new MaxUploadSizeExceededException(1000000L);
+        if (multipartFile.getSize() > MAX_UPLOAD_FILE_ALLOWED) {
+            throw new MaxUploadSizeExceededException(MAX_UPLOAD_FILE_ALLOWED);
+        }
+    }
+
+    public static void checkFileExtension(MultipartFile multipartFile) {
+        String originalFilename = multipartFile.getOriginalFilename();
+        int dotIndex = originalFilename.lastIndexOf(".");
+        String fileExtension = originalFilename.substring(dotIndex + 1);
+        if (!ALLOWED_EXTENSIONS.contains(fileExtension)) {
+            throw new InvalidOperationException(INVALID_FILE_EXTENSION_MESSAGE);
         }
     }
 }

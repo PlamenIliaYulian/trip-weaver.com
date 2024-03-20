@@ -35,6 +35,7 @@ public class ConstantHelper {
     public static final int ROLE_MEMBER_ID = 2;
     public static final int DEFAULT_CAR_PICTURE_ID = 1;
     public static final String API_DOMAIN = "http://trip-weaver.com";
-
-
+    public static final String INVALID_FILE_EXTENSION_MESSAGE = "Invalid file extension. Please upload 'jpg', 'jpeg', 'png' or 'gif'.";
+    public static final String NO_PICTURE_UPLOADED_ERROR_MESSAGE = "Please select a picture to upload.";
+    public static final long MAX_UPLOAD_FILE_ALLOWED = 1000000L;
 }
