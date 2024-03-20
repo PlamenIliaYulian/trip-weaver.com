@@ -1,9 +1,12 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.CarPicture;
 import com.tripweaver.repositories.contracts.CarPictureRepository;
 import com.tripweaver.services.contracts.CarPictureService;
+import com.tripweaver.services.helpers.ValidationHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -28,6 +31,7 @@ public class CarPictureServiceImpl implements CarPictureService {
 
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
+        ValidationHelper.checkPictureFileSize(multipartFile);
         return carPictureRepository.uploadPictureToCloudinary(multipartFile);
     }
 

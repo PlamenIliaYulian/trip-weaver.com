@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -48,13 +49,7 @@ public class UserMvcController {
     private final AvatarService avatarService;
     private final CarPictureService carPictureService;
 
-    public UserMvcController(AuthenticationHelper authenticationHelper,
-                             ModelsMapper modelsMapper,
-                             UserService userService,
-                             RoleService roleService,
-                             TravelService travelService,
-                             AvatarService avatarService,
-                             CarPictureService carPictureService) {
+    public UserMvcController(AuthenticationHelper authenticationHelper, ModelsMapper modelsMapper, UserService userService, RoleService roleService, TravelService travelService, AvatarService avatarService, CarPictureService carPictureService) {
         this.authenticationHelper = authenticationHelper;
         this.modelsMapper = modelsMapper;
         this.userService = userService;
@@ -71,21 +66,13 @@ public class UserMvcController {
 
     @ModelAttribute("isBlocked")
     public boolean populateIsBlocked(HttpSession httpSession) {
-        return (httpSession.getAttribute("currentUser") != null &&
-                authenticationHelper
-                        .tryGetUserFromSession(httpSession)
-                        .isBlocked()
-        );
+        return (httpSession.getAttribute("currentUser") != null && authenticationHelper.tryGetUserFromSession(httpSession).isBlocked());
     }
 
 
     @ModelAttribute("isAdmin")
     public boolean populateIsLoggedAndAdmin(HttpSession httpSession) {
-        return (httpSession.getAttribute("currentUser") != null &&
-                authenticationHelper
-                        .tryGetUserFromSession(httpSession)
-                        .getRoles()
-                        .contains(roleService.getRoleById(ADMIN_ID)));
+        return (httpSession.getAttribute("currentUser") != null && authenticationHelper.tryGetUserFromSession(httpSession).getRoles().contains(roleService.getRoleById(ADMIN_ID)));
     }
 
     @ModelAttribute("isAuthenticated")
@@ -107,9 +94,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/search")
-    public String showAllUsersPage(@ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto userFilterOptionsDto,
-                                   Model model,
-                                   HttpSession session) {
+    public String showAllUsersPage(@ModelAttribute("userFilterOptionsDto") UserFilterOptionsDto userFilterOptionsDto, Model model, HttpSession session) {
 
         User loggedUser;
         try {
@@ -129,9 +114,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/{userId}/block")
-    public String blockUser(@PathVariable int userId,
-                            HttpSession session,
-                            Model model) {
+    public String blockUser(@PathVariable int userId, HttpSession session, Model model) {
 
         try {
             User loggedUser = authenticationHelper.tryGetUserFromSession(session);
@@ -154,9 +137,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/{userId}/unblock")
-    public String unblockUser(@PathVariable int userId,
-                              HttpSession session,
-                              Model model) {
+    public String unblockUser(@PathVariable int userId, HttpSession session, Model model) {
         try {
             User loggedUser = authenticationHelper.tryGetUserFromSession(session);
             User userToBeUnblocked = userService.getUserById(userId);
@@ -178,10 +159,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/{id}")
-    public String showSingleUserPage(@PathVariable int id,
-                                     @ModelAttribute("travelFilterOptions") SingleUserTravelFilterOptionsDto dto,
-                                     Model model,
-                                     HttpSession session) {
+    public String showSingleUserPage(@PathVariable int id, @ModelAttribute("travelFilterOptions") SingleUserTravelFilterOptionsDto dto, Model model, HttpSession session) {
         try {
             User loggedInUser = authenticationHelper.tryGetUserFromSession(session);
             User user = userService.getUserById(id);
@@ -199,14 +177,10 @@ public class UserMvcController {
             model.addAttribute("feedbackForDriver", userService.getAllFeedbackForDriver(user));
             model.addAttribute("feedbackForPassenger", userService.getAllFeedbackForPassenger(user));
             model.addAttribute("travelFilterOptions", dto);
-            model.addAttribute("userTotalDistanceAsPassenger", userService
-                    .getTotalDistanceAsPassengerHashMap(Collections.singletonList(user)));
-            model.addAttribute("userTotalDistanceAsDriver", userService
-                    .getTotalDistanceAsDriverHashMap(Collections.singletonList(user)));
-            model.addAttribute("userTotalTravelsAsDriver", userService
-                    .getTotalTravelsAsDriverHashMap(Collections.singletonList(user)));
-            model.addAttribute("userTotalTravelsAsPassenger", userService
-                    .getTotalTravelsAsPassengerHashMap(Collections.singletonList(user)));
+            model.addAttribute("userTotalDistanceAsPassenger", userService.getTotalDistanceAsPassengerHashMap(Collections.singletonList(user)));
+            model.addAttribute("userTotalDistanceAsDriver", userService.getTotalDistanceAsDriverHashMap(Collections.singletonList(user)));
+            model.addAttribute("userTotalTravelsAsDriver", userService.getTotalTravelsAsDriverHashMap(Collections.singletonList(user)));
+            model.addAttribute("userTotalTravelsAsPassenger", userService.getTotalTravelsAsPassengerHashMap(Collections.singletonList(user)));
             model.addAttribute("openTravelsUserAppliedFor", travelService.getTravelsAsAppliedPassenger(user, user));
 
             return "SingleUser";
@@ -224,9 +198,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditPage(@PathVariable int id,
-                               Model model,
-                               HttpSession session) {
+    public String showEditPage(@PathVariable int id, Model model, HttpSession session) {
         try {
             User userLoggedIn = authenticationHelper.tryGetUserFromSession(session);
             User userById = userService.getUserById(id);
@@ -248,11 +220,7 @@ public class UserMvcController {
     }
 
     @PostMapping("/{id}/edit")
-    public String handleEditUser(@PathVariable int id,
-                                 @Valid @ModelAttribute("userDto") UserDto userDto,
-                                 BindingResult errors,
-                                 HttpSession session,
-                                 Model model) {
+    public String handleEditUser(@PathVariable int id, @Valid @ModelAttribute("userDto") UserDto userDto, BindingResult errors, HttpSession session, Model model) {
 
         User userById = null;
         try {
@@ -293,12 +261,8 @@ public class UserMvcController {
 
 
     @PostMapping("/{id}/edit/photos/upload")
-    public String uploadAvatar(@PathVariable int id,
-                               Model model,
-                               @RequestParam("file") MultipartFile file,
-                               HttpSession session) {
+    public String uploadAvatar(@PathVariable int id, Model model, @RequestParam("file") MultipartFile file, HttpSession session) {
         String message = "";
-
 
         try {
             String newAvatar = avatarService.uploadPictureToCloudinary(file);
@@ -315,6 +279,14 @@ public class UserMvcController {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";
+        } catch (MaxUploadSizeExceededException e) {
+            model.addAttribute("statusCode", HttpStatus.PAYLOAD_TOO_LARGE.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
         } catch (RuntimeException e) {
             model.addAttribute("message", e.getMessage());
             return "Error";
@@ -322,10 +294,7 @@ public class UserMvcController {
     }
 
     @PostMapping("/{id}/edit/car-photo/upload")
-    public String uploadCarPhoto(@PathVariable int id,
-                                 Model model,
-                                 @RequestParam("file") MultipartFile file,
-                                 HttpSession session) {
+    public String uploadCarPhoto(@PathVariable int id, Model model, @RequestParam("file") MultipartFile file, HttpSession session) {
         String message = "";
 
         try {
@@ -343,6 +312,14 @@ public class UserMvcController {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "Error";
+        } catch (MaxUploadSizeExceededException e) {
+            model.addAttribute("statusCode", HttpStatus.PAYLOAD_TOO_LARGE.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
+        } catch (InvalidOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "Error";
         } catch (RuntimeException e) {
             model.addAttribute("message", e.getMessage());
             return "Error";
@@ -350,9 +327,7 @@ public class UserMvcController {
     }
 
     @PostMapping("/{userId}/delete-account")
-    public String deleteUser(HttpSession session,
-                             @PathVariable int userId,
-                             Model model) {
+    public String deleteUser(HttpSession session, @PathVariable int userId, Model model) {
         try {
             User userToBeDeleted = userService.getUserById(userId);
             User userLogged = authenticationHelper.tryGetUserFromSession(session);

@@ -6,6 +6,8 @@ import com.tripweaver.exceptions.UnauthorizedOperationException;
 import com.tripweaver.models.Feedback;
 import com.tripweaver.models.Travel;
 import com.tripweaver.models.User;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -136,6 +138,15 @@ public class ValidationHelper {
                 .filter(feedback -> feedback.getReceiver().equals(receiver))
                 .collect(Collectors.toList()).isEmpty()) {
             throw new InvalidOperationException(YOU_HAVE_ALREADY_LEFT_FEEDBACK_FOR_THIS_RIDE);
+        }
+    }
+
+    public static void checkPictureFileSize(MultipartFile multipartFile) {
+        if (multipartFile.getSize() <= 0) {
+            throw new InvalidOperationException("Please select a picture to upload.");
+        }
+        if (multipartFile.getSize() > 1000000L) {
+            throw new MaxUploadSizeExceededException(1000000L);
         }
     }
 }

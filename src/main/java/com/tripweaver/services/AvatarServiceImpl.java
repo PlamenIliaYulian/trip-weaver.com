@@ -1,10 +1,13 @@
 package com.tripweaver.services;
 
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.models.Avatar;
 import com.tripweaver.repositories.contracts.AvatarRepository;
 import com.tripweaver.services.contracts.AvatarService;
+import com.tripweaver.services.helpers.ValidationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -28,6 +31,7 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
+        ValidationHelper.checkPictureFileSize(multipartFile);
         return avatarRepository.uploadPictureToCloudinary(multipartFile);
     }
 

@@ -2,6 +2,7 @@ package com.tripweaver.repositories;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.tripweaver.exceptions.InvalidOperationException;
 import com.tripweaver.repositories.contracts.Uploadable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +29,7 @@ public class UploadableImpl implements Uploadable {
                     .upload(multipartFile.getBytes(), params1)
                     .get("secure_url")
                     .toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
